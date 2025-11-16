@@ -36,7 +36,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::group(['middleware' => ['motorista']], function () {
         Route::put('/motorista/status', [MotoristaController::class, 'updateStatus']);
         Route::get('/motorista/viajes/solicitados', [ViajeController::class, 'getSolicitedTrips']);
-        Route::post('/motorista/viajes/{viaje}/aceptar', [ViajeController::class, 'acceptTrip']); // New route
+        Route::post('/motorista/viajes/{viaje}/aceptar', [ViajeController::class, 'acceptTrip']);
+        Route::put('/motorista/viajes/{viaje}/status', [ViajeController::class, 'updateTripStatus']); // New route
     });
 
     // Admin routes

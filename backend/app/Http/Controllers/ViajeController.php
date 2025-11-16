@@ -7,6 +7,7 @@ use App\Models\ClienteForfait;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\MotoristaPerfil; // Import MotoristaPerfil
+use Illuminate\Validation\Rule; // Import Rule
 
 class ViajeController extends Controller
 {
@@ -83,6 +84,46 @@ class ViajeController extends Controller
 
         return response()->json([
             'message' => 'Trip accepted successfully',
+            'data' => $viaje,
+        ]);
+    }
+
+    public function updateTripStatus(Request $request, Viaje $viaje)
+    {
+        $motorista = auth()->user();
+
+        // Check if the authenticated user is the assigned motorista
+        if ($viaje->motorista_id !== $motorista->id) {
+            return response()->json(['error' => 'Forbidden: You are not assigned to this trip'], 403);
+        }
+
+        $request->validate([
+            'estado' => ['required', Rule::in(['en_curso', 'completado', 'cancelado'])],
+        ]);
+
+        $newStatus = $request->estado;
+        $currentStatus = $viaje->estado;
+
+        // Define valid state transitions for motorista
+        $validTransitions = [
+            'aceptado' => ['en_curso', 'cancelado'],
+            'en_curso' => ['completado', 'cancelado'],
+        ];
+
+        if (!isset($validTransitions[$currentStatus]) || !in_array($newStatus, $validTransitions[$currentStatus])) {
+            return response()->json(['error' => "Invalid state transition from {$currentStatus} to {$newStatus}"], 400);
+        }
+
+        $updateData = ['estado' => $newStatus];
+
+        if ($newStatus === 'completado') {
+            $updateData['fecha_fin'] = Carbon::now();
+        }
+
+        $viaje->update($updateData);
+
+        return response()->json([
+            'message' => "Trip status updated to {$newStatus}",
             'data' => $viaje,
         ]);
     }
