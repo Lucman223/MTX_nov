@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForfaitController;
 use App\Http\Controllers\ClienteForfaitController;
 use App\Http\Controllers\ViajeController;
+use App\Http\Controllers\MotoristaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::post('/forfaits/buy', [ClienteForfaitController::class, 'buyForfait']); // New route for buying forfaits
     Route::post('/viajes/solicitar', [ViajeController::class, 'solicitarViaje']); // New route for requesting a trip
+
+    // Motorista routes
+    Route::group(['middleware' => ['motorista']], function () {
+        Route::put('/motorista/status', [MotoristaController::class, 'updateStatus']);
+    });
 
     // Admin routes
     Route::group(['middleware' => ['admin']], function () {
