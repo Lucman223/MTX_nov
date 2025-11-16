@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForfaitController;
 use App\Http\Controllers\ClienteForfaitController;
+use App\Http\Controllers\ViajeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::put('/profile', [AuthController::class, 'updateProfile']);
 
     Route::post('/forfaits/buy', [ClienteForfaitController::class, 'buyForfait']); // New route for buying forfaits
+    Route::post('/viajes/solicitar', [ViajeController::class, 'solicitarViaje']); // New route for requesting a trip
 
     // Admin routes
     Route::group(['middleware' => ['admin']], function () {
