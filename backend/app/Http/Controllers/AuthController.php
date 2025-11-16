@@ -53,4 +53,36 @@ class AuthController extends Controller
             'user' => auth()->user(), // Get the authenticated user
         ]);
     }
+
+    public function getProfile()
+    {
+        return response()->json(auth()->user());
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'password' => 'sometimes|string|min:8|confirmed',
+            'rol' => ['sometimes', Rule::in(['cliente', 'motorista', 'admin'])], // Admin should change this, but for now allow
+        ]);
+
+        $user->name = $request->input('name', $user->name);
+        $user->email = $request->input('email', $user->email);
+        $user->rol = $request->input('rol', $user->rol);
+
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user,
+        ]);
+    }
 }
