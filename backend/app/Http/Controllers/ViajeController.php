@@ -6,6 +6,7 @@ use App\Models\Viaje;
 use App\Models\ClienteForfait;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\MotoristaPerfil; // Import MotoristaPerfil
 
 class ViajeController extends Controller
 {
@@ -53,5 +54,36 @@ class ViajeController extends Controller
                                ->get();
 
         return response()->json($solicitedTrips);
+    }
+
+    public function acceptTrip(Request $request, Viaje $viaje)
+    {
+        $motorista = auth()->user();
+
+        // Check if the authenticated user is a motorista
+        if ($motorista->rol !== 'motorista') {
+            return response()->json(['error' => 'Forbidden: Only motoristas can accept trips'], 403);
+        }
+
+        // Check if the motorista is active
+        $motoristaPerfil = MotoristaPerfil::where('usuario_id', $motorista->id)->first();
+        if (!$motoristaPerfil || $motoristaPerfil->estado_actual !== 'activo') {
+            return response()->json(['error' => 'Motorista is not active or profile not found'], 400);
+        }
+
+        // Check if the trip is solicited and not already accepted
+        if ($viaje->estado !== 'solicitado' || $viaje->motorista_id !== null) {
+            return response()->json(['error' => 'Trip is not available for acceptance'], 400);
+        }
+
+        $viaje->update([
+            'motorista_id' => $motorista->id,
+            'estado' => 'aceptado',
+        ]);
+
+        return response()->json([
+            'message' => 'Trip accepted successfully',
+            'data' => $viaje,
+        ]);
     }
 }
