@@ -19,6 +19,7 @@ use App\Http\Controllers\ForfaitController;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/forfaits', [ForfaitController::class, 'getAvailableForfaits']); // New public route
 
 // Protected routes (JWT required)
 Route::group(['middleware' => ['jwt.auth']], function () {

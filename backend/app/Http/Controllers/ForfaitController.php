@@ -71,4 +71,12 @@ class ForfaitController extends Controller
 
         return response()->json(null, 204);
     }
+
+    /**
+     * Display a listing of active forfaits for clients.
+     */
+    public function getAvailableForfaits()
+    {
+        return Forfait::where('estado', 'activo')->get();
+    }
 }
