@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForfaitController;
+use App\Http\Controllers\ClienteForfaitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,8 @@ Route::get('/forfaits', [ForfaitController::class, 'getAvailableForfaits']); // 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/profile', [AuthController::class, 'getProfile']);
     Route::put('/profile', [AuthController::class, 'updateProfile']);
+
+    Route::post('/forfaits/buy', [ClienteForfaitController::class, 'buyForfait']); // New route for buying forfaits
 
     // Admin routes
     Route::group(['middleware' => ['admin']], function () {
