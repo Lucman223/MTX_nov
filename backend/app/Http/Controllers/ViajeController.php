@@ -44,4 +44,14 @@ class ViajeController extends Controller
             'data' => $viaje,
         ], 201);
     }
+
+    public function getSolicitedTrips()
+    {
+        // Only return trips that are 'solicitado' and have no motorista assigned yet
+        $solicitedTrips = Viaje::where('estado', 'solicitado')
+                               ->whereNull('motorista_id')
+                               ->get();
+
+        return response()->json($solicitedTrips);
+    }
 }
