@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController; // Import AuthController
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ForfaitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +16,6 @@ use App\Http\Controllers\AuthController; // Import AuthController
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -27,4 +24,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/profile', [AuthController::class, 'getProfile']);
     Route::put('/profile', [AuthController::class, 'updateProfile']);
+
+    // Admin routes
+    Route::group(['middleware' => ['admin']], function () {
+        Route::apiResource('forfaits', ForfaitController::class);
+    });
 });
