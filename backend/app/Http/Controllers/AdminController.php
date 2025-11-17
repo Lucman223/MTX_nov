@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\MotoristaPerfil; // Import MotoristaPerfil
 use App\Models\Viaje; // Import Viaje
+use App\Models\Transaccion; // Import Transaccion
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -95,5 +96,11 @@ class AdminController extends Controller
     {
         $trips = Viaje::all();
         return response()->json($trips);
+    }
+
+    public function getAllTransacciones()
+    {
+        $transacciones = Transaccion::all();
+        return response()->json($transacciones);
     }
 }

@@ -46,6 +46,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::apiResource('forfaits', ForfaitController::class);
         Route::apiResource('users', AdminController::class)->except(['store']); // Manage users, but registration is public
         Route::put('/admin/motoristas/{user}/status', [AdminController::class, 'updateMotoristaStatus']);
-        Route::get('/admin/viajes', [AdminController::class, 'getAllTrips']); // New route
+        Route::get('/admin/viajes', [AdminController::class, 'getAllTrips']);
+        Route::get('/admin/transacciones', [AdminController::class, 'getAllTransacciones']); // New route
     });
 });
