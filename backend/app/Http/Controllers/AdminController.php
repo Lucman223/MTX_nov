@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\MotoristaPerfil; // Import MotoristaPerfil
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -61,5 +62,31 @@ class AdminController extends Controller
         $user->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function updateMotoristaStatus(Request $request, User $user)
+    {
+        if ($user->rol !== 'motorista') {
+            return response()->json(['error' => 'User is not a motorista'], 400);
+        }
+
+        $request->validate([
+            'estado_validacion' => ['required', Rule::in(['pendiente', 'aprobado', 'rechazado'])],
+        ]);
+
+        $motoristaPerfil = MotoristaPerfil::where('usuario_id', $user->id)->first();
+
+        if (!$motoristaPerfil) {
+            return response()->json(['error' => 'Motorista profile not found'], 404);
+        }
+
+        $motoristaPerfil->update([
+            'estado_validacion' => $request->estado_validacion,
+        ]);
+
+        return response()->json([
+            'message' => 'Motorista validation status updated successfully',
+            'data' => $motoristaPerfil,
+        ]);
     }
 }
