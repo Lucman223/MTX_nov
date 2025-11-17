@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\MotoristaPerfil; // Import MotoristaPerfil
+use App\Models\Viaje; // Import Viaje
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -88,5 +89,11 @@ class AdminController extends Controller
             'message' => 'Motorista validation status updated successfully',
             'data' => $motoristaPerfil,
         ]);
+    }
+
+    public function getAllTrips()
+    {
+        $trips = Viaje::all();
+        return response()->json($trips);
     }
 }
