@@ -7,6 +7,7 @@ use App\Http\Controllers\ForfaitController;
 use App\Http\Controllers\ClienteForfaitController;
 use App\Http\Controllers\ViajeController;
 use App\Http\Controllers\MotoristaController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,5 +44,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     // Admin routes
     Route::group(['middleware' => ['admin']], function () {
         Route::apiResource('forfaits', ForfaitController::class);
+        Route::apiResource('users', AdminController::class)->except(['store']); // Manage users, but registration is public
     });
 });
