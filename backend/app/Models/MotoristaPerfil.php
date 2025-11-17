@@ -13,5 +13,7 @@ class MotoristaPerfil extends Model
         'documento_licencia_path',
         'estado_validacion',
         'estado_actual',
+        'current_lat', // New field
+        'current_lng', // New field
     ];
 }
