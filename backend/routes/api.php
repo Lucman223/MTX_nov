@@ -8,6 +8,7 @@ use App\Http\Controllers\ClienteForfaitController;
 use App\Http\Controllers\ViajeController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CalificacionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/motorista/viajes/{viaje}/aceptar', [ViajeController::class, 'acceptTrip']);
         Route::put('/motorista/viajes/{viaje}/status', [ViajeController::class, 'updateTripStatus']); // New route
     });
+
+    Route::post('/calificaciones/motorista/{viaje}', [CalificacionController::class, 'rateMotorista']); // Client rates motorista
+    Route::post('/calificaciones/cliente/{viaje}', [CalificacionController::class, 'rateCliente']); // Motorista rates client
 
     // Admin routes
     Route::group(['middleware' => ['admin']], function () {
