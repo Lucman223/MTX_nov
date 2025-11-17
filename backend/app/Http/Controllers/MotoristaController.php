@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MotoristaPerfil;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Events\MotoristaLocationUpdated; // Import the event
 
 class MotoristaController extends Controller
 {
@@ -59,6 +60,9 @@ class MotoristaController extends Controller
             'current_lat' => $request->latitude,
             'current_lng' => $request->longitude,
         ]);
+
+        // Dispatch the event
+        event(new MotoristaLocationUpdated($motoristaPerfil));
 
         return response()->json([
             'message' => 'Motorista location updated successfully',
