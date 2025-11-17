@@ -9,6 +9,7 @@ use App\Http\Controllers\ViajeController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CalificacionController;
+use App\Http\Controllers\OrangeMoneyController; // Import OrangeMoneyController
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/forfaits', [ForfaitController::class, 'getAvailableForfaits']); // New public route
 
+// Orange Money Callback (Public route as it's called by Orange Money)
+Route::post('/orange-money/callback', [OrangeMoneyController::class, 'handleCallback']);
+
 // Protected routes (JWT required)
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/profile', [AuthController::class, 'getProfile']);
@@ -33,6 +37,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::post('/forfaits/buy', [ClienteForfaitController::class, 'buyForfait']); // New route for buying forfaits
     Route::post('/viajes/solicitar', [ViajeController::class, 'solicitarViaje']); // New route for requesting a trip
+
+    // Orange Money Payment Initiation (Protected)
+    Route::post('/orange-money/initiate', [OrangeMoneyController::class, 'initiatePayment']);
 
     // Motorista routes
     Route::group(['middleware' => ['motorista']], function () {

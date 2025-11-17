@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa908517a282ec165a081f9df212b97e",
+    "content-hash": "988f5a26c7640d9d364046b3df32e348",
     "packages": [
         {
             "name": "brick/math",
@@ -1051,6 +1051,54 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "ibracilinks/orange-money",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ibracilinks/OrangeMoney.git",
+                "reference": "37b2a7a96dc5a42d596ded86816e3e2eed3b7be7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ibracilinks/OrangeMoney/zipball/37b2a7a96dc5a42d596ded86816e3e2eed3b7be7",
+                "reference": "37b2a7a96dc5a42d596ded86816e3e2eed3b7be7",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "OrangeMoney": "Ibracilinks\\OrangeMoney\\Facades\\OrangeMoney"
+                    },
+                    "providers": [
+                        "Ibracilinks\\OrangeMoney\\Providers\\OrangeMoneyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ibracilinks\\OrangeMoney\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ibraci Links",
+                    "email": "hello@ibracilinks.com"
+                }
+            ],
+            "description": "A laravel package for Orange Money Web Payment API.",
+            "support": {
+                "issues": "https://github.com/Ibracilinks/OrangeMoney/issues",
+                "source": "https://github.com/Ibracilinks/OrangeMoney/tree/master"
+            },
+            "time": "2020-05-19T11:24:40+00:00"
         },
         {
             "name": "laravel/framework",
@@ -8618,7 +8666,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "ibracilinks/orange-money": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
