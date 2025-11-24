@@ -3,9 +3,9 @@
 namespace App\Events;
 
 use App\Models\MotoristaPerfil;
+use App\Models\Viaje; // Import the Viaje model
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -15,7 +15,8 @@ class MotoristaLocationUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $motoristaPerfil;
+    public MotoristaPerfil $motoristaPerfil;
+    public ?Viaje $viaje; // The active trip can be null
 
     /**
      * Create a new event instance.
@@ -23,6 +24,10 @@ class MotoristaLocationUpdated implements ShouldBroadcast
     public function __construct(MotoristaPerfil $motoristaPerfil)
     {
         $this->motoristaPerfil = $motoristaPerfil;
+        // Find the active trip for this motorista
+        $this->viaje = Viaje::where('motorista_id', $this->motoristaPerfil->usuario_id)
+                            ->whereIn('estado', ['aceptado', 'en_curso'])
+                            ->first();
     }
 
     /**
@@ -32,9 +37,14 @@ class MotoristaLocationUpdated implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [
-            new PrivateChannel('motorista.' . $this->motoristaPerfil->usuario_id),
-        ];
+        // Only broadcast if there is an active trip
+        if ($this->viaje) {
+            return [
+                new PrivateChannel('viaje.' . $this->viaje->id),
+            ];
+        }
+
+        return []; // Return an empty array if no active trip is found
     }
 
     /**
@@ -53,9 +63,8 @@ class MotoristaLocationUpdated implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'latitude' => $this->motoristaPerfil->current_lat,
-            'longitude' => $this->motoristaPerfil->current_lng,
-            'motorista_id' => $this->motoristaPerfil->usuario_id,
+            'lat' => $this->motoristaPerfil->current_lat,
+            'lng' => $this->motoristaPerfil->current_lng,
         ];
     }
 }
