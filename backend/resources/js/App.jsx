@@ -1,27 +1,50 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Viaje from './components/Viaje'; // We will create this next
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
 
-// A simple placeholder for the home page
-function Home() {
-    return (
-        <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-            <h1>Bienvenido a MotoTX</h1>
-            <p>Esta es la página de inicio de la aplicación React.</p>
-            <nav>
-                <Link to="/viaje/1" style={{ color: 'blue' }}>Ver Viaje de Prueba (ID: 1)</Link>
-            </nav>
-        </div>
-    );
-}
+import HomePage from './pages/Public/HomePage.jsx';
+import LoginPage from './pages/Public/LoginPage.jsx';
+import RegisterPage from './pages/Public/RegisterPage.jsx';
+
+import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
+import ClienteDashboard from './pages/Cliente/ClienteDashboard.jsx';
+import MotoristaDashboard from './pages/Motorista/MotoristaDashboard.jsx';
+
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/Auth/ProtectedRoute';
+
+// Set default base URL for Axios
+axios.defaults.baseURL = '/api';
 
 function App() {
     return (
         <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/viaje/:viajeId" element={<Viaje />} />
-            </Routes>
+            <AuthProvider>
+                <Routes>
+                    {/* Public Routes */}
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+
+                    {/* Protected Admin Routes */}
+                    <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                        <Route path="/admin" element={<AdminDashboard />} />
+                    </Route>
+
+                    {/* Protected Cliente Routes */}
+                    <Route element={<ProtectedRoute allowedRoles={['cliente']} />}>
+                        <Route path="/cliente" element={<ClienteDashboard />} />
+                    </Route>
+
+                    {/* Protected Motorista Routes */}
+                    <Route element={<ProtectedRoute allowedRoles={['motorista']} />}>
+                        <Route path="/motorista" element={<MotoristaDashboard />} />
+                    </Route>
+
+                    {/* Fallback for unmatched routes - could be a 404 page */}
+                    <Route path="*" element={<div>404 Not Found</div>} />
+                </Routes>
+            </AuthProvider>
         </Router>
     );
 }

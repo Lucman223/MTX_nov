@@ -1,15 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ForfaitController;
-use App\Http\Controllers\ClienteForfaitController;
-use App\Http\Controllers\ViajeController;
-use App\Http\Controllers\MotoristaController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CalificacionController;
-use App\Http\Controllers\OrangeMoneyController; // Import OrangeMoneyController
 
 /*
 |--------------------------------------------------------------------------
@@ -22,43 +13,13 @@ use App\Http\Controllers\OrangeMoneyController; // Import OrangeMoneyController
 |
 */
 
-// Public routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/forfaits', [ForfaitController::class, 'getAvailableForfaits']); // New public route
+// Include segregated API routes
+require __DIR__.'/api/auth.php';
+require __DIR__.'/api/pagos.php';
+require __DIR__.'/api/viajes.php';
 
-// Orange Money Callback (Public route as it's called by Orange Money)
-Route::post('/orange-money/callback', [OrangeMoneyController::class, 'handleCallback']);
-
-// Protected routes (JWT required)
+// Protected routes (JWT required) - these will wrap the user and admin specific routes
 Route::group(['middleware' => ['jwt.auth']], function () {
-    Route::get('/profile', [AuthController::class, 'getProfile']);
-    Route::put('/profile', [AuthController::class, 'updateProfile']);
-
-    Route::post('/forfaits/buy', [ClienteForfaitController::class, 'buyForfait']); // New route for buying forfaits
-    Route::post('/viajes/solicitar', [ViajeController::class, 'solicitarViaje']); // New route for requesting a trip
-
-    // Orange Money Payment Initiation (Protected)
-    Route::post('/orange-money/initiate', [OrangeMoneyController::class, 'initiatePayment']);
-
-    // Motorista routes
-    Route::group(['middleware' => ['motorista']], function () {
-        Route::put('/motorista/status', [MotoristaController::class, 'updateStatus']);
-        Route::put('/motorista/ubicacion', [MotoristaController::class, 'updateLocation']); // New route
-        Route::get('/motorista/viajes/solicitados', [ViajeController::class, 'getSolicitedTrips']);
-        Route::post('/motorista/viajes/{viaje}/aceptar', [ViajeController::class, 'acceptTrip']);
-        Route::put('/motorista/viajes/{viaje}/status', [ViajeController::class, 'updateTripStatus']); // New route
-    });
-
-    Route::post('/calificaciones/motorista/{viaje}', [CalificacionController::class, 'rateMotorista']); // Client rates motorista
-    Route::post('/calificaciones/cliente/{viaje}', [CalificacionController::class, 'rateCliente']); // Motorista rates client
-
-    // Admin routes
-    Route::group(['middleware' => ['admin']], function () {
-        Route::apiResource('forfaits', ForfaitController::class);
-        Route::apiResource('users', AdminController::class)->except(['store']); // Manage users, but registration is public
-        Route::put('/admin/motoristas/{user}/status', [AdminController::class, 'updateMotoristaStatus']);
-        Route::get('/admin/viajes', [AdminController::class, 'getAllTrips']);
-        Route::get('/admin/transacciones', [AdminController::class, 'getAllTransacciones']); // New route
-    });
+    require __DIR__.'/api/user.php'; // Motorista specific routes, already has 'motorista' middleware inside
+    require __DIR__.'/api/admin.php'; // Admin specific routes, already has 'admin' middleware inside
 });

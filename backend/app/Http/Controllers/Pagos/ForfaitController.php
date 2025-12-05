@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pagos;
 
 use App\Models\Forfait;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\Pagos\StoreForfaitRequest;
+use App\Http\Requests\Pagos\UpdateForfaitRequest;
 
 class ForfaitController extends Controller
 {
@@ -19,16 +21,8 @@ class ForfaitController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreForfaitRequest $request)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
-            'precio' => 'required|numeric|min:0',
-            'viajes_incluidos' => 'required|integer|min:1',
-            'dias_validez' => 'required|integer|min:1',
-            'estado' => ['required', Rule::in(['activo', 'inactivo'])],
-        ]);
 
         $forfait = Forfait::create($request->all());
 
@@ -46,16 +40,8 @@ class ForfaitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Forfait $forfait)
+    public function update(UpdateForfaitRequest $request, Forfait $forfait)
     {
-        $request->validate([
-            'nombre' => 'sometimes|string|max:255',
-            'descripcion' => 'nullable|string',
-            'precio' => 'sometimes|numeric|min:0',
-            'viajes_incluidos' => 'sometimes|integer|min:1',
-            'dias_validez' => 'sometimes|integer|min:1',
-            'estado' => ['sometimes', Rule::in(['activo', 'inactivo'])],
-        ]);
 
         $forfait->update($request->all());
 

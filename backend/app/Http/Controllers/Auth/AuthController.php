@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Models\User; // Import User model
@@ -8,24 +8,21 @@ use Illuminate\Support\Facades\Hash; // Import Hash facade
 use Illuminate\Validation\Rule; // Import Rule for enum validation
 use Tymon\JWTAuth\Facades\JWTAuth; // Import JWTAuth facade
 use Tymon\JWTAuth\Exceptions\JWTException; // Import JWTException
+use App\Http\Requests\Auth\RegisterRequest; // Import RegisterRequest
+use App\Http\Requests\Auth\UpdateProfileRequest; // Import UpdateProfileRequest
+use App\Services\UserService;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'rol' => ['required', Rule::in(['cliente', 'motorista', 'admin'])],
-        ]);
+    protected $userService;
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'rol' => $request->rol,
-        ]);
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+    public function register(RegisterRequest $request)
+    {
+        $user = $this->userService->createUser($request->validated());
 
         return response()->json([
             'message' => 'User registered successfully',
@@ -58,30 +55,14 @@ class AuthController extends Controller
         return response()->json(auth()->user());
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateProfileRequest $request)
     {
         $user = auth()->user();
-
-        $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => 'sometimes|string|min:8|confirmed',
-            'rol' => ['sometimes', Rule::in(['cliente', 'motorista', 'admin'])], // Admin should change this, but for now allow
-        ]);
-
-        $user->name = $request->input('name', $user->name);
-        $user->email = $request->input('email', $user->email);
-        $user->rol = $request->input('rol', $user->rol);
-
-        if ($request->has('password')) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
+        $updatedUser = $this->userService->updateProfile($user, $request->validated());
 
         return response()->json([
             'message' => 'Profile updated successfully',
-            'user' => $user,
+            'user' => $updatedUser,
         ]);
     }
 }

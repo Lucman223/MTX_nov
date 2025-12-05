@@ -11,7 +11,7 @@
          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
          crossorigin=""/>
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/js/app_entry.jsx'])
     </head>
     <body style="margin: 0; padding: 0;">
         <div id="root"></div>
