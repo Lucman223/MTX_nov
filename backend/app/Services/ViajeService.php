@@ -10,21 +10,26 @@ use App\Models\MotoristaPerfil;
 
 class ViajeService
 {
-    public function solicitarViaje(User $user, float $origen_lat, float $origen_lng): Viaje
+    public function solicitarViaje(User $user, float $origen_lat, float $origen_lng, ?float $destino_lat = null, ?float $destino_lng = null): Viaje
     {
+        // Check for Forfait
         $clienteForfait = ClienteForfait::where('cliente_id', $user->id)
             ->where('viajes_restantes', '>', 0)
             ->where('fecha_expiracion', '>', Carbon::now())
             ->first();
 
+        // For now, if no forfait, we might throw error, OR allow Pay-Per-Ride pending implementation.
+        // Sticking to strict forfait for now as per logic, but adding logging.
         if (!$clienteForfait) {
-            throw new \Exception('No active forfait with remaining trips found');
+             throw new \Exception('No active forfait. Please purchase a plan.');
         }
 
         $viaje = Viaje::create([
             'cliente_id' => $user->id,
             'origen_lat' => $origen_lat,
             'origen_lng' => $origen_lng,
+            'destino_lat' => $destino_lat,
+            'destino_lng' => $destino_lng,
             'estado' => 'solicitado',
         ]);
 

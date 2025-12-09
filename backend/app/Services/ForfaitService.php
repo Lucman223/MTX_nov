@@ -9,6 +9,17 @@ use Carbon\Carbon;
 
 class ForfaitService
 {
+    /**
+     * Create a new forfait type (administrative).
+     *
+     * @param array $data Validated data for the new forfait.
+     * @return Forfait The newly created forfait model.
+     */
+    public function createForfait(array $data): Forfait
+    {
+        return Forfait::create($data);
+    }
+
     public function buyForfait(User $user, int $forfaitId): ClienteForfait
     {
         $forfait = Forfait::find($forfaitId);

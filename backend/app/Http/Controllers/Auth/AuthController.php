@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Exceptions\JWTException; // Import JWTException
 use App\Http\Requests\Auth\RegisterRequest; // Import RegisterRequest
 use App\Http\Requests\Auth\UpdateProfileRequest; // Import UpdateProfileRequest
 use App\Services\UserService;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -39,7 +40,8 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Invalid credentials'], 401);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            \Illuminate\Support\Facades\Log::error('JWT Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Could not create token', 'message' => $e->getMessage()], 500);
         }
 
         return response()->json([
@@ -52,7 +54,11 @@ class AuthController extends Controller
 
     public function getProfile()
     {
-        return response()->json(auth()->user());
+        $user = auth()->user();
+        if ($user) {
+            $user->load(['clienteForfaits', 'motorista_perfil']);
+        }
+        return response()->json(['user' => $user]);
     }
 
     public function updateProfile(UpdateProfileRequest $request)

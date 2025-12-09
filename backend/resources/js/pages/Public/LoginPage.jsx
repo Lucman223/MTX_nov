@@ -10,16 +10,15 @@ function LoginPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!loading && isAuthenticated) {
-            // Redirect based on user role
-            if (user?.rol === 'admin') {
+        if (!loading && isAuthenticated && user) {
+            console.log('LoginPage: User authenticated, redirecting...', user.rol);
+            if (user.rol === 'admin') {
                 navigate('/admin', { replace: true });
-            } else if (user?.rol === 'cliente') {
+            } else if (user.rol === 'cliente') {
                 navigate('/cliente', { replace: true });
-            } else if (user?.rol === 'motorista') {
+            } else if (user.rol === 'motorista') {
                 navigate('/motorista', { replace: true });
             } else {
-                // Default redirect if role is not recognized or not set
                 navigate('/', { replace: true });
             }
         }

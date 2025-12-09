@@ -14,6 +14,7 @@ use App\Http\Requests\Admin\UpdateMotoristaStatusRequest;
 use App\Services\UserService;
 use App\Services\MotoristaService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Controllers\Controller;
 
 class AdminController extends Controller
 {
@@ -28,9 +29,15 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return User::all();
+        $query = User::with('motorista_perfil');
+
+        if ($request->has('rol')) {
+            $query->where('rol', $request->rol);
+        }
+
+        return $query->get();
     }
 
     /**

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class MotoristaPerfil extends Model
 {
+    protected $table = 'motoristas_perfiles';
+
     protected $fillable = [
         'usuario_id',
         'marca_vehiculo',
@@ -13,7 +15,7 @@ class MotoristaPerfil extends Model
         'documento_licencia_path',
         'estado_validacion',
         'estado_actual',
-        'current_lat', // New field
-        'current_lng', // New field
+        'latitud_actual',
+        'longitud_actual',
     ];
 }

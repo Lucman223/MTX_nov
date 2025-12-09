@@ -16,70 +16,74 @@ use App\Services\ViajeService;
 
 
 
+use App\Http\Controllers\Controller;
+
 class ViajeController extends Controller
-
 {
-
     protected $viajeService;
 
-
-
     public function __construct(ViajeService $viajeService)
-
     {
-
         $this->viajeService = $viajeService;
-
     }
 
-
-
     public function solicitarViaje(SolicitarViajeRequest $request)
-
     {
-
         $user = auth()->user();
 
-
-
         try {
-
-            $viaje = $this->viajeService->solicitarViaje($user, $request->origen_lat, $request->origen_lng);
+            $viaje = $this->viajeService->solicitarViaje(
+                $user, 
+                $request->origen_lat, 
+                $request->origen_lng,
+                $request->destino_lat,
+                $request->destino_lng
+            );
 
             return response()->json([
-
                 'message' => 'Trip requested successfully',
-
                 'data' => $viaje,
-
             ], 201);
-
         } catch (\Exception $e) {
-
             return response()->json(['error' => $e->getMessage()], 400);
-
         }
-
     }
 
 
 
     public function getSolicitedTrips()
-
     {
-
         // Only return trips that are 'solicitado' and have no motorista assigned yet
-
         $solicitedTrips = Viaje::where('estado', 'solicitado')
-
                                ->whereNull('motorista_id')
-
+                               ->orderBy('created_at', 'desc')
                                ->get();
 
-
-
         return response()->json($solicitedTrips);
+    }
 
+    public function getCurrentTrip()
+    {
+        $user = auth()->user();
+        
+        if ($user->rol === 'motorista') {
+            $currentTrip = Viaje::where('motorista_id', $user->id)
+                                ->whereIn('estado', ['aceptado', 'en_curso'])
+                                ->first();
+        } else {
+            // Assume client
+            $currentTrip = Viaje::where('cliente_id', $user->id)
+                                ->whereIn('estado', ['solicitado', 'aceptado', 'en_curso'])
+                                ->with(['motorista.motorista_perfil']) // Eager load motorista location
+                                ->first();
+        }
+
+        if ($currentTrip) {
+            $currentTrip->refresh();
+            return response()->json($currentTrip);
+        }
+
+        return response()->json(null);
     }
 
 

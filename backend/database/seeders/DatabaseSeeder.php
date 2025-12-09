@@ -15,11 +15,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // 1. Admin
+        User::create([
+            'name' => 'Admin Principal',
+            'email' => 'admin@mototx.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'rol' => 'admin',
         ]);
+
+        // 2. Cliente
+        User::create([
+            'name' => 'Cliente Pruebas',
+            'email' => 'cliente@mototx.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'rol' => 'cliente',
+        ]);
+
+        // 3. Motorista
+        $moto = User::create([
+            'name' => 'Motorista Pruebas',
+            'email' => 'moto@mototx.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'rol' => 'motorista',
+        ]);
+
+        // Crear perfil del motorista
+        /*
+        \App\Models\MotoristaPerfil::create([
+            'usuario_id' => $moto->id,
+            'marca_vehiculo' => 'Yamaha Crypton',
+            'matricula' => 'AB-123-CD',
+            'estado_validacion' => 'pendiente', // Para probar la aprobación
+            'estado_actual' => 'inactivo',
+            'documento_licencia_path' => 'docs/dummy.pdf'
+        ]);
+        */
     }
 }

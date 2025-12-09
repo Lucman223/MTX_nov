@@ -14,7 +14,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Include segregated API routes
-require __DIR__.'/api/auth.php';
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('/register', [\App\Http\Controllers\Auth\AuthController::class, 'register']);
+    Route::post('/login', [\App\Http\Controllers\Auth\AuthController::class, 'login']);
+    
+    Route::group(['middleware' => ['jwt.auth']], function () {
+        Route::get('/profile', [\App\Http\Controllers\Auth\AuthController::class, 'getProfile']);
+        Route::put('/profile', [\App\Http\Controllers\Auth\AuthController::class, 'updateProfile']);
+    });
+});
 require __DIR__.'/api/pagos.php';
 require __DIR__.'/api/viajes.php';
 

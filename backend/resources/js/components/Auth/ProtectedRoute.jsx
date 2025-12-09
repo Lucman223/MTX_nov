@@ -5,22 +5,22 @@ import { useAuth } from '../../context/AuthContext';
 const ProtectedRoute = ({ allowedRoles }) => {
     const { isAuthenticated, user, loading } = useAuth();
 
+    console.log('ProtectedRoute Debug:', { isAuthenticated, user, loading, allowedRoles });
+
     if (loading) {
-        return <div>Cargando autenticación...</div>; // Or a spinner
+        return <div>Cargando autenticación...</div>;
     }
 
     if (!isAuthenticated) {
-        // User not authenticated, redirect to login page
+        console.log('Redirecting to login: Not authenticated');
         return <Navigate to="/login" replace />;
     }
 
     if (allowedRoles && user && !allowedRoles.includes(user.rol)) {
-        // User authenticated but not authorized, redirect to a forbidden page or home
-        // For now, let's redirect to home
+        console.log('Redirecting to home: Not authorized', { role: user.rol });
         return <Navigate to="/" replace />;
     }
 
-    // User is authenticated and authorized
     return <Outlet />;
 };
 

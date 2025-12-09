@@ -1,0 +1,28 @@
+
+
+
+
+
+
+
+
+
+
+   Error 
+
+  Class "App\Http\Controllers\Auth\Controller" not found
+
+  at app\Http\Controllers\Auth\AuthController.php:15
+     11▕ use App\Http\Requests\Auth\RegisterRequest; // Import RegisterRequest
+     12▕ use App\Http\Requests\Auth\UpdateProfileRequest; // Import UpdateProfileRequest
+     13▕ use App\Services\UserService;
+     14▕ 
+  ➜  15▕ class AuthController extends Controller
+     16▕ {
+     17▕     protected $userService;
+     18▕ 
+     19▕     public function __construct(UserService $userService)
+
+  1   vendor\composer\ClassLoader.php:576
+  2   vendor\composer\ClassLoader.php:427
+

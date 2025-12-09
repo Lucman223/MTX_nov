@@ -1,0 +1,36 @@
+
+
+
+
+
+
+
+
+
+--- USERS ---
+ID: 1, Name: Admin Principal, Email:admin@mototx.com, Rol: admin
+ID: 2, Name: Cliente Pruebas, Email:cliente@mototx.com, Rol: cliente
+ID: 3, Name: Motorista Pruebas, Email:moto@mototx.com, Rol: motorista
+
+--- VIAJES ---
+ID: 1
+  Cliente: 2
+  Motorista: 
+  Estado: 'solicitado'
+  Origen: 12.648187833284, -7.9859967516453
+  Destino: 12.643998052396, -8.0088370102072
+----------------
+ID: 2
+  Cliente: 2
+  Motorista: 
+  Estado: 'solicitado'
+  Origen: 12.669303282041, -8.018280552543
+  Destino: 12.650534080551, -8.0126134207193
+----------------
+ID: 3
+  Cliente: 2
+  Motorista: 
+  Estado: 'solicitado'
+  Origen: 12.645530779175, -8.0160713195801
+  Destino: 12.65038815771, -7.9800224304199
+----------------

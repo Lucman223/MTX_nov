@@ -67,4 +67,14 @@ class User extends Authenticatable implements JWTSubject // Implement JWTSubject
     {
         return [];
     }
+
+    public function motorista_perfil()
+    {
+        return $this->hasOne(MotoristaPerfil::class, 'usuario_id');
+    }
+
+    public function clienteForfaits()
+    {
+        return $this->hasMany(ClienteForfait::class, 'cliente_id');
+    }
 }

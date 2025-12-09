@@ -11,6 +11,7 @@
          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
          crossorigin=""/>
 
+        @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app_entry.jsx'])
     </head>
     <body style="margin: 0; padding: 0;">

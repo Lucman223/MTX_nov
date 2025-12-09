@@ -5,11 +5,20 @@ namespace App\Http\Controllers\Pagos;
 use App\Models\Forfait;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Services\ForfaitService;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Pagos\StoreForfaitRequest;
 use App\Http\Requests\Pagos\UpdateForfaitRequest;
 
 class ForfaitController extends Controller
 {
+    protected $forfaitService;
+
+    public function __construct(ForfaitService $forfaitService)
+    {
+        $this->forfaitService = $forfaitService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -23,8 +32,7 @@ class ForfaitController extends Controller
      */
     public function store(StoreForfaitRequest $request)
     {
-
-        $forfait = Forfait::create($request->all());
+        $forfait = $this->forfaitService->createForfait($request->validated());
 
         return response()->json($forfait, 201);
     }

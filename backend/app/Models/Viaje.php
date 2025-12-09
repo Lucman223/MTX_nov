@@ -17,4 +17,8 @@ class Viaje extends Model
         'fecha_solicitud',
         'fecha_fin',
     ];
+    public function motorista()
+    {
+        return $this->belongsTo(User::class, 'motorista_id');
+    }
 }

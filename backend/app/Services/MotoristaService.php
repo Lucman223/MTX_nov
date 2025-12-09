@@ -19,8 +19,8 @@ class MotoristaService
     {
         $motoristaPerfil = MotoristaPerfil::where('usuario_id', $user->id)->firstOrFail();
         $motoristaPerfil->update([
-            'current_lat' => $latitude,
-            'current_lng' => $longitude,
+            'latitud_actual' => $latitude,
+            'longitud_actual' => $longitude,
         ]);
         event(new MotoristaLocationUpdated($motoristaPerfil));
         return $motoristaPerfil;
