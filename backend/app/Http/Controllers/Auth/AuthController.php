@@ -48,7 +48,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            'user' => auth()->user(), // Get the authenticated user
+            'user' => auth()->user()->load(['clienteForfaits.forfait', 'motorista_perfil']), // Get the authenticated user with relations
         ]);
     }
 
@@ -56,7 +56,7 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         if ($user) {
-            $user->load(['clienteForfaits', 'motorista_perfil']);
+            $user->load(['clienteForfaits.forfait', 'motorista_perfil']);
         }
         return response()->json(['user' => $user]);
     }

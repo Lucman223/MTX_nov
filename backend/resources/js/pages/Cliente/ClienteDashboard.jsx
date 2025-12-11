@@ -3,6 +3,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import MapSelection from './MapSelection';
 import axios from 'axios';
+import { toast } from 'sonner';
+import useNotifications from '../../hooks/useNotifications';
 
 const ClienteDashboard = () => {
     const { logout, user } = useAuth();
@@ -11,13 +13,20 @@ const ClienteDashboard = () => {
     const [origen, setOrigen] = useState(null);
     const [destino, setDestino] = useState(null);
     const [puntoActivo, setPuntoActivo] = useState('origen'); // 'origen' | 'destino'
+    const [activeTrip, setActiveTrip] = useState(null);
+
+    // Color system
+    const colors = {
+        primary: '#2563eb',
+        secondary: '#10b981',
+        accent: '#f59e0b',
+        error: '#ef4444'
+    };
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
-
-    const [activeTrip, setActiveTrip] = useState(null);
 
     // Poll for active trip status
     useEffect(() => {
@@ -45,6 +54,18 @@ const ClienteDashboard = () => {
         return () => clearInterval(interval);
     }, []);
 
+    // Real-time updates
+    const { listenToTripUpdates } = useNotifications();
+
+    useEffect(() => {
+        if (activeTrip?.id) {
+            return listenToTripUpdates(activeTrip.id, (updatedTrip) => {
+                setActiveTrip(updatedTrip);
+                toast.info(`Actualización: ${updatedTrip.estado}`);
+            });
+        }
+    }, [activeTrip?.id]);
+
     const handleSolicitarViaje = async () => {
         if (!origen || !destino) {
             alert('Por favor, selecciona origen y destino en el mapa.');
@@ -68,68 +89,167 @@ const ClienteDashboard = () => {
         }
     };
 
+    const forfaits = user?.cliente_forfaits || [];
+    const viajesDisponibles = forfaits.reduce((acc, curr) => acc + (parseInt(curr.viajes_restantes) || 0), 0);
+
+    console.log('UserData:', user, 'Forfaits:', forfaits, 'Balance:', viajesDisponibles);
+
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', flexDirection: 'column' }}>
             {/* Header */}
-            <header style={{ backgroundColor: 'white', padding: '1rem 2rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1f2937' }}>MotoTX</h1>
-                    <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>Bienvenido, {user?.name || 'Cliente'}</span>
+            <header style={{
+                backgroundColor: 'white',
+                padding: '1.25rem 2rem',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottom: `3px solid ${colors.primary}`
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <span style={{ fontSize: '2rem' }}>🏍️</span>
+                    <div>
+                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.primary, margin: 0 }}>MotoTX</h1>
+                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>Hola, {user?.name || 'Cliente'}</span>
+                    </div>
                 </div>
-                <button
-                    onClick={handleLogout}
-                    style={{ padding: '0.5rem 1rem', backgroundColor: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '0.375rem', fontWeight: '500', cursor: 'pointer', transition: 'background 0.2s' }}
-                    onMouseOver={(e) => e.target.style.backgroundColor = '#fecaca'}
-                    onMouseOut={(e) => e.target.style.backgroundColor = '#fee2e2'}
-                >
-                    Cerrar Sesión
-                </button>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div style={{
+                        padding: '0.5rem 1rem',
+                        background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                        borderRadius: '0.5rem',
+                        color: 'white',
+                        fontWeight: '600',
+                        fontSize: '0.875rem'
+                    }}>
+                        {viajesDisponibles} viajes disponibles
+                    </div>
+                    <button
+                        onClick={() => navigate('/cliente/historial')}
+                        style={{
+                            padding: '0.5rem 1.25rem',
+                            background: 'white',
+                            color: colors.primary,
+                            border: `2px solid ${colors.primary}`,
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.background = colors.primary;
+                            e.target.style.color = 'white';
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.background = 'white';
+                            e.target.style.color = colors.primary;
+                        }}
+                    >
+                        📋 Historial
+                    </button>
+                    <button
+                        onClick={() => navigate('/cliente/perfil')}
+                        style={{
+                            padding: '0.5rem 1.25rem',
+                            background: 'white',
+                            color: '#4b5563',
+                            border: '1px solid #d1d5db',
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        👤 Perfil
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        style={{
+                            padding: '0.5rem 1.25rem',
+                            backgroundColor: 'white',
+                            color: colors.error,
+                            border: `2px solid ${colors.error}`,
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.backgroundColor = colors.error;
+                            e.target.style.color = 'white';
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.backgroundColor = 'white';
+                            e.target.style.color = colors.error;
+                        }}
+                    >
+                        Cerrar Sesión
+                    </button>
+                </div>
             </header>
 
             {/* Main Content */}
-            <main style={{ flex: 1, padding: '2rem', display: 'flex', gap: '2rem', height: 'calc(100vh - 80px)' }}>
+            <main style={{ flex: 1, padding: '2rem', display: 'flex', gap: '2rem', height: 'calc(100vh - 90px)' }}>
 
                 {/* Left Panel: Controls & Info */}
-                <div style={{ flex: '0 0 350px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div style={{ flex: '0 0 380px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
                     {/* Status Card */}
-                    <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '0.75rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                        <h2 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem', color: '#374151' }}>Planificar Viaje</h2>
+                    <div style={{
+                        backgroundColor: 'white',
+                        padding: '2rem',
+                        borderRadius: '1rem',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                        border: '1px solid #e5e7eb'
+                    }}>
+                        <h2 style={{
+                            fontSize: '1.25rem',
+                            fontWeight: 'bold',
+                            marginBottom: '1.5rem',
+                            color: '#111827',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                        }}>
+                            <span>📍</span> Planificar Viaje
+                        </h2>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <button
                                 onClick={() => setPuntoActivo('origen')}
                                 style={{
-                                    padding: '1rem',
-                                    borderRadius: '0.5rem',
-                                    border: `2px solid ${puntoActivo === 'origen' ? '#3b82f6' : '#e5e7eb'}`,
-                                    backgroundColor: puntoActivo === 'origen' ? '#eff6ff' : 'white',
+                                    padding: '1.25rem',
+                                    borderRadius: '0.75rem',
+                                    border: `2px solid ${puntoActivo === 'origen' ? colors.primary : '#e5e7eb'}`,
+                                    backgroundColor: puntoActivo === 'origen' ? `${colors.primary}10` : 'white',
                                     textAlign: 'left',
                                     cursor: 'pointer',
-                                    transition: 'all 0.2s'
+                                    transition: 'all 0.2s',
+                                    boxShadow: puntoActivo === 'origen' ? `0 4px 12px ${colors.primary}20` : 'none'
                                 }}
                             >
-                                <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '0.25rem' }}>PUNTO DE ORIGEN</div>
-                                <div style={{ fontWeight: '500', color: origen ? '#111827' : '#9ca3af' }}>
-                                    {origen ? `Lat: ${origen[0].toFixed(4)}, Lng: ${origen[1].toFixed(4)}` : 'Toca en el mapa para fijar'}
+                                <div style={{ fontSize: '0.75rem', color: colors.primary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>ORIGEN</div>
+                                <div style={{ fontWeight: '600', color: origen ? '#111827' : '#9ca3af', fontSize: '0.95rem' }}>
+                                    {origen ? `${origen[0].toFixed(4)}, ${origen[1].toFixed(4)}` : 'Toca en el mapa'}
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => setPuntoActivo('destino')}
                                 style={{
-                                    padding: '1rem',
-                                    borderRadius: '0.5rem',
-                                    border: `2px solid ${puntoActivo === 'destino' ? '#10b981' : '#e5e7eb'}`,
-                                    backgroundColor: puntoActivo === 'destino' ? '#ecfdf5' : 'white',
+                                    padding: '1.25rem',
+                                    borderRadius: '0.75rem',
+                                    border: `2px solid ${puntoActivo === 'destino' ? colors.secondary : '#e5e7eb'}`,
+                                    backgroundColor: puntoActivo === 'destino' ? `${colors.secondary}10` : 'white',
                                     textAlign: 'left',
                                     cursor: 'pointer',
-                                    transition: 'all 0.2s'
+                                    transition: 'all 0.2s',
+                                    boxShadow: puntoActivo === 'destino' ? `0 4px 12px ${colors.secondary}20` : 'none'
                                 }}
                             >
-                                <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '0.25rem' }}>PUNTO DE DESTINO</div>
-                                <div style={{ fontWeight: '500', color: destino ? '#111827' : '#9ca3af' }}>
-                                    {destino ? `Lat: ${destino[0].toFixed(4)}, Lng: ${destino[1].toFixed(4)}` : 'Toca en el mapa para fijar'}
+                                <div style={{ fontSize: '0.75rem', color: colors.secondary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>DESTINO</div>
+                                <div style={{ fontWeight: '600', color: destino ? '#111827' : '#9ca3af', fontSize: '0.95rem' }}>
+                                    {destino ? `${destino[0].toFixed(4)}, ${destino[1].toFixed(4)}` : 'Toca en el mapa'}
                                 </div>
                             </button>
                         </div>
@@ -140,42 +260,109 @@ const ClienteDashboard = () => {
                                 disabled={!origen || !destino}
                                 style={{
                                     width: '100%',
-                                    padding: '0.875rem',
-                                    backgroundColor: (!origen || !destino) ? '#d1d5db' : '#2563eb',
+                                    padding: '1.125rem',
+                                    background: (!origen || !destino) ? '#d1d5db' : `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
                                     color: 'white',
                                     border: 'none',
-                                    borderRadius: '0.5rem',
-                                    fontWeight: '600',
+                                    borderRadius: '0.75rem',
+                                    fontWeight: 'bold',
+                                    fontSize: '1.05rem',
                                     cursor: (!origen || !destino) ? 'not-allowed' : 'pointer',
-                                    boxShadow: (!origen || !destino) ? 'none' : '0 4px 6px rgba(37, 99, 235, 0.2)',
-                                    transition: 'background 0.2s'
+                                    boxShadow: (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary}40`,
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseOver={(e) => {
+                                    if (origen && destino) {
+                                        e.target.style.transform = 'translateY(-2px)';
+                                        e.target.style.boxShadow = `0 6px 16px ${colors.primary}50`;
+                                    }
+                                }}
+                                onMouseOut={(e) => {
+                                    e.target.style.transform = 'translateY(0)';
+                                    e.target.style.boxShadow = (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary}40`;
                                 }}
                             >
-                                Solicitar Moto Ahora
+                                🚀 Solicitar Moto Ahora
                             </button>
                         </div>
                     </div>
 
-                    {/* Forfaits Promo */}
-                    <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '0.75rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                        <h3 style={{ fontSize: '1rem', fontWeight: '600', color: '#374151' }}>Saldo de Viajes</h3>
-                        <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827', margin: '0.5rem 0' }}>
-                            {user?.cliente_forfaits?.reduce((acc, curr) => acc + curr.viajes_restantes, 0) || 0}
+                    {/* Forfaits Card */}
+                    <div style={{
+                        backgroundColor: 'white',
+                        padding: '2rem',
+                        borderRadius: '1rem',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                        border: '1px solid #e5e7eb',
+                        background: `linear-gradient(135deg, white 0%, ${colors.primary}05 100%)`
+                    }}>
+                        <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#111827', marginBottom: '1rem' }}>💰 Saldo de Viajes</h3>
+                        <div style={{ fontSize: '3rem', fontWeight: 'bold', color: colors.primary, margin: '1rem 0' }}>
+                            {viajesDisponibles}
                         </div>
-                        <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
-                            {user?.cliente_forfaits?.length > 0 ? 'Viajes disponibles.' : 'No tienes forfaits activos.'}
+                        <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1.5rem' }}>
+                            {viajesDisponibles > 0 ? `Tienes ${viajesDisponibles} viajes disponibles` : 'No tienes forfaits activos'}
                         </p>
                         <button
                             onClick={() => navigate('/cliente/forfaits')}
-                            style={{ fontSize: '0.875rem', color: '#2563eb', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textDecoration: 'underline' }}
+                            style={{
+                                width: '100%',
+                                padding: '0.875rem',
+                                fontSize: '0.95rem',
+                                color: 'white',
+                                background: colors.accent,
+                                border: 'none',
+                                borderRadius: '0.75rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                boxShadow: `0 4px 12px ${colors.accent}40`
+                            }}
+                            onMouseOver={(e) => {
+                                e.target.style.transform = 'translateY(-2px)';
+                                e.target.style.boxShadow = `0 6px 16px ${colors.accent}50`;
+                            }}
+                            onMouseOut={(e) => {
+                                e.target.style.transform = 'translateY(0)';
+                                e.target.style.boxShadow = `0 4px 12px ${colors.accent}40`;
+                            }}
                         >
                             Comprar Forfait
                         </button>
                     </div>
+
+                    {/* Active Trip Status */}
+                    {activeTrip && (
+                        <div style={{
+                            backgroundColor: colors.secondary,
+                            color: 'white',
+                            padding: '1.5rem',
+                            borderRadius: '1rem',
+                            boxShadow: `0 4px 12px ${colors.secondary}40`
+                        }}>
+                            <div style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem' }}>VIAJE ACTIVO</div>
+                            <div style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>
+                                Estado: {activeTrip.estado}
+                            </div>
+                            {activeTrip.motorista && (
+                                <div style={{ marginTop: '0.75rem', fontSize: '0.95rem', opacity: 0.95 }}>
+                                    Motorista: {activeTrip.motorista.name}
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Panel: Map */}
-                <div style={{ flex: 1, backgroundColor: 'white', borderRadius: '0.75rem', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', position: 'relative' }}>
+                <div style={{
+                    flex: 1,
+                    backgroundColor: 'white',
+                    borderRadius: '1rem',
+                    overflow: 'hidden',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                    position: 'relative',
+                    border: '1px solid #e5e7eb'
+                }}>
                     <MapSelection
                         origen={origen}
                         setOrigen={setOrigen}

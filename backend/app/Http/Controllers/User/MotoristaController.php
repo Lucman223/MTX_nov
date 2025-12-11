@@ -10,6 +10,7 @@ use App\Http\Requests\User\UpdateMotoristaStatusRequest;
 use App\Http\Requests\User\UpdateMotoristaLocationRequest;
 use App\Services\MotoristaService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Controllers\Controller;
 
 class MotoristaController extends Controller
 {

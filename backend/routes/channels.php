@@ -30,3 +30,7 @@ Broadcast::channel('viaje.{viajeId}', function ($user, $viajeId) {
     // Allow access if the user is the client or the motorista for the trip
     return $user->id === $viaje->cliente_id || $user->id === $viaje->motorista_id;
 });
+
+Broadcast::channel('viajes.disponibles', function ($user) {
+    return $user->rol === 'motorista' && $user->motorista_perfil?->estado_validacion === 'aprobado';
+});

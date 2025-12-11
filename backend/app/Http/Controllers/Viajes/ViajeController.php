@@ -16,6 +16,8 @@ use App\Services\ViajeService;
 
 
 
+use App\Events\ViajeSolicitado;
+use App\Events\ViajeActualizado;
 use App\Http\Controllers\Controller;
 
 class ViajeController extends Controller
@@ -40,6 +42,9 @@ class ViajeController extends Controller
                 $request->destino_lng
             );
 
+            // Broadcast new trip request to motoristas
+            ViajeSolicitado::dispatch($viaje);
+
             return response()->json([
                 'message' => 'Trip requested successfully',
                 'data' => $viaje,
@@ -49,6 +54,48 @@ class ViajeController extends Controller
         }
     }
 
+    /**
+     * Get trip history for the authenticated user
+     */
+    public function getHistory(Request $request)
+    {
+        $user = $request->user();
+        
+        $query = Viaje::with(['cliente', 'motorista', 'calificacion'])
+            ->where('estado', 'completado')
+            ->orderBy('updated_at', 'desc');
+
+        if ($user->rol === 'cliente') {
+            $query->where('cliente_id', $user->id);
+        } elseif ($user->rol === 'motorista') {
+            $query->where('motorista_id', $user->id);
+        }
+
+        $viajes = $query->paginate(10);
+
+        return response()->json($viajes, 200);
+    }
+
+    /**
+     * Get trip details by ID
+     */
+    public function getTripDetails(Request $request, $id)
+    {
+        $user = $request->user();
+        
+        $viaje = Viaje::with(['cliente', 'motorista', 'calificacion'])->find($id);
+
+        if (!$viaje) {
+            return response()->json(['error' => 'Viaje no encontrado'], 404);
+        }
+
+        // Verify user has access to this trip
+        if ($viaje->cliente_id !== $user->id && $viaje->motorista_id !== $user->id && $user->rol !== 'admin') {
+            return response()->json(['error' => 'No autorizado'], 403);
+        }
+
+        return response()->json($viaje, 200);
+    }
 
 
     public function getSolicitedTrips()
@@ -69,12 +116,14 @@ class ViajeController extends Controller
         if ($user->rol === 'motorista') {
             $currentTrip = Viaje::where('motorista_id', $user->id)
                                 ->whereIn('estado', ['aceptado', 'en_curso'])
+                                ->latest() // Prioritize newest
                                 ->first();
         } else {
             // Assume client
             $currentTrip = Viaje::where('cliente_id', $user->id)
                                 ->whereIn('estado', ['solicitado', 'aceptado', 'en_curso'])
-                                ->with(['motorista.motorista_perfil']) // Eager load motorista location
+                                ->with(['motorista.motorista_perfil'])
+                                ->latest() // Prioritize newest
                                 ->first();
         }
 
@@ -99,6 +148,9 @@ class ViajeController extends Controller
         try {
 
             $acceptedViaje = $this->viajeService->acceptTrip($motorista, $viaje);
+
+            // Notify client that trip was accepted
+            ViajeActualizado::dispatch($acceptedViaje);
 
             return response()->json([
 
@@ -129,6 +181,9 @@ class ViajeController extends Controller
         try {
 
             $updatedViaje = $this->viajeService->updateTripStatus($motorista, $viaje, $request->estado);
+
+            // Notify client of status change
+            ViajeActualizado::dispatch($updatedViaje);
 
             return response()->json([
 

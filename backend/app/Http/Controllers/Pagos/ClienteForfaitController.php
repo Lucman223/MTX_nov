@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Pagos;
 
-use App\Models\User; // Import User for auth()->user()
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Carbon\Carbon;
 use App\Http\Requests\Pagos\BuyForfaitRequest;
 use App\Services\ForfaitService;
@@ -30,3 +31,4 @@ class ClienteForfaitController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
+}

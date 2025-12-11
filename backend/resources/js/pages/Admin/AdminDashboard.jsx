@@ -1,51 +1,370 @@
-import React from 'react';
-
-const StatCard = ({ title, value, color }) => (
-    <div className={`p-6 bg-white rounded-lg shadow-md border-l-4 ${color}`}>
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{title}</h3>
-        <p className="mt-2 text-3xl font-bold text-gray-900">{value}</p>
-    </div>
-);
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminDashboard = () => {
+    const { logout, user } = useAuth();
+    const navigate = useNavigate();
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    // Color system
+    const colors = {
+        primary: '#2563eb',
+        secondary: '#10b981',
+        accent: '#f59e0b',
+        error: '#ef4444',
+        purple: '#7c3aed'
+    };
+
+    useEffect(() => {
+        fetchStatistics();
+    }, []);
+
+    const fetchStatistics = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('/api/admin/statistics');
+            console.log('Admin Stats:', response.data); // Debug log
+            setStats(response.data);
+        } catch (error) {
+            console.error('Error fetching statistics:', error);
+            // Optional: set dummy stats or error state
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // ...
+
+    // Recent Activity Render Logic
+    const renderActivity = () => {
+        if (!stats?.recentActivity) return <div style={{ color: '#6b7280', padding: '1rem' }}>No hay actividad reciente.</div>;
+
+        // Ensure we have an array, even if backend returns object/map
+        const activityList = Array.isArray(stats.recentActivity)
+            ? stats.recentActivity
+            : Object.values(stats.recentActivity);
+
+        if (activityList.length === 0) return <div style={{ color: '#6b7280', padding: '1rem' }}>No hay actividad reciente.</div>;
+
+        return activityList.map((activity, index) => (
+            <div
+                key={index}
+                style={{
+                    padding: '1rem',
+                    borderLeft: `3px solid ${activity.color}`,
+                    backgroundColor: 'white',
+                    borderRadius: '0.5rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}
+            >
+                <span style={{ color: '#374151', fontWeight: '500' }}>{activity.text}</span>
+                <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>{activity.time}</span>
+            </div>
+        ));
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
+    // Stats cards configuration
+    const statsConfig = stats ? [
+        {
+            title: 'Total Motoristas',
+            value: stats.totalMotoristas,
+            icon: '🏍️',
+            color: colors.secondary,
+            badge: stats.motoristasPendientes > 0 ? `${stats.motoristasPendientes} pendientes` : null
+        },
+        {
+            title: 'Viajes Hoy',
+            value: stats.viajesHoy,
+            icon: '🚀',
+            color: colors.primary,
+            subtitle: `${stats.viajesTotales} totales`,
+            onClick: () => navigate('/admin/viajes')
+        },
+        {
+            title: 'Ingresos del Mes',
+            value: `${Math.round(stats.ingresosMes).toLocaleString()} CFA`,
+            icon: '💰',
+            color: colors.accent,
+            subtitle: 'Forfaits vendidos'
+        },
+        {
+            title: 'Usuarios Activos',
+            value: stats.usuariosActivos,
+            icon: '👥',
+            color: colors.purple,
+            subtitle: `Rating: ${stats.ratingPromedio}⭐`
+        }
+    ] : [];
+
+    const quickActions = [
+        {
+            title: 'Gestionar Motoristas',
+            description: 'Aprobar, rechazar y gestionar motoristas',
+            icon: '🏍️',
+            color: colors.secondary,
+            action: () => navigate('/admin/motoristas')
+        },
+        {
+            title: 'Gestionar Clientes',
+            description: 'Ver lista de usuarios registrados',
+            icon: '👥',
+            color: '#06b6d4', // Cyan
+            action: () => navigate('/admin/clientes')
+        },
+        {
+            title: 'Ver Forfaits',
+            description: 'Administrar paquetes y precios',
+            icon: '💳',
+            color: colors.primary,
+            action: () => navigate('/admin/forfaits')
+        },
+        {
+            title: 'Reportes',
+            description: 'Estadísticas y análisis',
+            icon: '📊',
+            color: colors.accent,
+            action: () => navigate('/admin/reportes')
+        }
+    ];
+
     return (
-        <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Resumen General</h2>
+        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+            {/* Header */}
+            <header style={{
+                backgroundColor: 'white',
+                padding: '1.25rem 2rem',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottom: `3px solid ${colors.purple}`
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <span style={{ fontSize: '2rem' }}>⚙️</span>
+                    <div>
+                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.purple, margin: 0 }}>
+                            MotoTX Admin v1.1
+                        </h1>
+                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+                            Panel de Administración
+                        </span>
+                    </div>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div style={{
+                        padding: '0.5rem 1rem',
+                        background: `linear-gradient(135deg, ${colors.purple}, ${colors.primary})`,
+                        borderRadius: '0.5rem',
+                        color: 'white',
+                        fontWeight: '600',
+                        fontSize: '0.875rem'
+                    }}>
+                        👤 {user?.name || 'Admin'}
+                    </div>
+                    <button
+                        onClick={handleLogout}
+                        style={{
+                            padding: '0.5rem 1.25rem',
+                            backgroundColor: 'white',
+                            color: colors.error,
+                            border: `2px solid ${colors.error}`,
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.backgroundColor = colors.error;
+                            e.target.style.color = 'white';
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.backgroundColor = 'white';
+                            e.target.style.color = colors.error;
+                        }}
+                    >
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <StatCard title="Usuarios Totales" value="1,245" color="border-indigo-500" />
-                <StatCard title="Motoristas Activos" value="58" color="border-green-500" />
-                <StatCard title="Viajes Hoy" value="234" color="border-yellow-500" />
-                <StatCard title="Ingresos Mes" value="2.5M CFA" color="border-blue-500" />
-            </div>
+            {/* Main Content */}
+            <main style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Actividad Reciente</h3>
-                    <div className="text-gray-500 text-sm">
-                        <p className="py-2 border-b">Nuevo motorista registrado: Cheick Diabaté</p>
-                        <p className="py-2 border-b">Viaje completado #4523 - 2500 CFA</p>
-                        <p className="py-2 border-b">Forfait comprado por Usuario #892</p>
-                        <p className="py-2 py-0">Solicitud de reembolso #22</p>
+                {/* Welcome Section */}
+                <div style={{ marginBottom: '2rem' }}>
+                    <h2 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>
+                        Bienvenido, {user?.name || 'Admin'} 👋
+                    </h2>
+                    <p style={{ color: '#6b7280', fontSize: '1.05rem' }}>
+                        Aquí está un resumen de la actividad de la plataforma
+                    </p>
+                </div>
+
+
+                {/* Stats Grid */}
+                {loading ? (
+                    <div style={{
+                        textAlign: 'center',
+                        padding: '3rem',
+                        color: '#6b7280',
+                        backgroundColor: 'white',
+                        borderRadius: '1rem',
+                        marginBottom: '2.5rem'
+                    }}>
+                        Cargando estadísticas...
+                    </div>
+                ) : (
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                        gap: '1.5rem',
+                        marginBottom: '2.5rem'
+                    }}>
+                        {statsConfig.map((stat, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    backgroundColor: 'white',
+                                    padding: '1.75rem',
+                                    borderRadius: '1rem',
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                                    border: '1px solid #e5e7eb',
+                                    transition: 'all 0.2s',
+                                    cursor: 'pointer'
+                                }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-4px)';
+                                    e.currentTarget.style.boxShadow = `0 8px 20px ${stat.color}30`;
+                                    e.currentTarget.style.borderColor = stat.color;
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+                                    e.currentTarget.style.borderColor = '#e5e7eb';
+                                }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                                    <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '600' }}>
+                                        {stat.title}
+                                    </div>
+                                    <div style={{
+                                        fontSize: '2rem',
+                                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+                                    }}>
+                                        {stat.icon}
+                                    </div>
+                                </div>
+                                <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: stat.color, marginBottom: '0.5rem' }}>
+                                    {stat.value}
+                                </div>
+                                {stat.badge && (
+                                    <div style={{
+                                        fontSize: '0.875rem',
+                                        color: colors.accent,
+                                        fontWeight: '600',
+                                        padding: '0.25rem 0.75rem',
+                                        background: `${colors.accent}20`,
+                                        borderRadius: '0.5rem',
+                                        display: 'inline-block',
+                                        marginBottom: '0.5rem'
+                                    }}>
+                                        {stat.badge}
+                                    </div>
+                                )}
+                                {stat.subtitle && (
+                                    <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>
+                                        {stat.subtitle}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Quick Actions */}
+                <div style={{ marginBottom: '2rem' }}>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
+                        Acciones Rápidas
+                    </h3>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                        gap: '1.5rem'
+                    }}>
+                        {quickActions.map((action, index) => (
+                            <div
+                                key={index}
+                                onClick={action.action}
+                                style={{
+                                    backgroundColor: 'white',
+                                    padding: '2rem',
+                                    borderRadius: '1rem',
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                                    border: '1px solid #e5e7eb',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-6px)';
+                                    e.currentTarget.style.boxShadow = `0 12px 24px ${action.color}30`;
+                                    e.currentTarget.style.borderColor = action.color;
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+                                    e.currentTarget.style.borderColor = '#e5e7eb';
+                                }}
+                            >
+                                <div style={{
+                                    fontSize: '3rem',
+                                    marginBottom: '1rem',
+                                    filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+                                }}>
+                                    {action.icon}
+                                </div>
+                                <h4 style={{
+                                    fontSize: '1.25rem',
+                                    fontWeight: 'bold',
+                                    color: action.color,
+                                    marginBottom: '0.5rem'
+                                }}>
+                                    {action.title}
+                                </h4>
+                                <p style={{ color: '#6b7280', fontSize: '0.95rem', lineHeight: 1.5 }}>
+                                    {action.description}
+                                </p>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Estado del Sistema</h3>
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-600">Servidor API</span>
-                        <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Operativo</span>
-                    </div>
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-600">Base de Datos</span>
-                        <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Operativo</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-600">Servicios de Mapa</span>
-                        <span className="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Lento</span>
+                {/* Recent Activity */}
+                <div style={{
+                    backgroundColor: 'white',
+                    padding: '2rem',
+                    borderRadius: '1rem',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                    border: '1px solid #e5e7eb'
+                }}>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
+                        Actividad Reciente
+                    </h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {renderActivity()}
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     );
 };

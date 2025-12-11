@@ -31,6 +31,12 @@ const AdminLayout = () => {
                     <Link to="/admin/forfaits" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 hover:text-white">
                         Forfaits
                     </Link>
+                    <Link to="/admin/clientes" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 hover:text-white">
+                        Clientes
+                    </Link>
+                    <Link to="/admin/reportes" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 hover:text-white">
+                        Reportes
+                    </Link>
                 </nav>
                 <div className="p-4 border-t border-gray-700">
                     <button

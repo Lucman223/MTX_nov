@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
                 if (token) {
                     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                     // Verify token with backend
-                    const response = await axios.get('/api/profile');
+                    const response = await axios.get('/api/auth/profile');
                     setUser(response.data.user);
                     setIsAuthenticated(true);
                 }
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
     const refreshUser = async () => {
         try {
-            const response = await axios.get('/api/profile');
+            const response = await axios.get('/api/auth/profile');
             setUser(response.data.user);
         } catch (error) {
             console.error('Error refreshing user profile:', error);

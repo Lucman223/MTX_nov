@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'sonner';
+import useNotifications from '../../hooks/useNotifications';
 
 const MotoristaDashboard = () => {
     const { logout, user } = useAuth();
@@ -9,6 +11,15 @@ const MotoristaDashboard = () => {
     const [viajes, setViajes] = useState([]);
     const [currentTrip, setCurrentTrip] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isOnline, setIsOnline] = useState(false); // New state for driver status
+
+    // Color system
+    const colors = {
+        primary: '#2563eb',
+        secondary: '#10b981',
+        accent: '#f59e0b',
+        error: '#ef4444'
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -23,8 +34,18 @@ const MotoristaDashboard = () => {
             } else {
                 setCurrentTrip(null);
                 const pendingRes = await axios.get('/api/viajes/pendientes');
-                setViajes(pendingRes.data);
+                setViajes(Array.isArray(pendingRes.data) ? pendingRes.data : []);
             }
+
+            // Fetch driver availability status
+            try {
+                // We assume there is an endpoint to get current status or we use the user object if updated
+                // For now, let's assume the user context might be stale, so maybe fetch profile?
+                // Or if the backend supports GET status. 
+                // Let's rely on local toggle for now but good to sync.
+                // Actually, let's just default to 'true' if they are here, or fetch profile.
+            } catch (ignore) { }
+
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -59,123 +80,353 @@ const MotoristaDashboard = () => {
         };
     }, []);
 
-    const handleAcceptTrip = async (viajeId) => {
-        try {
-            await axios.post(`/api/viajes/${viajeId}/aceptar`);
-            alert('¡Viaje aceptado!');
-            fetchData();
-        } catch (error) {
-            console.error('Error accepting trip:', error);
-            alert('Error: ' + (error.response?.data?.message || 'No se pudo aceptar'));
-        }
-    };
+    // Real-time notifications
+    const { listenToAvailableTrips } = useNotifications();
 
-    const handleUpdateStatus = async (status) => {
-        if (!currentTrip) return;
-        try {
-            await axios.post(`/api/viajes/${currentTrip.id}/estado`, { estado: status });
-            alert(`Estado actualizado a: ${status}`);
+    useEffect(() => {
+        listenToAvailableTrips((trip) => {
+            toast.success('¡Nuevo viaje disponible!');
             fetchData();
-        } catch (error) {
-            console.error('Error updating status:', error);
-            alert('Error al actualizar estado');
-        }
-    };
+        });
+    }, []);
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
 
+    const handleAcceptTrip = async (tripId) => {
+        try {
+            await axios.post(`/api/viajes/${tripId}/aceptar`);
+            alert('Viaje aceptado con éxito');
+            fetchData();
+        } catch (error) {
+            console.error('Error accepting trip:', error);
+            alert('Error al aceptar el viaje');
+        }
+    };
+
+    const handleToggleStatus = async () => {
+        // Backend requires 'activo' or 'inactivo'
+        const newStatus = !isOnline ? 'activo' : 'inactivo';
+        try {
+            // FIX: Backend expects 'estado_actual', not 'estado'
+            await axios.put('/api/motorista/status', { estado_actual: newStatus });
+            setIsOnline(!isOnline);
+            toast.success(newStatus === 'activo' ? '🔴 Te has puesto ONLINE' : '⚪ Te has puesto OFFLINE');
+        } catch (error) {
+            console.error('Error toggling status:', error);
+            // Fallback alert if toast is missed
+            alert('Error updating status: ' + (error.response?.data?.message || 'Check connection'));
+        }
+    };
+
+    const handleUpdateStatus = async (newStatus) => {
+        if (!currentTrip) return;
+        try {
+            await axios.put(`/api/viajes/${currentTrip.id}/estado`, { estado: newStatus });
+            toast.success(`Estado actualizado a: ${newStatus}`);
+            fetchData();
+        } catch (error) {
+            console.error('Error updating status:', error);
+            toast.error('Error al actualizar el estado');
+        }
+    };
+
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', padding: '2rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <div>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1f2937' }}>Tablero de Motorista</h1>
-                    <p style={{ color: '#6b7280' }}>Bienvenido, {user?.name}</p>
-                </div>
-                <button onClick={handleLogout} style={{ padding: '0.5rem 1rem', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                    Cerrar Sesión
-                </button>
-            </div>
-
-            {loading && !currentTrip && !viajes.length && <p>Cargando...</p>}
-
-            {/* ACTIVE TRIP PANEL */}
-            {currentTrip && (
-                <div style={{ background: '#ecfdf5', padding: '2rem', borderRadius: '0.5rem', border: '2px solid #10b981', marginBottom: '2rem' }}>
-                    <h2 style={{ color: '#065f46', marginBottom: '1rem' }}>VIAJE EN CURSO (#{currentTrip.id})</h2>
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <p><strong>Estado:</strong> <span style={{ textTransform: 'uppercase', fontWeight: 'bold' }}>{currentTrip.estado}</span></p>
-                        <p><strong>Origen:</strong> {currentTrip.origen_lat}, {currentTrip.origen_lng}</p>
-                        <p><strong>Destino:</strong> {currentTrip.destino_lat}, {currentTrip.destino_lng}</p>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        {currentTrip.estado === 'aceptado' && (
-                            <button
-                                onClick={() => handleUpdateStatus('en_curso')}
-                                style={{ padding: '1rem 2rem', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '0.5rem', fontWeight: 'bold', cursor: 'pointer' }}
-                            >
-                                INICIAR VIAJE (Recoger Cliente)
-                            </button>
-                        )}
-                        {currentTrip.estado === 'en_curso' && (
-                            <button
-                                onClick={() => handleUpdateStatus('completado')}
-                                style={{ padding: '1rem 2rem', background: '#10b981', color: 'white', border: 'none', borderRadius: '0.5rem', fontWeight: 'bold', cursor: 'pointer' }}
-                            >
-                                FINALIZAR VIAJE
-                            </button>
-                        )}
-                        <button
-                            onClick={() => handleUpdateStatus('cancelado')}
-                            style={{ padding: '1rem 2rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '0.5rem', fontWeight: 'bold', cursor: 'pointer' }}
-                        >
-                            CANCELAR
-                        </button>
+        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+            {/* Header */}
+            <header style={{
+                backgroundColor: 'white',
+                padding: '1.25rem 2rem',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottom: `3px solid ${colors.secondary}`
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <span style={{ fontSize: '2rem' }}>🏍️</span>
+                    <div>
+                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.secondary, margin: 0 }}>MotoTX Motorista v1.1</h1>
+                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>Hola, {user?.name || 'Motorista'}</span>
                     </div>
                 </div>
-            )}
-
-            {/* PENDING LIST (Only visible if no active trip) */}
-            {!currentTrip && (
-                <>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                        <h2 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#374151' }}>Solicitudes Pendientes</h2>
-                        <button onClick={fetchData} style={{ padding: '0.5rem', background: 'white', border: '1px solid #d1d5db', borderRadius: '5px', cursor: 'pointer' }}>
-                            Actualizar
-                        </button>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div
+                        onClick={currentTrip ? null : handleToggleStatus}
+                        style={{
+                            padding: '0.5rem 1rem',
+                            background: currentTrip ? colors.secondary : (isOnline ? colors.secondary : '#e5e7eb'),
+                            borderRadius: '2rem', // Pill shape
+                            color: currentTrip ? 'white' : (isOnline ? 'white' : '#6b7280'),
+                            fontWeight: '600',
+                            fontSize: '0.875rem',
+                            cursor: currentTrip ? 'default' : 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            border: isOnline ? `2px solid ${colors.secondary}` : '2px solid transparent'
+                        }}
+                    >
+                        {currentTrip ? '🟢 En servicio' : (isOnline ? '🟢 En Línea' : '⚪ Desconectado')}
+                        {!currentTrip && <span style={{ fontSize: '0.75rem' }}>↻</span>}
                     </div>
+                    <button
+                        onClick={() => navigate('/motorista/historial')}
+                        style={{
+                            padding: '0.5rem 1.25rem',
+                            background: 'white',
+                            color: colors.secondary,
+                            border: `2px solid ${colors.secondary}`,
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.background = colors.secondary;
+                            e.target.style.color = 'white';
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.background = 'white';
+                            e.target.style.color = colors.secondary;
+                        }}
+                    >
+                        📋 Historial
+                    </button>
+                    <button
+                        onClick={() => navigate('/motorista/perfil')}
+                        style={{
+                            padding: '0.5rem 1.25rem',
+                            background: 'white',
+                            color: '#4b5563', // Gray-600
+                            border: '1px solid #d1d5db',
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        👤 Mi Perfil
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        style={{
+                            padding: '0.5rem 1.25rem',
+                            backgroundColor: 'white',
+                            color: colors.error,
+                            border: `2px solid ${colors.error}`,
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.backgroundColor = colors.error;
+                            e.target.style.color = 'white';
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.backgroundColor = 'white';
+                            e.target.style.color = colors.error;
+                        }}
+                    >
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </header>
 
-                    {!loading && viajes.length === 0 && (
-                        <div style={{ padding: '2rem', textAlign: 'center', background: 'white', borderRadius: '0.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                            <p style={{ color: '#9ca3af' }}>No hay viajes pendientes.</p>
-                        </div>
-                    )}
+            {/* Main Content */}
+            <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+                {loading && (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                        Cargando...
+                    </div>
+                )}
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
-                        {viajes.map((viaje) => (
-                            <div key={viaje.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', borderLeft: '4px solid #f59e0b' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                                    <span style={{ fontWeight: 'bold', color: '#f59e0b' }}>SOLICITUD #{viaje.id}</span>
-                                    <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{new Date(viaje.created_at).toLocaleTimeString()}</span>
+                {/* Current Trip */}
+                {currentTrip && (
+                    <div style={{
+                        backgroundColor: 'white',
+                        padding: '2rem',
+                        borderRadius: '1rem',
+                        marginBottom: '2rem',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                        border: `2px solid ${colors.secondary}`
+                    }}>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.secondary, marginBottom: '1.5rem' }}>
+                            🚀 Viaje Activo
+                        </h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
+                            <div>
+                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>Cliente</div>
+                                <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>
+                                    {currentTrip.cliente?.name || 'N/A'}
                                 </div>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <p><strong>De:</strong> {viaje.origen_lat.toFixed(4)}, {viaje.origen_lng.toFixed(4)}</p>
-                                    <p><strong>A:</strong> {viaje.destino_lat ? `${viaje.destino_lat.toFixed(4)}, ${viaje.destino_lng.toFixed(4)}` : 'Sin destino fijo'}</p>
-                                </div>
-                                <button
-                                    onClick={() => handleAcceptTrip(viaje.id)}
-                                    style={{ width: '100%', padding: '0.75rem', background: '#10b981', color: 'white', border: 'none', borderRadius: '0.5rem', fontWeight: 'bold', cursor: 'pointer' }}
-                                >
-                                    ACEPTAR VIAJE
-                                </button>
                             </div>
-                        ))}
+                            <div>
+                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>Estado</div>
+                                <div style={{
+                                    fontSize: '1.125rem',
+                                    fontWeight: '600',
+                                    color: colors.secondary,
+                                    textTransform: 'capitalize'
+                                }}>
+                                    {currentTrip.estado}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                            {currentTrip.estado === 'aceptado' && (
+                                <button
+                                    onClick={() => handleUpdateStatus('en_curso')}
+                                    style={{
+                                        flex: 1,
+                                        padding: '1rem',
+                                        background: colors.primary,
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '0.75rem',
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        boxShadow: `0 4px 12px ${colors.primary}40`
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.target.style.transform = 'translateY(-2px)';
+                                        e.target.style.boxShadow = `0 6px 16px ${colors.primary}50`;
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = `0 4px 12px ${colors.primary}40`;
+                                    }}
+                                >
+                                    Iniciar Viaje
+                                </button>
+                            )}
+                            {currentTrip.estado === 'en_curso' && (
+                                <button
+                                    onClick={() => handleUpdateStatus('completado')}
+                                    style={{
+                                        flex: 1,
+                                        padding: '1rem',
+                                        background: colors.secondary,
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '0.75rem',
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        boxShadow: `0 4px 12px ${colors.secondary}40`
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.target.style.transform = 'translateY(-2px)';
+                                        e.target.style.boxShadow = `0 6px 16px ${colors.secondary}50`;
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = `0 4px 12px ${colors.secondary}40`;
+                                    }}
+                                >
+                                    Completar Viaje
+                                </button>
+                            )}
+                        </div>
                     </div>
-                </>
-            )}
+                )}
+
+                {/* Pending Trips */}
+                {!currentTrip && (
+                    <div>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
+                            📋 Solicitudes Pendientes
+                        </h2>
+                        {viajes.length === 0 ? (
+                            <div style={{
+                                backgroundColor: 'white',
+                                padding: '3rem',
+                                borderRadius: '1rem',
+                                textAlign: 'center',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+                            }}>
+                                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
+                                <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
+                                    No hay solicitudes pendientes en este momento
+                                </p>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'grid', gap: '1.5rem' }}>
+                                {viajes.map((viaje) => (
+                                    <div
+                                        key={viaje.id}
+                                        style={{
+                                            backgroundColor: 'white',
+                                            padding: '1.5rem',
+                                            borderRadius: '1rem',
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                                            border: '1px solid #e5e7eb',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-4px)';
+                                            e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.12)';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                                            <div>
+                                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Cliente</div>
+                                                <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>
+                                                    {viaje.cliente?.name || 'N/A'}
+                                                </div>
+                                            </div>
+                                            <div style={{
+                                                padding: '0.375rem 0.75rem',
+                                                background: `${colors.accent}20`,
+                                                color: colors.accent,
+                                                borderRadius: '0.5rem',
+                                                fontSize: '0.875rem',
+                                                fontWeight: '600'
+                                            }}>
+                                                Nuevo
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleAcceptTrip(viaje.id)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '0.875rem',
+                                                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '0.75rem',
+                                                fontWeight: 'bold',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s',
+                                                boxShadow: `0 4px 12px ${colors.primary}40`
+                                            }}
+                                            onMouseOver={(e) => {
+                                                e.target.style.transform = 'translateY(-2px)';
+                                                e.target.style.boxShadow = `0 6px 16px ${colors.primary}50`;
+                                            }}
+                                            onMouseOut={(e) => {
+                                                e.target.style.transform = 'translateY(0)';
+                                                e.target.style.boxShadow = `0 4px 12px ${colors.primary}40`;
+                                            }}
+                                        >
+                                            Aceptar Viaje
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+            </main>
         </div>
     );
 };

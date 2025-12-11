@@ -1,30 +1,38 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
+import { Toaster } from 'sonner';
 
-import HomePage from './pages/Public/HomePage.jsx';
+import LandingPage from './pages/Public/LandingPage.jsx';
 import LoginPage from './pages/Public/LoginPage.jsx';
 import RegisterPage from './pages/Public/RegisterPage.jsx';
 
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import MotoristasList from './pages/Admin/MotoristasList';
+import AdminForfaits from './pages/Admin/Forfaits/AdminForfaits';
+import AdminViajes from './pages/Admin/Viajes/AdminViajes';
+import AdminReportes from './pages/Admin/Reports/AdminReportes';
+import AdminClientes from './pages/Admin/Clientes/AdminClientes';
 
 import ClienteDashboard from './pages/Cliente/ClienteDashboard.jsx';
 import Forfaits from './pages/Cliente/Forfaits.jsx';
+import ClienteHistory from './pages/Cliente/ClienteHistory.jsx';
+import ClienteProfile from './pages/Cliente/ClienteProfile.jsx';
 import MotoristaDashboard from './pages/Motorista/MotoristaDashboard.jsx';
+import MotoristaHistory from './pages/Motorista/MotoristaHistory.jsx';
+import MotoristaProfile from './pages/Motorista/MotoristaProfile.jsx';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
-
-// axios.defaults.baseURL = '/api'; // Comentado para evitar doble prefijo si ya se usa /api en las llamadas
 
 function App() {
     return (
         <Router>
             <AuthProvider>
                 <ErrorBoundary>
+                    <Toaster richColors position="top-center" />
                     <AppContent />
                 </ErrorBoundary>
             </AuthProvider>
@@ -42,7 +50,7 @@ function AppContent() {
     return (
         <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
@@ -51,25 +59,32 @@ function AppContent() {
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<AdminDashboard />} />
                     <Route path="motoristas" element={<MotoristasList />} />
+                    <Route path="forfaits" element={<AdminForfaits />} />
+                    <Route path="viajes" element={<AdminViajes />} />
+                    <Route path="clientes" element={<AdminClientes />} />
+                    <Route path="reportes" element={<AdminReportes />} />
                 </Route>
             </Route>
 
             {/* Protected Cliente Routes */}
             <Route element={<ProtectedRoute allowedRoles={['cliente']} />}>
                 <Route path="/cliente" element={<ClienteDashboard />} />
+                <Route path="/cliente/historial" element={<ClienteHistory />} />
                 <Route path="/cliente/forfaits" element={<Forfaits />} />
+                <Route path="/cliente/perfil" element={<ClienteProfile />} />
             </Route>
 
             {/* Protected Motorista Routes */}
             <Route element={<ProtectedRoute allowedRoles={['motorista']} />}>
                 <Route path="/motorista" element={<MotoristaDashboard />} />
+                <Route path="/motorista/historial" element={<MotoristaHistory />} />
+                <Route path="/motorista/perfil" element={<MotoristaProfile />} />
             </Route>
 
-            {/* Fallback for unmatched routes - could be a 404 page */}
+            {/* Fallback for unmatched routes */}
             <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
     );
 }
-
 
 export default App;

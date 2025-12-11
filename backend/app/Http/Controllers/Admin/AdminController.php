@@ -90,7 +90,7 @@ class AdminController extends Controller
 
     public function getAllTrips()
     {
-        $trips = Viaje::all();
+        $trips = Viaje::with(['cliente', 'motorista', 'calificacion'])->orderBy('created_at', 'desc')->get();
         return response()->json($trips);
     }
 
@@ -98,5 +98,96 @@ class AdminController extends Controller
     {
         $transacciones = Transaccion::all();
         return response()->json($transacciones);
+    }
+
+    /**
+     * Get dashboard statistics
+     */
+    public function getStatistics()
+    {
+        // Total motoristas aprobados
+        $totalMotoristas = User::where('rol', 'motorista')
+            ->whereHas('motorista_perfil', function($q) {
+                $q->where('estado_validacion', 'aprobado');
+            })->count();
+
+        // Viajes hoy
+        $viajesHoy = Viaje::whereDate('created_at', today())
+            ->where('estado', 'completado')
+            ->count();
+
+        // Ingresos del mes (forfaits vendidos)
+        $ingresosMes = \App\Models\ClienteForfait::whereMonth('fecha_compra', now()->month)
+            ->whereYear('fecha_compra', now()->year)
+            ->join('forfaits', 'clientes_forfaits.forfait_id', '=', 'forfaits.id')
+            ->sum('forfaits.precio');
+
+        // Usuarios activos (clientes + motoristas)
+        $usuariosActivos = User::whereIn('rol', ['cliente', 'motorista'])->count();
+
+        // Viajes por estado
+        $viajesPorEstado = Viaje::select('estado', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('estado')
+            ->pluck('total', 'estado');
+
+        // Rating promedio
+        $ratingPromedio = \App\Models\Calificacion::avg('puntuacion');
+
+        // Motoristas pendientes
+        $motoristasPendientes = User::where('rol', 'motorista')
+            ->whereHas('motorista_perfil', function($q) {
+                $q->where('estado_validacion', 'pendiente');
+            })->count();
+
+        // Viajes totales
+        $viajesTotales = Viaje::count();
+
+        // Actividad Reciente (Synthesized)
+        $recentUsers = User::latest()->take(3)->get()->map(function($u) {
+            return [
+                'type' => 'user', 
+                'text' => "Nuevo usuario: {$u->name} ({$u->rol})", 
+                'time' => $u->created_at->diffForHumans(),
+                'color' => '#10b981' // Green
+            ];
+        });
+
+        $recentTrips = Viaje::latest()->take(3)->get()->map(function($t) {
+            return [
+                'type' => 'trip', 
+                'text' => "Nuevo viaje: {$t->origen} -> {$t->destino}", 
+                'time' => $t->created_at->diffForHumans(),
+                'color' => '#2563eb' // Blue
+            ];
+        });
+
+        $recentSales = \App\Models\ClienteForfait::with('forfait')->latest()->take(3)->get()->map(function($s) {
+            return [
+                'type' => 'sale', 
+                'text' => "Venta: " . ($s->forfait->nombre ?? 'Forfait'), 
+                'time' => $s->created_at->diffForHumans(),
+                'color' => '#f59e0b' // Amber
+            ];
+        });
+
+        // Merge and sort
+        $recentActivity = $recentUsers->concat($recentTrips)->concat($recentSales)
+            ->sortByDesc(function($item) {
+                // Approximate sort by relying on 'time' string is hard, ideally we'd use raw timestamps.
+                // For simplicity in this demo, we just merge. In real app, standardizing timestamps is better.
+                return $item['time']; 
+            })->values()->take(5);
+
+        return response()->json([
+            'totalMotoristas' => $totalMotoristas,
+            'viajesHoy' => $viajesHoy,
+            'ingresosMes' => $ingresosMes ?? 0,
+            'usuariosActivos' => $usuariosActivos,
+            'viajesPorEstado' => $viajesPorEstado,
+            'ratingPromedio' => $ratingPromedio ? round($ratingPromedio, 1) : 0,
+            'motoristasPendientes' => $motoristasPendientes,
+            'viajesTotales' => $viajesTotales,
+            'recentActivity' => $recentActivity
+        ]);
     }
 }

@@ -14,5 +14,16 @@ class ClienteForfait extends Model
         'fecha_compra',
         'fecha_expiracion',
         'viajes_restantes',
+        'estado',
     ];
+
+    public function forfait()
+    {
+        return $this->belongsTo(Forfait::class, 'forfait_id');
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo(User::class, 'cliente_id');
+    }
 }
