@@ -1,0 +1,39 @@
+{
+    "common": {
+        "login": "Login",
+        "logout": "Logout",
+        "register": "Register",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Submit",
+        "back_home": "← Back to Home",
+        "loading": "Loading..."
+    },
+    "auth": {
+        "welcome_title": "Welcome to MotoTX",
+        "login_subtitle": "Login to continue",
+        "register_title": "Create Account",
+        "register_subtitle": "Join the MotoTX community",
+        "no_account": "Don't have an account?",
+        "have_account": "Already have an account?",
+        "logging_in": "Logging in...",
+        "login_error": "Login error.",
+        "name": "Full Name",
+        "phone": "Phone",
+        "password_confirm": "Confirm Password",
+        "i_want_to_be": "I want to be:",
+        "role_client": "👤 Client",
+        "role_driver": "🏍️ Driver"
+    },
+    "nav": {
+        "admin_title": "MotoTX Admin",
+        "dashboard": "Dashboard",
+        "drivers": "Drivers",
+        "trips": "Trips",
+        "forfaits": "Forfaits",
+        "clients": "Clients",
+        "reports": "Reports",
+        "admin_panel": "Admin Panel",
+        "admin_role": "Administrator"
+    }
+}

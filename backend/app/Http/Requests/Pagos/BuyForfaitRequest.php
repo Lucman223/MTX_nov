@@ -23,6 +23,7 @@ class BuyForfaitRequest extends FormRequest
     {
         return [
             'forfait_id' => 'required|exists:forfaits,id',
+            'phone_number' => 'required|string|min:8',
         ];
     }
 }

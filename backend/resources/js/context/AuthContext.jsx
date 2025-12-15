@@ -21,10 +21,16 @@ export const AuthProvider = ({ children }) => {
                 }
             } catch (error) {
                 console.error('Error verifying token:', error);
-                localStorage.removeItem('token');
-                delete axios.defaults.headers.common['Authorization'];
-                setUser(null);
-                setIsAuthenticated(false);
+
+                // Only logout if it's strictly an Auth error (401)
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    delete axios.defaults.headers.common['Authorization'];
+                    setUser(null);
+                    setIsAuthenticated(false);
+                }
+                // If it's a network error (no response), keep the user logged in locally
+                // The UI will handle the connection error
             } finally {
                 setLoading(false);
             }

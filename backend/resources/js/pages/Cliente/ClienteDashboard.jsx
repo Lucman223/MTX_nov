@@ -94,105 +94,161 @@ const ClienteDashboard = () => {
 
     console.log('UserData:', user, 'Forfaits:', forfaits, 'Balance:', viajesDisponibles);
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', flexDirection: 'column' }}>
-            {/* Header */}
+        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', flexDirection: 'column', paddingBottom: isMobile ? '80px' : '0' }}>
+            {/* Responsive Header */}
             <header style={{
                 backgroundColor: 'white',
-                padding: '1.25rem 2rem',
+                padding: isMobile ? '1rem' : '1.25rem 2rem',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderBottom: `3px solid ${colors.primary}`
+                borderBottom: `3px solid ${colors.primary}`,
+                position: isMobile ? 'sticky' : 'static',
+                top: 0,
+                zIndex: 50
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontSize: '2rem' }}>🏍️</span>
+                    <img src="/logo.png" alt="MotoTX" style={{ height: isMobile ? '2.5rem' : '3.5rem', objectFit: 'contain' }} />
                     <div>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.primary, margin: 0 }}>MotoTX</h1>
-                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>Hola, {user?.name || 'Cliente'}</span>
+                        <h1 style={{ fontSize: isMobile ? '1.1rem' : '1.5rem', fontWeight: 'bold', color: colors.primary, margin: 0 }}>MotoTX</h1>
+                        <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem', color: '#6b7280' }}>
+                            {user?.name || 'Cliente'}
+                        </span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+
+                {/* Desktop Nav */}
+                {!isMobile && (
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <div style={{
+                            padding: '0.5rem 1rem',
+                            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                            borderRadius: '0.5rem',
+                            color: 'white',
+                            fontWeight: '600',
+                            fontSize: '0.875rem'
+                        }}>
+                            {viajesDisponibles} viajes
+                        </div>
+                        <button
+                            onClick={() => navigate('/cliente/historial')}
+                            style={{
+                                padding: '0.5rem 1.25rem',
+                                background: 'white',
+                                color: colors.primary,
+                                border: `2px solid ${colors.primary}`,
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            📋 Historial
+                        </button>
+                        <button
+                            onClick={() => navigate('/cliente/perfil')}
+                            style={{
+                                padding: '0.5rem 1.25rem',
+                                background: 'white',
+                                color: '#4b5563',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            👤 Perfil
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            style={{
+                                padding: '0.5rem 1.25rem',
+                                backgroundColor: 'white',
+                                color: colors.error,
+                                border: `2px solid ${colors.error}`,
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            Salir
+                        </button>
+                    </div>
+                )}
+
+                {/* Mobile Balance Badge (Right) */}
+                {isMobile && (
                     <div style={{
-                        padding: '0.5rem 1rem',
+                        padding: '0.25rem 0.75rem',
                         background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                        borderRadius: '0.5rem',
+                        borderRadius: '1rem',
                         color: 'white',
                         fontWeight: '600',
-                        fontSize: '0.875rem'
+                        fontSize: '0.75rem'
                     }}>
-                        {viajesDisponibles} viajes disponibles
+                        {viajesDisponibles} 🎫
                     </div>
-                    <button
-                        onClick={() => navigate('/cliente/historial')}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            background: 'white',
-                            color: colors.primary,
-                            border: `2px solid ${colors.primary}`,
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.target.style.background = colors.primary;
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.background = 'white';
-                            e.target.style.color = colors.primary;
-                        }}
-                    >
-                        📋 Historial
-                    </button>
-                    <button
-                        onClick={() => navigate('/cliente/perfil')}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            background: 'white',
-                            color: '#4b5563',
-                            border: '1px solid #d1d5db',
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                    >
-                        👤 Perfil
-                    </button>
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            backgroundColor: 'white',
-                            color: colors.error,
-                            border: `2px solid ${colors.error}`,
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.target.style.backgroundColor = colors.error;
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.backgroundColor = 'white';
-                            e.target.style.color = colors.error;
-                        }}
-                    >
-                        Cerrar Sesión
-                    </button>
-                </div>
+                )}
             </header>
 
+            {/* Mobile Bottom Nav */}
+            {isMobile && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: 'white',
+                    borderTop: '1px solid #e5e7eb',
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    padding: '0.75rem',
+                    boxShadow: '0 -2px 10px rgba(0,0,0,0.05)',
+                    zIndex: 100
+                }}>
+                    <button onClick={() => { }} style={{ background: 'none', border: 'none', color: colors.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🏠</span>
+                        Inicio
+                    </button>
+                    <button onClick={() => navigate('/cliente/historial')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>📋</span>
+                        Historial
+                    </button>
+                    <button onClick={() => navigate('/cliente/perfil')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>👤</span>
+                        Perfil
+                    </button>
+                    <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: colors.error, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🚪</span>
+                        Salir
+                    </button>
+                </div>
+            )}
+
             {/* Main Content */}
-            <main style={{ flex: 1, padding: '2rem', display: 'flex', gap: '2rem', height: 'calc(100vh - 90px)' }}>
+            <main style={{
+                flex: 1,
+                padding: isMobile ? '1rem' : '2rem',
+                display: 'flex',
+                flexDirection: isMobile ? 'column-reverse' : 'row', // On mobile, map goes top (or bottom?) - Let's keep controls accessible. Actually map on top is standard but controllers bottom. Let's stack naturally but reserve order? No, keep Controls on top for easy access?
+                // Better UX: Map on Top, Controls Below? 
+                // Let's stick to standard flex column for mobile
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: '2rem',
+                // height: isMobile ? 'auto' : 'calc(100vh - 90px)' // Allow scrolling on mobile
+            }}>
 
                 {/* Left Panel: Controls & Info */}
-                <div style={{ flex: '0 0 380px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div style={{ flex: isMobile ? 'auto' : '0 0 380px', display: 'flex', flexDirection: 'column', gap: '1.5rem', order: isMobile ? 2 : 1 }}>
 
                     {/* Status Card */}
                     <div style={{
@@ -361,7 +417,9 @@ const ClienteDashboard = () => {
                     overflow: 'hidden',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                     position: 'relative',
-                    border: '1px solid #e5e7eb'
+                    border: '1px solid #e5e7eb',
+                    minHeight: isMobile ? '300px' : 'auto', // Ensure map has height on mobile
+                    order: isMobile ? 1 : 2
                 }}>
                     <MapSelection
                         origen={origen}

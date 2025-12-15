@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 import { useAuth } from '../../context/AuthContext';
 
 function LoginPage() {
@@ -8,6 +10,7 @@ function LoginPage() {
     const [error, setError] = useState('');
     const { login, isAuthenticated, user, loading } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     // Color system
     const colors = {
@@ -38,7 +41,7 @@ function LoginPage() {
         try {
             await login(email, password);
         } catch (err) {
-            setError(err.message || 'Error en el inicio de sesión.');
+            setError(err.message || t('auth.login_error'));
         }
     };
 
@@ -49,8 +52,13 @@ function LoginPage() {
             alignItems: 'center',
             justifyContent: 'center',
             background: `linear-gradient(135deg, ${colors.primary} 0%, #7c3aed 50%, ${colors.accent} 100%)`,
-            padding: '2rem'
+            padding: '2rem',
+            position: 'relative'
         }}>
+            <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                <LanguageSwitcher />
+            </div>
+
             <div style={{
                 background: 'white',
                 borderRadius: '1.5rem',
@@ -61,16 +69,16 @@ function LoginPage() {
             }}>
                 {/* Logo y título */}
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🏍️</div>
+                    <img src="/logo_clean.png" alt="MotoTX Logo" style={{ height: '5rem', marginBottom: '1rem', objectFit: 'contain' }} />
                     <h2 style={{
                         fontSize: '2rem',
                         fontWeight: 'bold',
                         color: colors.primary,
                         margin: '0 0 0.5rem 0'
                     }}>
-                        Bienvenido a MotoTX
+                        {t('auth.welcome_title')}
                     </h2>
-                    <p style={{ color: '#6b7280', margin: 0 }}>Inicia sesión para continuar</p>
+                    <p style={{ color: '#6b7280', margin: 0 }}>{t('auth.login_subtitle')}</p>
                 </div>
 
                 {error && (
@@ -98,7 +106,7 @@ function LoginPage() {
                                 color: '#374151'
                             }}
                         >
-                            Email
+                            {t('common.email')}
                         </label>
                         <input
                             type="email"
@@ -130,7 +138,7 @@ function LoginPage() {
                                 color: '#374151'
                             }}
                         >
-                            Contraseña
+                            {t('common.password')}
                         </label>
                         <input
                             type="password"
@@ -180,7 +188,7 @@ function LoginPage() {
                             e.target.style.boxShadow = `0 4px 12px ${colors.primary}40`;
                         }}
                     >
-                        {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                        {loading ? t('auth.logging_in') : t('common.login')}
                     </button>
                 </form>
 
@@ -191,7 +199,7 @@ function LoginPage() {
                     textAlign: 'center'
                 }}>
                     <p style={{ color: '#6b7280', margin: '0 0 1rem 0' }}>
-                        ¿No tienes una cuenta?
+                        {t('auth.no_account')}
                     </p>
                     <Link
                         to="/register"
@@ -215,7 +223,7 @@ function LoginPage() {
                             e.target.style.color = colors.primary;
                         }}
                     >
-                        Registrarse
+                        {t('common.register')}
                     </Link>
                 </div>
 
@@ -230,7 +238,7 @@ function LoginPage() {
                         onMouseOver={(e) => e.target.style.color = colors.primary}
                         onMouseOut={(e) => e.target.style.color = '#6b7280'}
                     >
-                        ← Volver al inicio
+                        {t('common.back_home')}
                     </Link>
                 </div>
             </div>

@@ -22,7 +22,7 @@ class ViajeSolicitado implements ShouldBroadcast
      */
     public function __construct(Viaje $viaje)
     {
-        $this->viaje = $viaje->load(['cliente']);
+        $this->viaje = $viaje;
     }
 
     /**
@@ -32,9 +32,9 @@ class ViajeSolicitado implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        // Broadcast to all valid motoristas
+        // Broadcast to all drivers listening for new trips
         return [
-            new PrivateChannel('viajes.disponibles'),
+            new Channel('drivers'),
         ];
     }
 }

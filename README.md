@@ -17,6 +17,8 @@ Plataforma digital para la gestión de paquetes de viajes prepagados (forfaits) 
 - ✅ Aprobación de motoristas por Admin
 - ✅ Gestión de estados de viaje (solicitado → aceptado → en curso → completado)
 - ✅ Geolocalización del motorista visible para el cliente
+- ✅ **Soporte Multilingüe** (ES, FR, EN, AR) con RTL
+- ✅ Sistema de Calificaciones (Cliente/Motorista)
 
 ## 🛠️ Stack Tecnológico
 
@@ -237,12 +239,14 @@ Si necesitas acceder desde otro dominio, configura CORS en `config/cors.php`
 - ✅ Parámetro `estado_validacion` en Admin
 - ✅ Middleware no registrado
 - ✅ Columnas de ubicación en MotoristaPerfil
+- ✅ Pantalla negra al inicio (Race condition)
+- ✅ Decodificación insegura de Token en cliente
+- ✅ Fallo en el sistema de estrellas (Calificación)
 
 ## 📝 Próximos Pasos
 
 - [ ] Notificaciones Push
 - [ ] Historial completo de viajes
-- [ ] Sistema de calificaciones UI
 - [ ] Pasarela de pago real
 - [ ] Despliegue en producción
 

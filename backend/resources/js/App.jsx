@@ -16,12 +16,14 @@ import AdminReportes from './pages/Admin/Reports/AdminReportes';
 import AdminClientes from './pages/Admin/Clientes/AdminClientes';
 
 import ClienteDashboard from './pages/Cliente/ClienteDashboard.jsx';
-import Forfaits from './pages/Cliente/Forfaits.jsx';
+import ClienteForfaits from './pages/Cliente/ClienteForfaits.jsx';
 import ClienteHistory from './pages/Cliente/ClienteHistory.jsx';
 import ClienteProfile from './pages/Cliente/ClienteProfile.jsx';
+import ClientActiveTrip from './pages/Cliente/ClientActiveTrip.jsx';
 import MotoristaDashboard from './pages/Motorista/MotoristaDashboard.jsx';
 import MotoristaHistory from './pages/Motorista/MotoristaHistory.jsx';
 import MotoristaProfile from './pages/Motorista/MotoristaProfile.jsx';
+import DriverActiveTrip from './pages/Motorista/DriverActiveTrip.jsx';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
@@ -70,8 +72,9 @@ function AppContent() {
             <Route element={<ProtectedRoute allowedRoles={['cliente']} />}>
                 <Route path="/cliente" element={<ClienteDashboard />} />
                 <Route path="/cliente/historial" element={<ClienteHistory />} />
-                <Route path="/cliente/forfaits" element={<Forfaits />} />
+                <Route path="/cliente/forfaits" element={<ClienteForfaits />} />
                 <Route path="/cliente/perfil" element={<ClienteProfile />} />
+                <Route path="/cliente/viaje-actual" element={<ClientActiveTrip />} />
             </Route>
 
             {/* Protected Motorista Routes */}
@@ -79,6 +82,7 @@ function AppContent() {
                 <Route path="/motorista" element={<MotoristaDashboard />} />
                 <Route path="/motorista/historial" element={<MotoristaHistory />} />
                 <Route path="/motorista/perfil" element={<MotoristaProfile />} />
+                <Route path="/motorista/viaje-actual" element={<DriverActiveTrip />} />
             </Route>
 
             {/* Fallback for unmatched routes */}

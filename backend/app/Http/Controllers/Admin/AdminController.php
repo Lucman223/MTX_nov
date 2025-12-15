@@ -101,6 +101,53 @@ class AdminController extends Controller
     }
 
     /**
+     * Get chart data for dashboard
+     */
+    public function getChartData(Request $request) 
+    {
+        $days = $request->get('days', 30);
+        $startDate = now()->subDays($days);
+
+        // Ingresos por día (Forfaits + Comisiones si hubiera)
+        $ingresos = \App\Models\ClienteForfait::where('fecha_compra', '>=', $startDate)
+            ->join('forfaits', 'clientes_forfaits.forfait_id', '=', 'forfaits.id')
+            ->selectRaw('DATE(fecha_compra) as date, SUM(forfaits.precio) as total')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Viajes por día
+        $viajes = Viaje::where('created_at', '>=', $startDate)
+            ->selectRaw('DATE(created_at) as date, count(*) as total')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+        
+        // Fill missing dates
+        $chartData = [];
+        $current = $startDate->copy();
+        $end = now();
+
+        while ($current <= $end) {
+            $dateStr = $current->format('Y-m-d');
+            
+            $ingresoDia = $ingresos->firstWhere('date', $dateStr);
+            $viajeDia = $viajes->firstWhere('date', $dateStr);
+
+            $chartData[] = [
+                'date' => $current->format('d/m'),
+                'fullDate' => $dateStr,
+                'ingresos' => $ingresoDia ? (float)$ingresoDia->total : 0,
+                'viajes' => $viajeDia ? (int)$viajeDia->total : 0,
+            ];
+
+            $current->addDay();
+        }
+
+        return response()->json($chartData);
+    }
+
+    /**
      * Get dashboard statistics
      */
     public function getStatistics()

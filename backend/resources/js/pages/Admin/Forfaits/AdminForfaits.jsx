@@ -85,28 +85,45 @@ const AdminForfaits = () => {
         }
     };
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '2rem' }}>
+        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: isMobile ? '1rem' : '2rem', paddingBottom: isMobile ? '80px' : '2rem' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                    <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827' }}>
-                        ADMIN - Gestión de Forfaits
+                <div style={{
+                    display: 'flex',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    justifyContent: 'space-between',
+                    alignItems: isMobile ? 'flex-start' : 'center',
+                    gap: isMobile ? '1rem' : '0',
+                    marginBottom: '2rem'
+                }}>
+                    <h1 style={{ fontSize: isMobile ? '1.5rem' : '1.875rem', fontWeight: 'bold', color: '#111827' }}>
+                        {isMobile ? 'Gestión Forfaits' : 'ADMIN - Gestión de Forfaits'}
                     </h1>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <button
-                            onClick={() => navigate('/admin')}
-                            style={{
-                                padding: '0.75rem 1.5rem',
-                                border: '1px solid #d1d5db',
-                                borderRadius: '0.5rem',
-                                backgroundColor: 'white',
-                                color: '#374151',
-                                fontWeight: '600',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            Volver
-                        </button>
+                    <div style={{ display: 'flex', gap: '1rem', width: isMobile ? '100%' : 'auto' }}>
+                        {!isMobile && (
+                            <button
+                                onClick={() => navigate('/admin')}
+                                style={{
+                                    padding: '0.75rem 1.5rem',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '0.5rem',
+                                    backgroundColor: 'white',
+                                    color: '#374151',
+                                    fontWeight: '600',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Volver
+                            </button>
+                        )}
                         <button
                             onClick={() => {
                                 setEditingForfait(null);
@@ -121,7 +138,9 @@ const AdminForfaits = () => {
                                 border: 'none',
                                 fontWeight: '600',
                                 cursor: 'pointer',
-                                boxShadow: `0 4px 6px ${colors.primary}40`
+                                boxShadow: `0 4px 6px ${colors.primary}40`,
+                                flex: isMobile ? 1 : 'initial',
+                                textAlign: 'center'
                             }}
                         >
                             + Nuevo Forfait

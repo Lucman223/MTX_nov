@@ -17,6 +17,7 @@ use App\Services\ViajeService;
 
 
 use App\Events\ViajeSolicitado;
+use App\Events\ViajeAceptado;
 use App\Events\ViajeActualizado;
 use App\Http\Controllers\Controller;
 
@@ -119,9 +120,15 @@ class ViajeController extends Controller
                                 ->latest() // Prioritize newest
                                 ->first();
         } else {
-            // Assume client
+            // Client: Return active trips OR completed trips that haven't been rated yet
             $currentTrip = Viaje::where('cliente_id', $user->id)
-                                ->whereIn('estado', ['solicitado', 'aceptado', 'en_curso'])
+                                ->where(function($query) {
+                                    $query->whereIn('estado', ['solicitado', 'aceptado', 'en_curso'])
+                                          ->orWhere(function($q) {
+                                              $q->where('estado', 'completado')
+                                                ->doesntHave('calificacion');
+                                          });
+                                })
                                 ->with(['motorista.motorista_perfil'])
                                 ->latest() // Prioritize newest
                                 ->first();
@@ -150,7 +157,7 @@ class ViajeController extends Controller
             $acceptedViaje = $this->viajeService->acceptTrip($motorista, $viaje);
 
             // Notify client that trip was accepted
-            ViajeActualizado::dispatch($acceptedViaje);
+            ViajeAceptado::dispatch($acceptedViaje);
 
             return response()->json([
 

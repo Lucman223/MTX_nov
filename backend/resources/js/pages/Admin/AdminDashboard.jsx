@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import DashboardCharts from '../../components/Admin/DashboardCharts';
 
 const AdminDashboard = () => {
     const { logout, user } = useAuth();
     const navigate = useNavigate();
     const [stats, setStats] = useState(null);
+    const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // Color system
@@ -25,9 +27,14 @@ const AdminDashboard = () => {
     const fetchStatistics = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('/api/admin/statistics');
-            console.log('Admin Stats:', response.data); // Debug log
-            setStats(response.data);
+            const [statsRes, chartRes] = await Promise.all([
+                axios.get('/api/admin/statistics'),
+                axios.get('/api/admin/chart-data')
+            ]);
+
+            console.log('Admin Stats:', statsRes.data);
+            setStats(statsRes.data);
+            setChartData(chartRes.data);
         } catch (error) {
             console.error('Error fetching statistics:', error);
             // Optional: set dummy stats or error state
@@ -138,68 +145,98 @@ const AdminDashboard = () => {
         }
     ];
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: isMobile ? '80px' : '0' }}>
             {/* Header */}
             <header style={{
                 backgroundColor: 'white',
-                padding: '1.25rem 2rem',
+                padding: isMobile ? '1rem' : '1.25rem 2rem',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderBottom: `3px solid ${colors.purple}`
+                borderBottom: `3px solid ${colors.purple}`,
+                position: isMobile ? 'sticky' : 'static',
+                top: 0,
+                zIndex: 50
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontSize: '2rem' }}>⚙️</span>
+                    <img src="/logo.png" alt="MotoTX" style={{ height: isMobile ? '2.5rem' : '3.5rem', objectFit: 'contain' }} />
                     <div>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.purple, margin: 0 }}>
-                            MotoTX Admin v1.1
+                        <h1 style={{ fontSize: isMobile ? '1.1rem' : '1.5rem', fontWeight: 'bold', color: colors.purple, margin: 0 }}>
+                            {isMobile ? 'Admin Panel' : 'MotoTX Admin v1.1'}
                         </h1>
-                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-                            Panel de Administración
+                        <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem', color: '#6b7280' }}>
+                            {user?.name || 'Admin'}
                         </span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <div style={{
-                        padding: '0.5rem 1rem',
-                        background: `linear-gradient(135deg, ${colors.purple}, ${colors.primary})`,
-                        borderRadius: '0.5rem',
-                        color: 'white',
-                        fontWeight: '600',
-                        fontSize: '0.875rem'
-                    }}>
-                        👤 {user?.name || 'Admin'}
+
+                {/* Desktop Nav */}
+                {!isMobile && (
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <button
+                            onClick={handleLogout}
+                            style={{
+                                padding: '0.5rem 1.25rem',
+                                backgroundColor: 'white',
+                                color: colors.error,
+                                border: `2px solid ${colors.error}`,
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            Cerrar Sesión
+                        </button>
                     </div>
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            backgroundColor: 'white',
-                            color: colors.error,
-                            border: `2px solid ${colors.error}`,
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.target.style.backgroundColor = colors.error;
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.backgroundColor = 'white';
-                            e.target.style.color = colors.error;
-                        }}
-                    >
-                        Cerrar Sesión
-                    </button>
-                </div>
+                )}
             </header>
 
+            {/* Mobile Bottom Nav */}
+            {isMobile && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: 'white',
+                    borderTop: '1px solid #e5e7eb',
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    padding: '0.75rem',
+                    boxShadow: '0 -2px 10px rgba(0,0,0,0.05)',
+                    zIndex: 100
+                }}>
+                    <button onClick={() => { }} style={{ background: 'none', border: 'none', color: colors.purple, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>📊</span>
+                        Stats
+                    </button>
+                    <button onClick={() => navigate('/admin/motoristas')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🏍️</span>
+                        Motos
+                    </button>
+                    <button onClick={() => navigate('/admin/clientes')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>👥</span>
+                        Users
+                    </button>
+                    <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: colors.error, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🚪</span>
+                        Salir
+                    </button>
+                </div>
+            )}
+
             {/* Main Content */}
-            <main style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
+            <main style={{ padding: isMobile ? '1rem' : '2rem', maxWidth: '1400px', margin: '0 auto' }}>
 
                 {/* Welcome Section */}
                 <div style={{ marginBottom: '2rem' }}>
@@ -348,6 +385,9 @@ const AdminDashboard = () => {
                         ))}
                     </div>
                 </div>
+
+                {/* Charts Section */}
+                {!loading && <DashboardCharts data={chartData} />}
 
                 {/* Recent Activity */}
                 <div style={{

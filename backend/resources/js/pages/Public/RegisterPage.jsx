@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 
 function RegisterPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [telefono, setTelefono] = useState('');
@@ -46,8 +49,13 @@ function RegisterPage() {
             alignItems: 'center',
             justifyContent: 'center',
             background: `linear-gradient(135deg, ${colors.primary} 0%, #7c3aed 50%, ${colors.accent} 100%)`,
-            padding: '2rem'
+            padding: '2rem',
+            position: 'relative'
         }}>
+            <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                <LanguageSwitcher />
+            </div>
+
             <div style={{
                 background: 'white',
                 borderRadius: '1.5rem',
@@ -58,16 +66,16 @@ function RegisterPage() {
             }}>
                 {/* Logo y título */}
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🏍️</div>
+                    <img src="/logo_clean.png" alt="MotoTX Logo" style={{ height: '5rem', marginBottom: '1rem', objectFit: 'contain' }} />
                     <h2 style={{
                         fontSize: '2rem',
                         fontWeight: 'bold',
                         color: getRoleColor(),
                         margin: '0 0 0.5rem 0'
                     }}>
-                        Crear Cuenta
+                        {t('auth.register_title')}
                     </h2>
-                    <p style={{ color: '#6b7280', margin: 0 }}>Únete a la comunidad MotoTX</p>
+                    <p style={{ color: '#6b7280', margin: 0 }}>{t('auth.register_subtitle')}</p>
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -81,7 +89,7 @@ function RegisterPage() {
                                 color: '#374151'
                             }}
                         >
-                            Nombre Completo
+                            {t('auth.name')}
                         </label>
                         <input
                             type="text"
@@ -113,7 +121,7 @@ function RegisterPage() {
                                 color: '#374151'
                             }}
                         >
-                            Email
+                            {t('common.email')}
                         </label>
                         <input
                             type="email"
@@ -145,7 +153,7 @@ function RegisterPage() {
                                 color: '#374151'
                             }}
                         >
-                            Teléfono
+                            {t('auth.phone')}
                         </label>
                         <input
                             type="tel"
@@ -177,7 +185,7 @@ function RegisterPage() {
                                 color: '#374151'
                             }}
                         >
-                            Contraseña
+                            {t('common.password')}
                         </label>
                         <input
                             type="password"
@@ -209,7 +217,7 @@ function RegisterPage() {
                                 color: '#374151'
                             }}
                         >
-                            Confirmar Contraseña
+                            {t('auth.password_confirm')}
                         </label>
                         <input
                             type="password"
@@ -240,7 +248,7 @@ function RegisterPage() {
                                 color: '#374151'
                             }}
                         >
-                            Quiero ser:
+                            {t('auth.i_want_to_be')}
                         </label>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                             <button
@@ -257,7 +265,7 @@ function RegisterPage() {
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                👤 Cliente
+                                {t('auth.role_client')}
                             </button>
                             <button
                                 type="button"
@@ -273,7 +281,7 @@ function RegisterPage() {
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                🏍️ Motorista
+                                {t('auth.role_driver')}
                             </button>
                         </div>
                     </div>
@@ -302,7 +310,7 @@ function RegisterPage() {
                             e.target.style.boxShadow = `0 4px 12px ${getRoleColor()}40`;
                         }}
                     >
-                        Registrarse
+                        {t('common.register')}
                     </button>
                 </form>
 
@@ -313,7 +321,7 @@ function RegisterPage() {
                     textAlign: 'center'
                 }}>
                     <p style={{ color: '#6b7280', margin: '0 0 1rem 0' }}>
-                        ¿Ya tienes una cuenta?
+                        {t('auth.have_account')}
                     </p>
                     <Link
                         to="/login"
@@ -337,7 +345,7 @@ function RegisterPage() {
                             e.target.style.color = getRoleColor();
                         }}
                     >
-                        Iniciar Sesión
+                        {t('common.login')}
                     </Link>
                 </div>
 
@@ -352,7 +360,7 @@ function RegisterPage() {
                         onMouseOver={(e) => e.target.style.color = getRoleColor()}
                         onMouseOut={(e) => e.target.style.color = '#6b7280'}
                     >
-                        ← Volver al inicio
+                        {t('common.back_home')}
                     </Link>
                 </div>
             </div>

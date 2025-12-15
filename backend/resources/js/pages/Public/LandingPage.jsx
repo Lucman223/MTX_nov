@@ -79,7 +79,7 @@ const LandingPage = () => {
                 zIndex: 50
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '2rem' }}>🏍️</span>
+                    <img src="/logo_clean.png" alt="MotoTX" style={{ height: '2.5rem', objectFit: 'contain' }} />
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.primary, margin: 0 }}>MotoTX</h1>
                 </div>
                 <button
@@ -337,7 +337,7 @@ const LandingPage = () => {
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                     <div style={{ marginBottom: '2rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-                            <span style={{ fontSize: '2rem' }}>🏍️</span>
+                            <img src="/logo_clean.png" alt="MotoTX" style={{ height: '3rem', objectFit: 'contain', background: 'white', borderRadius: '50%', padding: '0.25rem' }} />
                             <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', margin: 0 }}>MotoTX</h2>
                         </div>
                         <p style={{ opacity: 0.8, maxWidth: '600px', margin: '0 auto' }}>

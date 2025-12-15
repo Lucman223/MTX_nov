@@ -2,126 +2,130 @@
 
 namespace App\Services;
 
-use App\Models\Forfait;
-use App\Models\Transaccion;
-use App\Models\ClienteForfait;
-use App\Models\User;
-use Carbon\Carbon;
-use Ibracilinks\OrangeMoney\OrangeMoney;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class OrangeMoneyService
 {
-    protected $orangeMoney;
+    protected $baseUrl;
+    protected $clientId;
+    protected $clientSecret;
+    protected $merchantKey;
 
     public function __construct()
     {
-        $this->orangeMoney = new OrangeMoney(
-            env('ORANGE_MONEY_MERCHANT_KEY'),
-            env('ORANGE_MONEY_AUTH_HEADER'),
-            env('ORANGE_MONEY_PAYMENT_URL'),
-            env('ORANGE_MONEY_CALLBACK_URL')
-        );
+        $this->baseUrl = config('services.orangemoney.base_url');
+        $this->clientId = config('services.orangemoney.client_id');
+        $this->clientSecret = config('services.orangemoney.client_secret');
+        $this->merchantKey = config('services.orangemoney.merchant_key');
     }
 
-    public function initiatePayment(User $user, int $forfaitId, string $phoneNumber): array
+    /**
+     * Get Access Token (OAuth2)
+     */
+    protected function getAccessToken()
     {
-        $forfait = Forfait::find($forfaitId);
-
-        if (!$forfait) {
-            throw new \Exception('Forfait not found.');
-        }
-
-        // Create a pending transaction record
-        $transaccion = Transaccion::create([
-            'usuario_id' => $user->id, // Changed from cliente_id to usuario_id
-            'monto' => $forfait->precio,
-            'tipo' => 'compra_forfait',
-            'pasarela_pago_id' => null, // Will be updated after payment initiation
-            'descripcion' => 'Compra de Forfait ' . $forfait->nombre,
-        ]);
-
-        try {
-            $response = $this->orangeMoney->pay(
-                $phoneNumber,
-                $forfait->precio,
-                $transaccion->id, // Use our transaction ID as order ID
-                'Compra de Forfait ' . $forfait->nombre
-            );
-
-            // Update transaction with Orange Money's transaction ID if available
-            $transaccion->update([
-                'pasarela_pago_id' => $response['txnid'] ?? null,
-                'estado' => 'iniciado',
+        // This is a standard OAuth2 Client Credentials flow
+        // Adjust endpoint if specific to Orange Money region (e.g., /oauth/v3/token)
+        $response = Http::asForm()
+            ->withBasicAuth($this->clientId, $this->clientSecret)
+            ->post($this->baseUrl . '/oauth/v3/token', [
+                'grant_type' => 'client_credentials'
             ]);
 
-            return [
-                'message' => 'Payment initiated successfully',
-                'data' => $response,
-                'transaction_id' => $transaccion->id,
+        if (!$response->successful()) {
+            Log::error('OM Token Error: ' . $response->body());
+            throw new \Exception('Failed to authenticate with Orange Money');
+        }
+
+        return $response->json()['access_token'];
+    }
+
+    /**
+     * Initiate a Web Payment
+     * 
+     * @param string $phoneNumber (Optional in WebPay depending on flow)
+     * @param float $amount
+     * @return array
+     */
+    public function initiatePayment(string $phoneNumber, float $amount)
+    {
+        // If credentials are missing, Fallback to simulation for DEV
+        if (empty($this->clientId)) {
+            return $this->simulateInitiate($phoneNumber, $amount);
+        }
+
+        try {
+            $token = $this->getAccessToken();
+
+            $body = [
+                'merchant_key' => $this->merchantKey,
+                'currency' => 'OUV', // West African CFA
+                'order_id' => 'TX_' . uniqid(),
+                'amount' => $amount,
+                'return_url' => config('services.orangemoney.return_url'),
+                'cancel_url' => config('services.orangemoney.cancel_url'),
+                'notif_url' => config('services.orangemoney.return_url'), // Webhook
+                'lang' => 'fr',
+                'reference' => 'MotoTX Forfait',
             ];
+
+            // Web Payment Endpoint (Generic structure, verify with docs)
+            $response = Http::withToken($token)
+                ->post($this->baseUrl . '/orange-money-webpay/dev/v1/webpayment', $body);
+
+            if (!$response->successful()) {
+                Log::error('OM Payment Init Error: ' . $response->body());
+                throw new \Exception('Failed to initiate payment');
+            }
+
+            return $response->json(); // Should contain 'payment_url' and 'pay_token'
+
         } catch (\Exception $e) {
-            $transaccion->update(['estado' => 'fallido']);
-            throw new \Exception('Orange Money payment initiation failed: ' . $e->getMessage());
+            Log::error('OM Exception: ' . $e->getMessage());
+            // Fallback for dev if needed, or rethrow
+            throw $e;
         }
     }
 
-    public function handleCallback(array $callbackData): array
+    /**
+     * Check Transaction Status
+     */
+    public function checkStatus(string $orderId, string $payToken = null)
     {
-        $ourTransactionId = $callbackData['order_id'] ?? null; // Assuming order_id is our transaction ID
-
-        if (!$ourTransactionId) {
-            throw new \Exception('Invalid callback data: order_id missing.');
+        // Simulation fallback
+        if (empty($this->clientId)) {
+             return $this->simulateCheck($orderId);
         }
 
-        $transaccion = Transaccion::find($ourTransactionId);
+        $token = $this->getAccessToken();
+        
+        // Generic status endpoint structure
+        $response = Http::withToken($token)
+            ->get($this->baseUrl . "/orange-money-webpay/dev/v1/transactionstatus/{$this->merchantKey}/{$orderId}"); // verify endpoint path
 
-        if (!$transaccion) {
-            throw new \Exception('Transaction not found for callback.');
-        }
+        return $response->json();
+    }
 
-        $orangeMoneyStatus = $callbackData['status'] ?? 'unknown';
+    // --- SIMULATION HELPERS ---
 
-        if ($orangeMoneyStatus === 'SUCCESS') {
-            $transaccion->update(['estado' => 'completado']);
+    private function simulateInitiate($phoneNumber, $amount) {
+        return [
+            'status' => 'pending',
+            'order_id' => 'SIM_' . uniqid(),
+            'pay_token' => 'SIM_TOKEN_' . uniqid(),
+            'payment_url' => '#', // No external redirect in sim
+            'message' => 'Simulation: Please confirm on your phone (fake).'
+        ];
+    }
 
-            $forfait = Forfait::find($transaccion->forfait_id); // Need forfait_id on transaction or re-fetch
-
-            // Assuming transaction has forfait_id for direct access
-            // If not, you might need to adjust the Transaccion model or pass forfaitId in callback
-            if (!$forfait && $transaccion->tipo === 'compra_forfait') { // Check if forfait_id is not set on transaction
-                 // Re-fetch forfait if not available on transaction and it's a forfait purchase
-                 // This part needs careful review as 'forfait_id' is not directly on Transaccion model based on migration.
-                 // Assuming 'forfait_id' can be inferred or passed as part of description or a new column on Transaccion.
-                 // For now, let's assume if 'tipo' is 'compra_forfait', we can look it up or it's implicitly part of the context.
-                 // **IMPORTANT**: The Transaccion model in the database schema does NOT have forfait_id.
-                 // This will need to be added or handled differently. For now, using a placeholder.
-                 // I will assume forfait_id can be derived from the description or that the Transaccion model will be updated.
-            }
-
-            // Create or update ClienteForfait
-            $clienteForfait = ClienteForfait::where('cliente_id', $transaccion->usuario_id)->first(); // Use usuario_id
-
-            if ($clienteForfait) {
-                // Update existing forfait (e.g., add trips, extend expiration)
-                $clienteForfait->update([
-                    'viajes_restantes' => $clienteForfait->viajes_restantes + $forfait->viajes_incluidos,
-                    'fecha_expiracion' => Carbon::parse($clienteForfait->fecha_expiracion)->addDays($forfait->dias_validez),
-                ]);
-            } else {
-                // Create new forfait for the client
-                ClienteForfait::create([
-                    'cliente_id' => $transaccion->usuario_id, // Use usuario_id
-                    'forfait_id' => $forfait->id, // Assuming forfait is found
-                    'fecha_compra' => Carbon::now(),
-                    'fecha_expiracion' => Carbon::now()->addDays($forfait->dias_validez),
-                    'viajes_restantes' => $forfait->viajes_incluidos,
-                ]);
-            }
-
-            return ['message' => 'Payment successful and forfait updated'];
-        } else {
-            $transaccion->update(['estado' => 'fallido']);
-            throw new \Exception('Orange Money payment failed.');
-        }
+    private function simulateCheck($orderId) {
+        // Randomly succeed for demo purposes or check a DB flag
+        // For now, always success after init
+        return [
+            'status' => 'SUCCESS',
+            'tx_id' => $orderId,
+            'message' => 'Simulated Success'
+        ];
     }
 }

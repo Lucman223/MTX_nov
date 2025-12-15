@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 import useNotifications from '../../hooks/useNotifications';
+import InstallPrompt from '../../components/Common/InstallPrompt';
 
 const MotoristaDashboard = () => {
     const { logout, user } = useAuth();
@@ -133,108 +134,165 @@ const MotoristaDashboard = () => {
         }
     };
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // ... (rest of logic) ...
+
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-            {/* Header */}
+        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: isMobile ? '80px' : '0' }}>
+            <InstallPrompt />
+
+            {/* Responsive Header */}
             <header style={{
                 backgroundColor: 'white',
-                padding: '1.25rem 2rem',
+                padding: isMobile ? '1rem' : '1.25rem 2rem',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderBottom: `3px solid ${colors.secondary}`
+                borderBottom: `3px solid ${colors.secondary}`,
+                position: isMobile ? 'sticky' : 'static',
+                top: 0,
+                zIndex: 50
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontSize: '2rem' }}>🏍️</span>
+                    <img src="/logo.png" alt="MotoTX" style={{ height: isMobile ? '2.5rem' : '3.5rem', objectFit: 'contain' }} />
                     <div>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.secondary, margin: 0 }}>MotoTX Motorista v1.1</h1>
-                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>Hola, {user?.name || 'Motorista'}</span>
+                        <h1 style={{ fontSize: isMobile ? '1.1rem' : '1.5rem', fontWeight: 'bold', color: colors.secondary, margin: 0 }}>
+                            {isMobile ? 'MotoTX Driver' : 'MotoTX Motorista v1.1'}
+                        </h1>
+                        <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem', color: '#6b7280' }}>
+                            {user?.name || 'Motorista'}
+                        </span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+
+                {/* Desktop Nav - Hidden on Mobile */}
+                {!isMobile && (
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <div
+                            onClick={currentTrip ? null : handleToggleStatus}
+                            style={{
+                                padding: '0.5rem 1rem',
+                                background: currentTrip ? colors.secondary : (isOnline ? colors.secondary : '#e5e7eb'),
+                                borderRadius: '2rem',
+                                color: currentTrip ? 'white' : (isOnline ? 'white' : '#6b7280'),
+                                fontWeight: '600',
+                                fontSize: '0.875rem',
+                                cursor: currentTrip ? 'default' : 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                border: isOnline ? `2px solid ${colors.secondary}` : '2px solid transparent'
+                            }}
+                        >
+                            {currentTrip ? '🟢 En servicio' : (isOnline ? '🟢 En Línea' : '⚪ Desconectado')}
+                            {!currentTrip && <span style={{ fontSize: '0.75rem' }}>↻</span>}
+                        </div>
+                        <button
+                            onClick={() => navigate('/motorista/historial')}
+                            style={{
+                                padding: '0.5rem 1.25rem',
+                                background: 'white',
+                                color: colors.secondary,
+                                border: `2px solid ${colors.secondary}`,
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            📋 Historial
+                        </button>
+                        <button
+                            onClick={() => navigate('/motorista/perfil')}
+                            style={{
+                                padding: '0.5rem 1.25rem',
+                                background: 'white',
+                                color: '#4b5563',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            👤 Perfil
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            style={{
+                                padding: '0.5rem 1.25rem',
+                                backgroundColor: 'white',
+                                color: colors.error,
+                                border: `2px solid ${colors.error}`,
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            Salir
+                        </button>
+                    </div>
+                )}
+
+                {/* Mobile Status Toggle (Mini) */}
+                {isMobile && (
                     <div
                         onClick={currentTrip ? null : handleToggleStatus}
                         style={{
-                            padding: '0.5rem 1rem',
+                            padding: '0.25rem 0.75rem',
                             background: currentTrip ? colors.secondary : (isOnline ? colors.secondary : '#e5e7eb'),
-                            borderRadius: '2rem', // Pill shape
+                            borderRadius: '2rem',
                             color: currentTrip ? 'white' : (isOnline ? 'white' : '#6b7280'),
                             fontWeight: '600',
-                            fontSize: '0.875rem',
+                            fontSize: '0.75rem',
                             cursor: currentTrip ? 'default' : 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            border: isOnline ? `2px solid ${colors.secondary}` : '2px solid transparent'
+                            border: isOnline ? `2px solid ${colors.secondary}` : '1px solid #d1d5db'
                         }}
                     >
-                        {currentTrip ? '🟢 En servicio' : (isOnline ? '🟢 En Línea' : '⚪ Desconectado')}
-                        {!currentTrip && <span style={{ fontSize: '0.75rem' }}>↻</span>}
+                        {currentTrip ? 'En servicio' : (isOnline ? 'ON' : 'OFF')}
                     </div>
-                    <button
-                        onClick={() => navigate('/motorista/historial')}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            background: 'white',
-                            color: colors.secondary,
-                            border: `2px solid ${colors.secondary}`,
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.target.style.background = colors.secondary;
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.background = 'white';
-                            e.target.style.color = colors.secondary;
-                        }}
-                    >
-                        📋 Historial
+                )}
+            </header>
+
+            {/* Mobile Bottom Nav */}
+            {isMobile && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: 'white',
+                    borderTop: '1px solid #e5e7eb',
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    padding: '0.75rem',
+                    boxShadow: '0 -2px 10px rgba(0,0,0,0.05)',
+                    zIndex: 100
+                }}>
+                    <button onClick={() => { }} style={{ background: 'none', border: 'none', color: colors.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🏠</span>
+                        Inicio
                     </button>
-                    <button
-                        onClick={() => navigate('/motorista/perfil')}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            background: 'white',
-                            color: '#4b5563', // Gray-600
-                            border: '1px solid #d1d5db',
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                    >
-                        👤 Mi Perfil
+                    <button onClick={() => navigate('/motorista/historial')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>📋</span>
+                        Historial
                     </button>
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            backgroundColor: 'white',
-                            color: colors.error,
-                            border: `2px solid ${colors.error}`,
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.target.style.backgroundColor = colors.error;
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.backgroundColor = 'white';
-                            e.target.style.color = colors.error;
-                        }}
-                    >
-                        Cerrar Sesión
+                    <button onClick={() => navigate('/motorista/perfil')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>👤</span>
+                        Perfil
+                    </button>
+                    <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: colors.error, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🚪</span>
+                        Salir
                     </button>
                 </div>
-            </header>
+            )}
 
             {/* Main Content */}
             <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
