@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SEO from '../components/Common/SEO';
+import SEO from '../../components/Common/SEO';
 import { useTranslation } from 'react-i18next';
 
 const LandingPage = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     // Sistema de colores cohesivo (Accessible WCAG AA)
     const colors = {

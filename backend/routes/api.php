@@ -13,14 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Debug Route
-Route::get('/debug-db', function () {
+// Debug All Data
+Route::get('/debug-full', function () {
     return response()->json([
-        'default' => config('database.default'),
-        'database' => \Illuminate\Support\Facades\DB::connection()->getDatabaseName(),
-        'count' => \App\Models\Forfait::count(),
-        'path' => base_path('database/database.sqlite'),
-        'items' => \App\Models\Forfait::take(5)->get()
+        'users' => [
+            'total' => \App\Models\User::count(),
+            'admins' => \App\Models\User::where('rol', 'admin')->get(['id', 'name', 'email', 'rol']),
+            'clientes' => \App\Models\User::where('rol', 'cliente')->take(5)->get(['id', 'name', 'email', 'rol']),
+            'motoristas' => \App\Models\User::where('rol', 'motorista')->take(5)->get(['id', 'name', 'email', 'rol']),
+        ],
+        'forfaits_catalogo' => \App\Models\Forfait::all(),
+        'forfaits_asignados_clientes' => \Illuminate\Support\Facades\DB::table('clientes_forfaits')->take(10)->get(),
+        'planes_motorista' => \App\Models\PlanMotorista::all(),
+        'suscripciones_motorista' => \Illuminate\Support\Facades\DB::table('suscripciones_motorista')->take(10)->get(),
     ]);
 });
 

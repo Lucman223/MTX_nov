@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import SEO from '../../components/Common/SEO';
 import { useNavigate } from 'react-router-dom';
 import MapSelection from './MapSelection';
 import axios from 'axios';
@@ -87,7 +89,7 @@ const ClienteDashboard = () => {
         } catch (error) {
             console.error('Error al solicitar viaje:', error);
             const msg = error.response?.data?.error || error.response?.data?.message || 'Error al conectar con el servidor';
-            alert(`Error: ${msg}`);
+            alert(`Error: ${msg} `);
         }
     };
 
@@ -115,7 +117,7 @@ const ClienteDashboard = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderBottom: `3px solid ${colors.primary}`,
+                borderBottom: `3px solid ${colors.primary} `,
                 position: isMobile ? 'sticky' : 'static',
                 top: 0,
                 zIndex: 50
@@ -135,7 +137,7 @@ const ClienteDashboard = () => {
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         <div style={{
                             padding: '0.5rem 1rem',
-                            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                            background: `linear - gradient(135deg, ${colors.primary}, ${colors.secondary})`,
                             borderRadius: '0.5rem',
                             color: 'white',
                             fontWeight: '600',
@@ -149,7 +151,7 @@ const ClienteDashboard = () => {
                                 padding: '0.5rem 1.25rem',
                                 background: 'white',
                                 color: colors.primary,
-                                border: `2px solid ${colors.primary}`,
+                                border: `2px solid ${colors.primary} `,
                                 borderRadius: '0.5rem',
                                 fontWeight: '600',
                                 cursor: 'pointer',
@@ -177,7 +179,7 @@ const ClienteDashboard = () => {
                                 padding: '0.5rem 1.25rem',
                                 backgroundColor: 'white',
                                 color: colors.error,
-                                border: `2px solid ${colors.error}`,
+                                border: `2px solid ${colors.error} `,
                                 borderRadius: '0.5rem',
                                 fontWeight: '600',
                                 cursor: 'pointer',
@@ -192,7 +194,7 @@ const ClienteDashboard = () => {
                 {isMobile && (
                     <div style={{
                         padding: '0.25rem 0.75rem',
-                        background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                        background: `linear - gradient(135deg, ${colors.primary}, ${colors.secondary})`,
                         borderRadius: '1rem',
                         color: 'white',
                         fontWeight: '600',
@@ -279,17 +281,17 @@ const ClienteDashboard = () => {
                                 style={{
                                     padding: '1.25rem',
                                     borderRadius: '0.75rem',
-                                    border: `2px solid ${puntoActivo === 'origen' ? colors.primary : '#e5e7eb'}`,
-                                    backgroundColor: puntoActivo === 'origen' ? `${colors.primary}10` : 'white',
+                                    border: `2px solid ${puntoActivo === 'origen' ? colors.primary : '#e5e7eb'} `,
+                                    backgroundColor: puntoActivo === 'origen' ? `${colors.primary} 10` : 'white',
                                     textAlign: 'left',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s',
-                                    boxShadow: puntoActivo === 'origen' ? `0 4px 12px ${colors.primary}20` : 'none'
+                                    boxShadow: puntoActivo === 'origen' ? `0 4px 12px ${colors.primary} 20` : 'none'
                                 }}
                             >
                                 <div style={{ fontSize: '0.75rem', color: colors.primary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>{t('client_dashboard.origin')}</div>
                                 <div style={{ fontWeight: '600', color: origen ? '#111827' : '#9ca3af', fontSize: '0.95rem' }}>
-                                    {origen ? `${origen[0].toFixed(4)}, ${origen[1].toFixed(4)}` : t('client_dashboard.tap_map')}
+                                    {origen ? `${origen[0].toFixed(4)}, ${origen[1].toFixed(4)} ` : t('client_dashboard.tap_map')}
                                 </div>
                             </button>
 
@@ -298,17 +300,17 @@ const ClienteDashboard = () => {
                                 style={{
                                     padding: '1.25rem',
                                     borderRadius: '0.75rem',
-                                    border: `2px solid ${puntoActivo === 'destino' ? colors.secondary : '#e5e7eb'}`,
-                                    backgroundColor: puntoActivo === 'destino' ? `${colors.secondary}10` : 'white',
+                                    border: `2px solid ${puntoActivo === 'destino' ? colors.secondary : '#e5e7eb'} `,
+                                    backgroundColor: puntoActivo === 'destino' ? `${colors.secondary} 10` : 'white',
                                     textAlign: 'left',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s',
-                                    boxShadow: puntoActivo === 'destino' ? `0 4px 12px ${colors.secondary}20` : 'none'
+                                    boxShadow: puntoActivo === 'destino' ? `0 4px 12px ${colors.secondary} 20` : 'none'
                                 }}
                             >
                                 <div style={{ fontSize: '0.75rem', color: colors.secondary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>{t('client_dashboard.destination')}</div>
                                 <div style={{ fontWeight: '600', color: destino ? '#111827' : '#9ca3af', fontSize: '0.95rem' }}>
-                                    {destino ? `${destino[0].toFixed(4)}, ${destino[1].toFixed(4)}` : t('client_dashboard.tap_map')}
+                                    {destino ? `${destino[0].toFixed(4)}, ${destino[1].toFixed(4)} ` : t('client_dashboard.tap_map')}
                                 </div>
                             </button>
                         </div>
@@ -320,25 +322,25 @@ const ClienteDashboard = () => {
                                 style={{
                                     width: '100%',
                                     padding: '1.125rem',
-                                    background: (!origen || !destino) ? '#d1d5db' : `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                                    background: (!origen || !destino) ? '#d1d5db' : `linear - gradient(135deg, ${colors.primary}, ${colors.secondary})`,
                                     color: 'white',
                                     border: 'none',
                                     borderRadius: '0.75rem',
                                     fontWeight: 'bold',
                                     fontSize: '1.05rem',
                                     cursor: (!origen || !destino) ? 'not-allowed' : 'pointer',
-                                    boxShadow: (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary}40`,
+                                    boxShadow: (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary} 40`,
                                     transition: 'all 0.2s'
                                 }}
                                 onMouseOver={(e) => {
                                     if (origen && destino) {
                                         e.target.style.transform = 'translateY(-2px)';
-                                        e.target.style.boxShadow = `0 6px 16px ${colors.primary}50`;
+                                        e.target.style.boxShadow = `0 6px 16px ${colors.primary} 50`;
                                     }
                                 }}
                                 onMouseOut={(e) => {
                                     e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary}40`;
+                                    e.target.style.boxShadow = (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary} 40`;
                                 }}
                             >
                                 {t('client_dashboard.request_now')}
@@ -353,7 +355,7 @@ const ClienteDashboard = () => {
                         borderRadius: '1rem',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                         border: '1px solid #e5e7eb',
-                        background: `linear-gradient(135deg, white 0%, ${colors.primary}05 100%)`
+                        background: `linear - gradient(135deg, white 0 %, ${colors.primary}05 100 %)`
                     }}>
                         <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#111827', marginBottom: '1rem' }}>{t('client_dashboard.balance_title')}</h3>
                         <div style={{ fontSize: '3rem', fontWeight: 'bold', color: colors.primary, margin: '1rem 0' }}>
@@ -375,15 +377,15 @@ const ClienteDashboard = () => {
                                 fontWeight: '600',
                                 cursor: 'pointer',
                                 transition: 'all 0.2s',
-                                boxShadow: `0 4px 12px ${colors.accent}40`
+                                boxShadow: `0 4px 12px ${colors.accent} 40`
                             }}
                             onMouseOver={(e) => {
                                 e.target.style.transform = 'translateY(-2px)';
-                                e.target.style.boxShadow = `0 6px 16px ${colors.accent}50`;
+                                e.target.style.boxShadow = `0 6px 16px ${colors.accent} 50`;
                             }}
                             onMouseOut={(e) => {
                                 e.target.style.transform = 'translateY(0)';
-                                e.target.style.boxShadow = `0 4px 12px ${colors.accent}40`;
+                                e.target.style.boxShadow = `0 4px 12px ${colors.accent} 40`;
                             }}
                         >
                             {t('client_dashboard.buy_forfait')}
@@ -397,7 +399,7 @@ const ClienteDashboard = () => {
                             color: 'white',
                             padding: '1.5rem',
                             borderRadius: '1rem',
-                            boxShadow: `0 4px 12px ${colors.secondary}40`
+                            boxShadow: `0 4px 12px ${colors.secondary} 40`
                         }}>
                             <div style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t('client_dashboard.trip_active')}</div>
                             <div style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>

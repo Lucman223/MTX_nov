@@ -29,6 +29,16 @@ class MotoristaMiddleware
         // Check for subscription or trial access
         $perfil = \App\Models\MotoristaPerfil::where('usuario_id', $user->id)->first();
         
+        \Illuminate\Support\Facades\Log::info('MotoristaMiddleware Check', [
+            'user_id' => $user->id,
+            'perfil_exists' => (bool)$perfil,
+            'has_access' => $perfil ? $perfil->hasAccess() : false,
+            'viajes_prueba' => $perfil ? $perfil->viajes_prueba_restantes : 0,
+            'active_sub_exists' => $perfil ? $perfil->activeSubscription()->exists() : false,
+            'now' => now()->toDateTimeString(),
+            'route' => $request->route()->getName()
+        ]);
+        
         // Allow access to subscription endpoints even if blocked (to allow payment)
         $route = $request->route()->getName();
         $allowedRoutes = ['motorista.planes.index', 'motorista.planes.status', 'motorista.planes.subscribe'];

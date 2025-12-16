@@ -40,7 +40,8 @@ const SuscripcionesMotorista = () => {
 
             await axios.post('/api/motorista/planes/subscribe', {
                 plan_id: planId,
-                phone: phone
+                payment_method: 'orange_money', // Default for prototype
+                phone_number: phone
             });
 
             toast.success('¡Suscripción activada con éxito!');

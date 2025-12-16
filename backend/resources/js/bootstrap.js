@@ -10,13 +10,12 @@ window.Pusher = Pusher;
 
 if (import.meta.env.VITE_PUSHER_APP_KEY) {
     window.Echo = new Echo({
-        broadcaster: 'pusher',
+        broadcaster: 'reverb',
         key: import.meta.env.VITE_PUSHER_APP_KEY,
-        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-        wsHost: import.meta.env.VITE_PUSHER_HOST,
-        wsPort: import.meta.env.VITE_PUSHER_PORT,
-        wssPort: import.meta.env.VITE_PUSHER_PORT,
-        forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'http') === 'https',
+        wsHost: import.meta.env.VITE_PUSHER_HOST ?? '127.0.0.1',
+        wsPort: 8080,
+        wssPort: 8080,
+        forceTLS: false,
         enabledTransports: ['ws', 'wss'],
     });
 } else {

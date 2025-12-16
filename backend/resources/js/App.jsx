@@ -31,20 +31,18 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 
-import { HelmetProvider } from 'react-helmet-async';
+
 
 function App() {
     return (
-        <HelmetProvider>
-            <Router>
-                <AuthProvider>
-                    <ErrorBoundary>
-                        <Toaster richColors position="top-center" />
-                        <AppContent />
-                    </ErrorBoundary>
-                </AuthProvider>
-            </Router>
-        </HelmetProvider>
+        <Router>
+            <AuthProvider>
+                <ErrorBoundary>
+                    <Toaster richColors position="top-center" />
+                    <AppContent />
+                </ErrorBoundary>
+            </AuthProvider>
+        </Router>
     );
 }
 

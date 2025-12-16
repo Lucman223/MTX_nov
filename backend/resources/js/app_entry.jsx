@@ -6,7 +6,7 @@ import { registerSW } from 'virtual:pwa-register';
 
 // PWA Registration
 registerSW({ immediate: true });
-// import './bootstrap'; 
+import './bootstrap';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
