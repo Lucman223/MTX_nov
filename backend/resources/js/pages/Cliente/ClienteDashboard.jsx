@@ -5,9 +5,11 @@ import MapSelection from './MapSelection';
 import axios from 'axios';
 import { toast } from 'sonner';
 import useNotifications from '../../hooks/useNotifications';
+import { useTranslation } from 'react-i18next';
 
 const ClienteDashboard = () => {
     const { logout, user } = useAuth();
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const [origen, setOrigen] = useState(null);
@@ -15,11 +17,11 @@ const ClienteDashboard = () => {
     const [puntoActivo, setPuntoActivo] = useState('origen'); // 'origen' | 'destino'
     const [activeTrip, setActiveTrip] = useState(null);
 
-    // Color system
+    // Color system (Accessible)
     const colors = {
         primary: '#2563eb',
-        secondary: '#10b981',
-        accent: '#f59e0b',
+        secondary: '#059669',
+        accent: '#b45309',
         error: '#ef4444'
     };
 
@@ -104,6 +106,7 @@ const ClienteDashboard = () => {
 
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', flexDirection: 'column', paddingBottom: isMobile ? '80px' : '0' }}>
+            <SEO title={t('nav.dashboard')} />
             {/* Responsive Header */}
             <header style={{
                 backgroundColor: 'white',
@@ -138,7 +141,7 @@ const ClienteDashboard = () => {
                             fontWeight: '600',
                             fontSize: '0.875rem'
                         }}>
-                            {viajesDisponibles} viajes
+                            {t('client_dashboard.trips_badge', { count: viajesDisponibles })}
                         </div>
                         <button
                             onClick={() => navigate('/cliente/historial')}
@@ -152,7 +155,7 @@ const ClienteDashboard = () => {
                                 cursor: 'pointer',
                             }}
                         >
-                            📋 Historial
+                            {t('client_dashboard.history')}
                         </button>
                         <button
                             onClick={() => navigate('/cliente/perfil')}
@@ -166,7 +169,7 @@ const ClienteDashboard = () => {
                                 cursor: 'pointer',
                             }}
                         >
-                            👤 Perfil
+                            {t('client_dashboard.profile')}
                         </button>
                         <button
                             onClick={handleLogout}
@@ -180,7 +183,7 @@ const ClienteDashboard = () => {
                                 cursor: 'pointer',
                             }}
                         >
-                            Salir
+                            {t('common.logout')}
                         </button>
                     </div>
                 )}
@@ -217,19 +220,19 @@ const ClienteDashboard = () => {
                 }}>
                     <button onClick={() => { }} style={{ background: 'none', border: 'none', color: colors.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
                         <span style={{ fontSize: '1.25rem' }}>🏠</span>
-                        Inicio
+                        {t('nav.dashboard')}
                     </button>
                     <button onClick={() => navigate('/cliente/historial')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
                         <span style={{ fontSize: '1.25rem' }}>📋</span>
-                        Historial
+                        {t('client_dashboard.history')}
                     </button>
                     <button onClick={() => navigate('/cliente/perfil')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
                         <span style={{ fontSize: '1.25rem' }}>👤</span>
-                        Perfil
+                        {t('client_dashboard.profile')}
                     </button>
                     <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: colors.error, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
                         <span style={{ fontSize: '1.25rem' }}>🚪</span>
-                        Salir
+                        {t('common.logout')}
                     </button>
                 </div>
             )}
@@ -267,7 +270,7 @@ const ClienteDashboard = () => {
                             alignItems: 'center',
                             gap: '0.5rem'
                         }}>
-                            <span>📍</span> Planificar Viaje
+                            <span>📍</span> {t('client_dashboard.plan_trip')}
                         </h2>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -284,9 +287,9 @@ const ClienteDashboard = () => {
                                     boxShadow: puntoActivo === 'origen' ? `0 4px 12px ${colors.primary}20` : 'none'
                                 }}
                             >
-                                <div style={{ fontSize: '0.75rem', color: colors.primary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>ORIGEN</div>
+                                <div style={{ fontSize: '0.75rem', color: colors.primary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>{t('client_dashboard.origin')}</div>
                                 <div style={{ fontWeight: '600', color: origen ? '#111827' : '#9ca3af', fontSize: '0.95rem' }}>
-                                    {origen ? `${origen[0].toFixed(4)}, ${origen[1].toFixed(4)}` : 'Toca en el mapa'}
+                                    {origen ? `${origen[0].toFixed(4)}, ${origen[1].toFixed(4)}` : t('client_dashboard.tap_map')}
                                 </div>
                             </button>
 
@@ -303,9 +306,9 @@ const ClienteDashboard = () => {
                                     boxShadow: puntoActivo === 'destino' ? `0 4px 12px ${colors.secondary}20` : 'none'
                                 }}
                             >
-                                <div style={{ fontSize: '0.75rem', color: colors.secondary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>DESTINO</div>
+                                <div style={{ fontSize: '0.75rem', color: colors.secondary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>{t('client_dashboard.destination')}</div>
                                 <div style={{ fontWeight: '600', color: destino ? '#111827' : '#9ca3af', fontSize: '0.95rem' }}>
-                                    {destino ? `${destino[0].toFixed(4)}, ${destino[1].toFixed(4)}` : 'Toca en el mapa'}
+                                    {destino ? `${destino[0].toFixed(4)}, ${destino[1].toFixed(4)}` : t('client_dashboard.tap_map')}
                                 </div>
                             </button>
                         </div>
@@ -338,7 +341,7 @@ const ClienteDashboard = () => {
                                     e.target.style.boxShadow = (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary}40`;
                                 }}
                             >
-                                🚀 Solicitar Moto Ahora
+                                {t('client_dashboard.request_now')}
                             </button>
                         </div>
                     </div>
@@ -352,12 +355,12 @@ const ClienteDashboard = () => {
                         border: '1px solid #e5e7eb',
                         background: `linear-gradient(135deg, white 0%, ${colors.primary}05 100%)`
                     }}>
-                        <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#111827', marginBottom: '1rem' }}>💰 Saldo de Viajes</h3>
+                        <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#111827', marginBottom: '1rem' }}>{t('client_dashboard.balance_title')}</h3>
                         <div style={{ fontSize: '3rem', fontWeight: 'bold', color: colors.primary, margin: '1rem 0' }}>
                             {viajesDisponibles}
                         </div>
                         <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1.5rem' }}>
-                            {viajesDisponibles > 0 ? `Tienes ${viajesDisponibles} viajes disponibles` : 'No tienes forfaits activos'}
+                            {viajesDisponibles > 0 ? t('client_dashboard.available_trips', { count: viajesDisponibles }) : t('client_dashboard.no_trips')}
                         </p>
                         <button
                             onClick={() => navigate('/cliente/forfaits')}
@@ -383,7 +386,7 @@ const ClienteDashboard = () => {
                                 e.target.style.boxShadow = `0 4px 12px ${colors.accent}40`;
                             }}
                         >
-                            Comprar Forfait
+                            {t('client_dashboard.buy_forfait')}
                         </button>
                     </div>
 
@@ -396,13 +399,13 @@ const ClienteDashboard = () => {
                             borderRadius: '1rem',
                             boxShadow: `0 4px 12px ${colors.secondary}40`
                         }}>
-                            <div style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem' }}>VIAJE ACTIVO</div>
+                            <div style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t('client_dashboard.trip_active')}</div>
                             <div style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>
-                                Estado: {activeTrip.estado}
+                                {t('client_dashboard.state')}: {activeTrip.estado}
                             </div>
                             {activeTrip.motorista && (
                                 <div style={{ marginTop: '0.75rem', fontSize: '0.95rem', opacity: 0.95 }}>
-                                    Motorista: {activeTrip.motorista.name}
+                                    {t('client_dashboard.driver')}: {activeTrip.motorista.name}
                                 </div>
                             )}
                         </div>

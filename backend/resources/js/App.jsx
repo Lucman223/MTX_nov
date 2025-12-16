@@ -6,6 +6,7 @@ import { Toaster } from 'sonner';
 import LandingPage from './pages/Public/LandingPage.jsx';
 import LoginPage from './pages/Public/LoginPage.jsx';
 import RegisterPage from './pages/Public/RegisterPage.jsx';
+import PrivacyPolicy from './pages/Public/PrivacyPolicy.jsx';
 
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
@@ -24,21 +25,26 @@ import MotoristaDashboard from './pages/Motorista/MotoristaDashboard.jsx';
 import MotoristaHistory from './pages/Motorista/MotoristaHistory.jsx';
 import MotoristaProfile from './pages/Motorista/MotoristaProfile.jsx';
 import DriverActiveTrip from './pages/Motorista/DriverActiveTrip.jsx';
+import SuscripcionesMotorista from './pages/Motorista/SuscripcionesMotorista.jsx';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 
+import { HelmetProvider } from 'react-helmet-async';
+
 function App() {
     return (
-        <Router>
-            <AuthProvider>
-                <ErrorBoundary>
-                    <Toaster richColors position="top-center" />
-                    <AppContent />
-                </ErrorBoundary>
-            </AuthProvider>
-        </Router>
+        <HelmetProvider>
+            <Router>
+                <AuthProvider>
+                    <ErrorBoundary>
+                        <Toaster richColors position="top-center" />
+                        <AppContent />
+                    </ErrorBoundary>
+                </AuthProvider>
+            </Router>
+        </HelmetProvider>
     );
 }
 
@@ -55,6 +61,7 @@ function AppContent() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
 
             {/* Protected Admin Routes with Layout */}
             <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
@@ -83,6 +90,7 @@ function AppContent() {
                 <Route path="/motorista/historial" element={<MotoristaHistory />} />
                 <Route path="/motorista/perfil" element={<MotoristaProfile />} />
                 <Route path="/motorista/viaje-actual" element={<DriverActiveTrip />} />
+                <Route path="/motorista/suscripciones" element={<SuscripcionesMotorista />} />
             </Route>
 
             {/* Fallback for unmatched routes */}

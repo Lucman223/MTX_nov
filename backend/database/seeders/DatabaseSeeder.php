@@ -35,20 +35,22 @@ class DatabaseSeeder extends Seeder
         $moto = User::create([
             'name' => 'Motorista Pruebas',
             'email' => 'moto@mototx.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
             'rol' => 'motorista',
         ]);
 
         // Crear perfil del motorista
-        /*
         \App\Models\MotoristaPerfil::create([
             'usuario_id' => $moto->id,
             'marca_vehiculo' => 'Yamaha Crypton',
             'matricula' => 'AB-123-CD',
-            'estado_validacion' => 'pendiente', // Para probar la aprobación
+            'estado_validacion' => 'aprobado', // Auto-aprobar para pruebas
             'estado_actual' => 'inactivo',
-            'documento_licencia_path' => 'docs/dummy.pdf'
+            'documento_licencia_path' => 'docs/dummy.pdf',
+            'viajes_prueba_restantes' => 3
         ]);
-        */
+
+        $this->call(PlanesMotoristaSeeder::class);
+        $this->call(ForfaitSeeder::class);
     }
 }

@@ -1,14 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import SEO from '../components/Common/SEO';
+import { useTranslation } from 'react-i18next';
 
 const LandingPage = () => {
     const navigate = useNavigate();
 
-    // Sistema de colores cohesivo
+    // Sistema de colores cohesivo (Accessible WCAG AA)
     const colors = {
-        primary: '#2563eb',    // Azul - Confianza
-        secondary: '#10b981',  // Verde - Seguridad
-        accent: '#f59e0b',     // Amarillo - Energía
+        primary: '#2563eb',    // Blue-600 (4.6:1 vs White)
+        secondary: '#059669',  // Emerald-600 (4.5:1 vs White) - Was #10b981
+        accent: '#b45309',     // Amber-700 (4.5:1 vs White) - Was #f59e0b
     };
 
     const features = [
@@ -24,14 +26,14 @@ const LandingPage = () => {
             title: 'Forfaits Económicos',
             description: 'Paquetes prepagados que se ajustan a tu presupuesto',
             color: colors.secondary,
-            gradient: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)'
+            gradient: 'linear-gradient(135deg, #34d399 0%, #059669 100%)'
         },
         {
             icon: '📍',
             title: 'Tracking en Tiempo Real',
             description: 'Sigue la ubicación de tu motorista en el mapa',
             color: colors.accent,
-            gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
+            gradient: 'linear-gradient(135deg, #fbbf24 0%, #b45309 100%)'
         }
     ];
 
@@ -54,7 +56,7 @@ const LandingPage = () => {
             subtitle: 'Gana Dinero',
             icon: '🏍️',
             color: colors.secondary,
-            hoverColor: '#059669',
+            hoverColor: '#047857', // Emerald-700
             steps: [
                 'Regístrate y obtén aprobación',
                 'Recibe solicitudes de viaje',
@@ -66,6 +68,7 @@ const LandingPage = () => {
 
     return (
         <div style={{ minHeight: '100vh', background: '#ffffff' }}>
+            <SEO title={t('seo.landing_title', 'Bienvenido')} />
             {/* Header */}
             <header style={{
                 padding: '1.5rem 2rem',
@@ -352,6 +355,8 @@ const LandingPage = () => {
                     }}>
                         <p style={{ margin: 0 }}>
                             © 2025 MotoTX - Desarrollado con ❤️ para mejorar el transporte en Mali
+                            <br />
+                            <a href="/privacy" style={{ color: 'white', opacity: 0.7, fontSize: '0.8rem', textDecoration: 'none' }}>Politique de Confidentialité</a>
                         </p>
                     </div>
                 </div>

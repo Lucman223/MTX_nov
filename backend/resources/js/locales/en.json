@@ -1,4 +1,25 @@
 {
+    "driver_dashboard": {
+        "new_trip_alert": "New trip available!",
+        "trip_accepted": "Trip accepted successfully",
+        "accept_error": "Error accepting trip",
+        "offline_error": "⚠️ You must be ONLINE first",
+        "online_msg": "🔴 You are now ONLINE",
+        "offline_msg": "⚪ You are now OFFLINE",
+        "subscription_required": "🚫 Access denied: Subscription required",
+        "status_updated": "Status updated to: {{status}}",
+        "update_error": "Error updating status",
+        "driver_role": "Driver",
+        "in_service": "🟢 In Service",
+        "status_online": "🟢 Online",
+        "status_offline": "⚪ Offline",
+        "start_trip": "Start Trip",
+        "complete_trip": "Complete Trip",
+        "pending_requests": "Pending Requests",
+        "no_requests": "No pending requests at the moment",
+        "accept_trip": "Accept Trip",
+        "new_tag": "New"
+    },
     "common": {
         "login": "Login",
         "logout": "Logout",
@@ -25,6 +46,9 @@
         "role_client": "👤 Client",
         "role_driver": "🏍️ Driver"
     },
+    "seo": {
+        "default_description": "Reliable and fast transport in Bamako. Secure motorcycle taxis."
+    },
     "nav": {
         "admin_title": "MotoTX Admin",
         "dashboard": "Dashboard",
@@ -35,5 +59,38 @@
         "reports": "Reports",
         "admin_panel": "Admin Panel",
         "admin_role": "Administrator"
+    },
+    "client_dashboard": {
+        "plan_trip": "Plan Trip",
+        "origin": "Origin",
+        "destination": "Destination",
+        "tap_map": "Tap on Map",
+        "request_now": "🚀 Request Ride",
+        "balance_title": "💰 Trip Balance",
+        "available_trips": "You have {{count}} trips available",
+        "no_trips": "No active plans",
+        "buy_forfait": "Buy Pack",
+        "trip_active": "Active Trip",
+        "state": "Status",
+        "driver": "Driver",
+        "history": "📋 History",
+        "profile": "👤 Profile",
+        "trips_badge": "{{count}} trips"
+    },
+    "client_forfaits": {
+        "title": "Buy Forfaits",
+        "payment_title": "Payment with Orange Money",
+        "phone_label": "Phone Number",
+        "phone_hint": "Enter a valid number (min 8 digits)",
+        "debit_warning": "<strong>{{amount}} CFA</strong> will be debited from your account.",
+        "waiting": "Waiting for confirmation...",
+        "processing": "Processing Payment...",
+        "pay_btn": "Pay {{amount}} CFA",
+        "payment_error": "Error initiating payment",
+        "timeout_error": "Timeout. Check your SMS.",
+        "purchase_success": "Purchase successful!",
+        "trips_count": "{{count}} trips",
+        "default_desc": "Best value pack",
+        "selected": "Selected"
     }
 }

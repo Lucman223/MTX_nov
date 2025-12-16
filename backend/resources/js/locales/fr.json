@@ -1,4 +1,25 @@
 {
+    "driver_dashboard": {
+        "new_trip_alert": "Nouveau trajet disponible !",
+        "trip_accepted": "Trajet accepté avec succès",
+        "accept_error": "Erreur lors de l'acceptation",
+        "offline_error": "⚠️ Vous devez être EN LIGNE d'abord",
+        "online_msg": "🔴 Vous êtes maintenant EN LIGNE",
+        "offline_msg": "⚪ Vous êtes maintenant HORS LIGNE",
+        "subscription_required": "🚫 Accès refusé : Abonnement requis",
+        "status_updated": "Statut mis à jour : {{status}}",
+        "update_error": "Erreur de mise à jour du statut",
+        "driver_role": "Chauffeur",
+        "in_service": "🟢 En service",
+        "status_online": "🟢 En Ligne",
+        "status_offline": "⚪ Hors Ligne",
+        "start_trip": "Démarrer la course",
+        "complete_trip": "Terminer la course",
+        "pending_requests": "Demandes en attente",
+        "no_requests": "Aucune demande en attente pour le moment",
+        "accept_trip": "Accepter la course",
+        "new_tag": "Nouveau"
+    },
     "common": {
         "login": "Connexion",
         "logout": "Déconnexion",
@@ -35,5 +56,38 @@
         "reports": "Rapports",
         "admin_panel": "Panneau d'administration",
         "admin_role": "Administrateur"
+    },
+    "client_dashboard": {
+        "plan_trip": "Planifier un Trajet",
+        "origin": "ORIGINE",
+        "destination": "DESTINATION",
+        "tap_map": "Touchez la carte",
+        "request_now": "🚀 Commander Moto",
+        "balance_title": "💰 Solde de Trajets",
+        "available_trips": "Vous avez {{count}} trajets disponibles",
+        "no_trips": "Aucun forfait actif",
+        "buy_forfait": "Acheter Forfait",
+        "trip_active": "TRAJET ACTIF",
+        "state": "État",
+        "driver": "Chauffeur",
+        "history": "📋 Historique",
+        "profile": "👤 Profil",
+        "trips_badge": "{{count}} trajets"
+    },
+    "client_forfaits": {
+        "title": "Acheter des Forfaits",
+        "payment_title": "Paiement avec Orange Money",
+        "phone_label": "Numéro de téléphone",
+        "phone_hint": "Entrez un numéro valide (min 8 chiffres)",
+        "debit_warning": "<strong>{{amount}} CFA</strong> seront débités de votre compte.",
+        "waiting": "En attente de confirmation...",
+        "processing": "Traitement du paiement...",
+        "pay_btn": "Payer {{amount}} CFA",
+        "payment_error": "Erreur lors de l'initiation du paiement",
+        "timeout_error": "Délai dépassé. Vérifiez vos SMS.",
+        "purchase_success": "Achat réussi !",
+        "trips_count": "{{count}} trajets",
+        "default_desc": "Meilleure offre",
+        "selected": "Sélectionné"
     }
 }

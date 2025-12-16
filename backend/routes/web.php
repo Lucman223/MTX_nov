@@ -32,6 +32,20 @@ Route::get('/manifest.webmanifest', function () {
     ]);
 });
 
+Route::get('/debug-data', function () {
+    $user = \App\Models\User::where('email', 'moto@mototx.com')->first();
+    $perfil = $user ? \App\Models\MotoristaPerfil::where('usuario_id', $user->id)->first() : null;
+    $planes = \App\Models\PlanMotorista::all();
+
+    return response()->json([
+        'user_exists' => !!$user,
+        'perfil_exists' => !!$perfil,
+        'viajes_perfil' => $perfil ? $perfil->viajes_prueba_restantes : 'N/A',
+        'planes_count' => $planes->count(),
+        'planes' => $planes
+    ]);
+});
+
 // React App Catch-all (exclude API and PWA files)
 Route::get('/{any?}', function () {
     return view('welcome');

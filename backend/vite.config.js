@@ -69,7 +69,8 @@ export default defineConfig({
         port: 5174,
         strictPort: true,
         hmr: {
-            host: '192.168.1.129', // IP de tu PC para que el móvil conecte
+            host: '192.168.1.129',
+            clientPort: 5174,
         },
         proxy: {
             '/api': {

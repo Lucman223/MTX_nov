@@ -1,28 +1,30 @@
-CREDENCIALES DE ACCESO - MOTO TX
-==================================
+================================================================================
+MOTOTX - CREDENCIALES DE ACCESO (VERIFICADAS)
+================================================================================
+Fecha de Verificación: 15/12/2025
+Estado: FUNCIONAL
 
-TODAS las cuentas tienen la contraseña: 
-123456
+--------------------------------------------------------------------------------
+1. MOTORISTA (Role: motorista)
+   - Funcionalidad clave: Suscripciones, Aceptar Viajes.
+   - Estado Inicial: 3 Viajes de Prueba.
+   * Email:      moto@mototx.com
+   * Contraseña: password123
 
-CUENTAS DE PRUEBA:
-------------------
-1. CLIENTE:
-   Email: cliente1@test.com
-   Pass:  123456
+--------------------------------------------------------------------------------
+2. ADMINISTRADOR (Role: admin)
+   - Funcionalidad clave: Panel de Control (Filament).
+   * Email:      admin@mototx.com
+   * Contraseña: password
 
-2. MOTORISTA:
-   Email: moto1@test.com
-   Pass:  123456
+--------------------------------------------------------------------------------
+3. CLIENTE (Role: cliente)
+   - Funcionalidad clave: Solicitar Viajes.
+   * Email:      cliente@mototx.com
+   * Contraseña: password
+--------------------------------------------------------------------------------
 
-3. ADMIN:
-   Email: admin@test.com
-   Pass:  123456
-
-4. TEST MOVIL (Rol Motorista):
-   Email: movil@test.com
-   Pass:  123456
-
-NOTA:
------
-Si usas el móvil, recuerda que la IP es http://192.168.1.129:8000
-(O la que tenga tu PC en ese momento).
+NOTAS IMPORTANTES:
+- Si el Motorista agota sus 3 viajes de prueba, DEBERÁ comprar un plan (simulado) para seguir operando.
+- El registro de nuevos usuarios está ABIERTO y funcionando.
+================================================================================

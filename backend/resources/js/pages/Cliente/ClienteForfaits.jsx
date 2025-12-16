@@ -3,9 +3,11 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 const ClienteForfaits = () => {
     const { user } = useAuth();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [forfaits, setForfaits] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,30 +15,22 @@ const ClienteForfaits = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [processing, setProcessing] = useState(false);
 
-    // Color system
-    const colors = {
-        primary: '#2563eb',
-        secondary: '#10b981',
-        accent: '#f59e0b',
-        error: '#ef4444'
-    };
-
     useEffect(() => {
         fetchForfaits();
     }, []);
 
     const fetchForfaits = async () => {
         try {
-            const response = await axios.get('/api/forfaits/disponibles'); // You might need to check if this route exists or use auth protected one
+            const response = await axios.get('/api/forfaits/disponibles');
             setForfaits(response.data);
         } catch (error) {
             console.error('Error fetching forfaits:', error);
-            // Fallback mock data if API fails (for development safety)
             if (forfaits.length === 0) {
                 setForfaits([
-                    { id: 1, nombre: 'Pack Básico', precio: 2000, viajes: 5, descripcion: 'Ideal para probar' },
-                    { id: 2, nombre: 'Pack Estándar', precio: 3500, viajes: 10, descripcion: 'El más popular' },
-                    { id: 3, nombre: 'Pack Premium', precio: 6000, viajes: 20, descripcion: 'Para usuarios frecuentes' }
+                    { id: 1, nombre: 'Pack Prueba', precio: 2500, viajes_incluidos: 5, descripcion: 'Ideal para probar' },
+                    { id: 2, nombre: 'Pack Estándar', precio: 5000, viajes_incluidos: 10, descripcion: 'El más popular' },
+                    { id: 3, nombre: 'Pack Viajero', precio: 9000, viajes_incluidos: 20, descripcion: 'Para usuarios frecuentes' },
+                    { id: 4, nombre: 'Pack Pro', precio: 2000, viajes_incluidos: 50, descripcion: 'Máximo ahorro' }
                 ]);
             }
         } finally {
@@ -54,35 +48,29 @@ const ClienteForfaits = () => {
         setStatusMessage(null);
 
         try {
-            // 1. Initiate Payment
             const initResponse = await axios.post('/api/forfaits/buy', {
                 forfait_id: selectedForfait.id,
                 phone_number: phoneNumber
             });
 
-            // If immediate success (should be pending in new flow, but mostly pending)
             if (initResponse.data.status === 'pending') {
                 setStatusMessage({ type: 'info', text: initResponse.data.message });
-
-                // 2. Start Polling
                 const orderId = initResponse.data.order_id;
                 pollStatus(orderId);
             } else {
-                // Immediate success?
                 finishPurchase();
             }
 
         } catch (error) {
             console.error('Payment init error:', error);
-            setStatusMessage({ type: 'error', text: error.response?.data?.error || 'Error al iniciar pago' });
+            setStatusMessage({ type: 'error', text: error.response?.data?.error || t('client_forfaits.payment_error') });
             setProcessing(false);
         }
     };
 
     const pollStatus = async (orderId) => {
         let attempts = 0;
-        const maxAttempts = 10; // 20 seconds approx
-
+        const maxAttempts = 10;
         const interval = setInterval(async () => {
             attempts++;
             try {
@@ -90,28 +78,25 @@ const ClienteForfaits = () => {
                     order_id: orderId,
                     forfait_id: selectedForfait.id
                 });
-
                 if (response.data.status === 'SUCCESS') {
                     clearInterval(interval);
                     finishPurchase(response.data.message);
                 } else if (attempts >= maxAttempts) {
                     clearInterval(interval);
                     setProcessing(false);
-                    setStatusMessage({ type: 'error', text: 'Tiempo de espera agotado. Verifique su SMS.' });
+                    setStatusMessage({ type: 'error', text: t('client_forfaits.timeout_error') });
                 }
-                // Else continue pending
             } catch (error) {
                 console.error('Polling error', error);
-                // Don't stop immediately on network glitch, but maybe after a few errors
             }
         }, 2000);
     };
 
-    const finishPurchase = (msg = '¡Compra exitosa!') => {
+    const finishPurchase = (msg) => {
         setProcessing(false);
-        toast.success(msg);
-        setStatusMessage({ type: 'success', text: msg });
-
+        const successMsg = msg || t('client_forfaits.purchase_success');
+        toast.success(successMsg);
+        setStatusMessage({ type: 'success', text: successMsg });
         setTimeout(() => {
             setSelectedForfait(null);
             setPhoneNumber('');
@@ -119,112 +104,174 @@ const ClienteForfaits = () => {
         }, 2000);
     };
 
+    const getCardStyle = (index) => {
+        const gradients = [
+            'linear-gradient(135deg, #60a5fa 0%, #2563eb 100%)',   // Blue
+            'linear-gradient(135deg, #34d399 0%, #059669 100%)',   // Green
+            'linear-gradient(135deg, #ffbbf2 0%, #d946ef 100%)',   // Pink
+            'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',   // Gold
+        ];
+        return gradients[index % gradients.length];
+    };
+
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '2rem' }}>
-            <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-                <header style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', padding: '2rem 1rem' }}>
+            <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                <header style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <button
                         onClick={() => navigate('/cliente/dashboard')}
-                        style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}
+                        style={{
+                            background: 'white',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.25rem',
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                        }}
                     >
                         ⬅️
                     </button>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>Comprar Forfaits</h1>
+                    <div>
+                        <h1 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#111827', margin: 0 }}>
+                            {t('client_forfaits.title')}
+                        </h1>
+                        <p style={{ color: '#6b7280', margin: 0 }}>Elige el paquete que mejor se adapte a ti</p>
+                    </div>
                 </header>
 
                 {loading ? (
-                    <div className="text-center p-8">Cargando paquetes...</div>
+                    <div className="text-center p-8 text-gray-500 font-medium">{t('common.loading')}</div>
                 ) : (
-                    <div style={{ display: 'grid', gap: '1.5rem' }}>
-                        {forfaits.map((forfait) => (
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                        gap: '1.5rem',
+                        marginBottom: '3rem'
+                    }}>
+                        {forfaits.map((forfait, index) => (
                             <div
                                 key={forfait.id}
-                                style={{
-                                    backgroundColor: 'white',
-                                    borderRadius: '1rem',
-                                    padding: '1.5rem',
-                                    border: selectedForfait?.id === forfait.id ? `2px solid ${colors.accent}` : '1px solid #e5e7eb',
-                                    boxShadow: selectedForfait?.id === forfait.id ? `0 4px 12px ${colors.accent}30` : '0 2px 4px rgba(0,0,0,0.05)',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}
                                 onClick={() => setSelectedForfait(forfait)}
+                                style={{
+                                    background: selectedForfait?.id === forfait.id ? getCardStyle(index) : 'white',
+                                    color: selectedForfait?.id === forfait.id ? 'white' : '#1f2937',
+                                    borderRadius: '1.5rem',
+                                    padding: '2rem',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    transform: selectedForfait?.id === forfait.id ? 'scale(1.03) translateY(-5px)' : 'scale(1)',
+                                    boxShadow: selectedForfait?.id === forfait.id
+                                        ? '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                                        : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                                    border: selectedForfait?.id === forfait.id ? 'none' : '1px solid #e5e7eb',
+                                    position: 'relative',
+                                    overflow: 'hidden'
+                                }}
                             >
-                                <div>
-                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937' }}>{forfait.nombre}</h3>
-                                    <p style={{ color: '#6b7280', fontSize: '0.95rem' }}>{forfait.viajes} viajes • {forfait.descripcion}</p>
-                                </div>
-                                <div style={{ textAlign: 'right' }}>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.primary }}>
-                                        {forfait.precio} CFA
-                                    </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                                        {forfait.nombre}
+                                    </h3>
                                     {selectedForfait?.id === forfait.id && (
-                                        <div style={{ fontSize: '0.875rem', color: colors.accent, fontWeight: '600' }}>Seleccionado</div>
+                                        <span style={{ fontSize: '1.5rem' }}>✨</span>
                                     )}
                                 </div>
+
+                                <div style={{ marginBottom: '1.5rem' }}>
+                                    <span style={{ fontSize: '2.5rem', fontWeight: '800' }}>
+                                        {forfait.precio}
+                                    </span>
+                                    <span style={{ fontSize: '1rem', opacity: 0.8, marginLeft: '4px' }}>CFA</span>
+                                </div>
+
+                                <div style={{
+                                    padding: '0.75rem',
+                                    borderRadius: '0.75rem',
+                                    background: selectedForfait?.id === forfait.id ? 'rgba(255,255,255,0.2)' : '#f3f4f6',
+                                    marginBottom: '1rem',
+                                    fontWeight: '600'
+                                }}>
+                                    🚀 {t('client_forfaits.trips_count', { count: forfait.viajes_incluidos || forfait.viajes })}
+                                </div>
+
+                                <p style={{ fontSize: '0.9rem', opacity: 0.9, lineHeight: '1.5' }}>
+                                    {forfait.descripcion || t('client_forfaits.default_desc')}
+                                </p>
                             </div>
                         ))}
                     </div>
                 )}
 
-                {/* Payment Modal / Section */}
+                {/* Payment Section */}
                 {selectedForfait && (
                     <div style={{
                         marginTop: '2rem',
                         backgroundColor: 'white',
-                        borderRadius: '1rem',
-                        padding: '2rem',
-                        boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
-                        borderTop: `4px solid ${colors.accent}`,
-                        animation: 'slideUp 0.3s ease-out'
+                        borderRadius: '1.5rem',
+                        padding: '2.5rem',
+                        boxShadow: '0 -10px 40px rgba(0,0,0,0.1)',
+                        animation: 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                        maxWidth: '600px',
+                        margin: '0 auto'
                     }}>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span style={{ color: '#ff7900' }}>🟠</span> Pago con Orange Money
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#111827' }}>
+                            <img src="/om-logo.png" onError={(e) => e.target.style.display = 'none'} alt="" style={{ height: '24px' }} />
+                            {t('client_forfaits.payment_title')}
                         </h2>
 
                         <form onSubmit={handleBuy}>
-                            <div style={{ marginBottom: '1.5rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#374151' }}>
-                                    Número de Teléfono
+                            <div style={{ marginBottom: '2rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: '600', color: '#374151', fontSize: '0.95rem' }}>
+                                    {t('client_forfaits.phone_label')}
                                 </label>
-                                <input
-                                    type="text"
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                    placeholder="Ej: 77000000"
-                                    style={{
-                                        width: '100%',
-                                        padding: '1rem',
-                                        borderRadius: '0.5rem',
-                                        border: '2px solid #e5e7eb',
-                                        fontSize: '1.1rem',
-                                        outline: 'none'
-                                    }}
-                                    required
-                                    pattern="\d{8,}"
-                                    title="Ingrese un número válido (mínimo 8 dígitos)"
-                                    disabled={processing}
-                                />
-                                <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>
-                                    Se debitarán <strong>{selectedForfait.precio} CFA</strong> de su cuenta.
+                                <div style={{ position: 'relative' }}>
+                                    <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '1.2rem' }}>📱</span>
+                                    <input
+                                        type="text"
+                                        value={phoneNumber}
+                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                        placeholder="Ej: 771234567"
+                                        style={{
+                                            width: '100%',
+                                            padding: '1rem 1rem 1rem 3rem',
+                                            borderRadius: '0.75rem',
+                                            border: '2px solid #e5e7eb',
+                                            fontSize: '1.1rem',
+                                            outline: 'none',
+                                            transition: 'border-color 0.2s',
+                                            backgroundColor: '#f9fafb'
+                                        }}
+                                        onFocus={(e) => { e.target.style.borderColor = '#ea580c'; e.target.style.backgroundColor = 'white'; }}
+                                        onBlur={(e) => { e.target.style.borderColor = '#e5e7eb'; e.target.style.backgroundColor = '#f9fafb'; }}
+                                        required
+                                        pattern="\d{8,}"
+                                        disabled={processing}
+                                    />
+                                </div>
+                                <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <span>ℹ️</span>
+                                    <span dangerouslySetInnerHTML={{ __html: t('client_forfaits.debit_warning', { amount: selectedForfait.precio }) }} />
                                 </p>
                             </div>
 
-                            {/* Status Message Area */}
                             {statusMessage && (
                                 <div style={{
                                     padding: '1rem',
-                                    marginBottom: '1rem',
-                                    backgroundColor: statusMessage.type === 'error' ? '#fee2e2' : '#dbeafe',
-                                    color: statusMessage.type === 'error' ? '#991b1b' : '#1e40af',
-                                    borderRadius: '0.5rem',
-                                    textAlign: 'center'
+                                    marginBottom: '1.5rem',
+                                    backgroundColor: statusMessage.type === 'error' ? '#fef2f2' : '#eff6ff',
+                                    color: statusMessage.type === 'error' ? '#b91c1c' : '#1d4ed8',
+                                    borderRadius: '0.75rem',
+                                    textAlign: 'center',
+                                    fontSize: '0.95rem',
+                                    border: `1px solid ${statusMessage.type === 'error' ? '#fecaca' : '#bfdbfe'}`
                                 }}>
                                     {statusMessage.text}
-                                    {processing && <div className="spinner" style={{ marginTop: '0.5rem' }}>⏳ Esperando confirmación...</div>}
+                                    {processing && <div style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>⏳ {t('client_forfaits.waiting')}</div>}
                                 </div>
                             )}
 
@@ -234,17 +281,31 @@ const ClienteForfaits = () => {
                                 style={{
                                     width: '100%',
                                     padding: '1.25rem',
-                                    borderRadius: '0.75rem',
+                                    borderRadius: '1rem',
                                     border: 'none',
-                                    backgroundColor: processing ? '#9ca3af' : '#ff7900', // OM Orange
+                                    background: processing ? '#9ca3af' : 'linear-gradient(to right, #ea580c, #c2410c)',
                                     color: 'white',
                                     fontWeight: 'bold',
                                     fontSize: '1.1rem',
                                     cursor: processing ? 'not-allowed' : 'pointer',
-                                    transition: 'background 0.2s'
+                                    boxShadow: processing ? 'none' : '0 4px 6px -1px rgba(234, 88, 12, 0.3)',
+                                    transition: 'transform 0.1s',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.75rem'
                                 }}
+                                onMouseDown={(e) => !processing && (e.currentTarget.style.transform = 'scale(0.98)')}
+                                onMouseUp={(e) => !processing && (e.currentTarget.style.transform = 'scale(1)')}
                             >
-                                {processing ? 'Procesando Pago...' : `Pagar ${selectedForfait.precio} CFA`}
+                                {processing ? (
+                                    <>{t('client_forfaits.processing')}</>
+                                ) : (
+                                    <>
+                                        <span>💳</span>
+                                        {t('client_forfaits.pay_btn', { amount: selectedForfait.precio })}
+                                    </>
+                                )}
                             </button>
                         </form>
                     </div>
@@ -252,7 +313,7 @@ const ClienteForfaits = () => {
             </div>
             <style>{`
                 @keyframes slideUp {
-                    from { transform: translateY(20px); opacity: 0; }
+                    from { transform: translateY(50px); opacity: 0; }
                     to { transform: translateY(0); opacity: 1; }
                 }
             `}</style>

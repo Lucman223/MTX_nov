@@ -1,4 +1,25 @@
 {
+    "driver_dashboard": {
+        "new_trip_alert": "¡Nuevo viaje disponible!",
+        "trip_accepted": "Viaje aceptado con éxito",
+        "accept_error": "Error al aceptar el viaje",
+        "offline_error": "⚠️ Debes ponerte EN LÍNEA primero",
+        "online_msg": "🔴 Te has puesto ONLINE",
+        "offline_msg": "⚪ Te has puesto OFFLINE",
+        "subscription_required": "🚫 Acceso denegado: Requiere suscripción",
+        "status_updated": "Estado actualizado a: {{status}}",
+        "update_error": "Error al actualizar el estado",
+        "driver_role": "Motorista",
+        "in_service": "🟢 En servicio",
+        "status_online": "🟢 En Línea",
+        "status_offline": "⚪ Desconectado",
+        "start_trip": "Iniciar Viaje",
+        "complete_trip": "Completar Viaje",
+        "pending_requests": "Solicitudes Pendientes",
+        "no_requests": "No hay solicitudes pendientes en este momento",
+        "accept_trip": "Aceptar Viaje",
+        "new_tag": "Nuevo"
+    },
     "common": {
         "login": "Iniciar Sesión",
         "logout": "Cerrar Sesión",
@@ -25,6 +46,9 @@
         "role_client": "👤 Cliente",
         "role_driver": "🏍️ Motorista"
     },
+    "seo": {
+        "default_description": "Transporte fiable y rápido en Bamako. Moto taxis seguros."
+    },
     "nav": {
         "admin_title": "MotoTX Admin",
         "dashboard": "Dashboard",
@@ -35,5 +59,38 @@
         "reports": "Reportes",
         "admin_panel": "Panel de Administración",
         "admin_role": "Administrador"
+    },
+    "client_dashboard": {
+        "plan_trip": "Planificar Viaje",
+        "origin": "ORIGEN",
+        "destination": "DESTINO",
+        "tap_map": "Toca en el mapa",
+        "request_now": "🚀 Solicitar Moto Ahora",
+        "balance_title": "💰 Saldo de Viajes",
+        "available_trips": "Tienes {{count}} viajes disponibles",
+        "no_trips": "No tienes forfaits activos",
+        "buy_forfait": "Comprar Forfait",
+        "trip_active": "VIAJE ACTIVO",
+        "state": "Estado",
+        "driver": "Motorista",
+        "history": "📋 Historial",
+        "profile": "👤 Perfil",
+        "trips_badge": "{{count}} viajes"
+    },
+    "client_forfaits": {
+        "title": "Comprar Forfaits",
+        "payment_title": "Pago con Orange Money",
+        "phone_label": "Número de Teléfono",
+        "phone_hint": "Ingrese un número válido (mín 8 dígitos)",
+        "debit_warning": "Se debitarán <strong>{{amount}} CFA</strong> de su cuenta.",
+        "waiting": "Esperando confirmación...",
+        "processing": "Procesando Pago...",
+        "pay_btn": "Pagar {{amount}} CFA",
+        "payment_error": "Error al iniciar pago",
+        "timeout_error": "Tiempo agotado. Verifique su SMS.",
+        "purchase_success": "¡Compra exitosa!",
+        "trips_count": "{{count}} viajes",
+        "default_desc": "La mejor opción",
+        "selected": "Seleccionado"
     }
 }

@@ -19,6 +19,7 @@ Plataforma digital para la gestión de paquetes de viajes prepagados (forfaits) 
 - ✅ Geolocalización del motorista visible para el cliente
 - ✅ **Soporte Multilingüe** (ES, FR, EN, AR) con RTL
 - ✅ Sistema de Calificaciones (Cliente/Motorista)
+- ✅ **Suscripciones para Motoristas** (Planes Diario/Semanal/VIP)
 
 ## 🛠️ Stack Tecnológico
 
@@ -34,6 +35,7 @@ Plataforma digital para la gestión de paquetes de viajes prepagados (forfaits) 
 - React Router
 - Axios
 - Leaflet (Mapas)
+- React-Helmet-Async (SEO)
 
 ## 📋 Requisitos Previos
 
@@ -182,6 +184,60 @@ Este script simula un ciclo completo:
    - Aceptar solicitud de viaje
    - Cambiar estado a "En curso" → "Completado"
    - El navegador pedirá permisos de ubicación
+
+## 📊 Diagrama de Base de Datos (ERD)
+
+```mermaid
+erDiagram
+    USERS ||--o| MOTORISTA_PERFIL : "tiene un"
+    USERS ||--o{ VIAJES : "solicita (cliente)"
+    USERS ||--o{ VIAJES : "realiza (motorista)"
+    USERS ||--o{ CLIENTE_FORFAITS : "compra"
+    FORFAITS ||--o{ CLIENTE_FORFAITS : "define"
+
+    USERS {
+        int id
+        string name
+        string email
+        string password
+        enum rol "admin, cliente, motorista"
+    }
+
+    MOTORISTA_PERFIL {
+        int id
+        int user_id
+        string licencia
+        string matricula
+        boolean is_online
+        float latitud
+        float longitud
+    }
+
+    VIAJES {
+        int id
+        int cliente_id
+        int motorista_id
+        string estado
+        float origen_lat
+        float destino_lat
+        float costo
+    }
+
+    FORFAITS {
+        int id
+        string nombre
+        int viajes_incluidos
+        int dias_validez
+    }
+
+    CLIENTE_FORFAITS {
+        int id
+        int cliente_id
+        int forfait_id
+        int viajes_restantes
+        date fecha_expiracion
+    }
+```
 
 ## 📁 Estructura del Proyecto
 

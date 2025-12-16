@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 import { useAuth } from '../../context/AuthContext';
+import SEO from '../../components/Common/SEO';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -12,11 +13,11 @@ function LoginPage() {
     const navigate = useNavigate();
     const { t } = useTranslation();
 
-    // Color system
+    // Color system (Accessible)
     const colors = {
         primary: '#2563eb',
-        secondary: '#10b981',
-        accent: '#f59e0b',
+        secondary: '#059669',
+        accent: '#b45309',
         error: '#ef4444'
     };
 
@@ -56,6 +57,7 @@ function LoginPage() {
             position: 'relative'
         }}>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                <SEO title={t('common.login')} />
                 <LanguageSwitcher />
             </div>
 

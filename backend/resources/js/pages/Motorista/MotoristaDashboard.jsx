@@ -5,14 +5,17 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import useNotifications from '../../hooks/useNotifications';
 import InstallPrompt from '../../components/Common/InstallPrompt';
+import { useTranslation } from 'react-i18next';
+import SEO from '../../components/Common/SEO';
 
 const MotoristaDashboard = () => {
     const { logout, user } = useAuth();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [viajes, setViajes] = useState([]);
     const [currentTrip, setCurrentTrip] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [isOnline, setIsOnline] = useState(false); // New state for driver status
+    const [isOnline, setIsOnline] = useState(false);
 
     // Color system
     const colors = {
@@ -25,28 +28,15 @@ const MotoristaDashboard = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            // Check for active trip first
             const activeRes = await axios.get('/api/viajes/actual');
-
-            // Fix: Check if data has an ID (avoids empty object issue)
             if (activeRes.data && activeRes.data.id) {
                 setCurrentTrip(activeRes.data);
-                setViajes([]); // Clear pending list
+                setViajes([]);
             } else {
                 setCurrentTrip(null);
                 const pendingRes = await axios.get('/api/viajes/pendientes');
                 setViajes(Array.isArray(pendingRes.data) ? pendingRes.data : []);
             }
-
-            // Fetch driver availability status
-            try {
-                // We assume there is an endpoint to get current status or we use the user object if updated
-                // For now, let's assume the user context might be stale, so maybe fetch profile?
-                // Or if the backend supports GET status. 
-                // Let's rely on local toggle for now but good to sync.
-                // Actually, let's just default to 'true' if they are here, or fetch profile.
-            } catch (ignore) { }
-
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -58,7 +48,6 @@ const MotoristaDashboard = () => {
         fetchData();
         const interval = setInterval(fetchData, 10000);
 
-        // Location Tracking
         const locationInterval = setInterval(() => {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(async (position) => {
@@ -66,14 +55,12 @@ const MotoristaDashboard = () => {
                     try {
                         await axios.put('/api/motorista/ubicacion', { latitude, longitude });
                         console.log('Location updated', { latitude, longitude });
-                    } catch (err) {
-                        console.error('Error updating location', err);
-                    }
+                    } catch (err) { }
                 }, (error) => {
                     console.error("Geolocation error:", error);
                 });
             }
-        }, 10000); // Update location every 10s
+        }, 10000);
 
         return () => {
             clearInterval(interval);
@@ -81,12 +68,11 @@ const MotoristaDashboard = () => {
         };
     }, []);
 
-    // Real-time notifications
     const { listenToAvailableTrips } = useNotifications();
 
     useEffect(() => {
         listenToAvailableTrips((trip) => {
-            toast.success('¡Nuevo viaje disponible!');
+            toast.success(t('driver_dashboard.new_trip_alert'));
             fetchData();
         });
     }, []);
@@ -99,25 +85,32 @@ const MotoristaDashboard = () => {
     const handleAcceptTrip = async (tripId) => {
         try {
             await axios.post(`/api/viajes/${tripId}/aceptar`);
-            alert('Viaje aceptado con éxito');
+            toast.success(t('driver_dashboard.trip_accepted'));
             fetchData();
         } catch (error) {
             console.error('Error accepting trip:', error);
-            alert('Error al aceptar el viaje');
+            const msg = error.response?.data?.error || t('driver_dashboard.accept_error');
+            if (msg.includes('not active')) {
+                toast.error(t('driver_dashboard.offline_error'));
+            } else {
+                toast.error(msg);
+            }
         }
     };
 
     const handleToggleStatus = async () => {
-        // Backend requires 'activo' or 'inactivo'
         const newStatus = !isOnline ? 'activo' : 'inactivo';
         try {
-            // FIX: Backend expects 'estado_actual', not 'estado'
             await axios.put('/api/motorista/status', { estado_actual: newStatus });
             setIsOnline(!isOnline);
-            toast.success(newStatus === 'activo' ? '🔴 Te has puesto ONLINE' : '⚪ Te has puesto OFFLINE');
+            toast.success(newStatus === 'activo' ? t('driver_dashboard.online_msg') : t('driver_dashboard.offline_msg'));
         } catch (error) {
             console.error('Error toggling status:', error);
-            // Fallback alert if toast is missed
+            if (error.response && error.response.status === 403) {
+                toast.error(t('driver_dashboard.subscription_required'));
+                setTimeout(() => navigate('/motorista/suscripciones'), 1500);
+                return;
+            }
             alert('Error updating status: ' + (error.response?.data?.message || 'Check connection'));
         }
     };
@@ -126,11 +119,11 @@ const MotoristaDashboard = () => {
         if (!currentTrip) return;
         try {
             await axios.put(`/api/viajes/${currentTrip.id}/estado`, { estado: newStatus });
-            toast.success(`Estado actualizado a: ${newStatus}`);
+            toast.success(t('driver_dashboard.status_updated', { status: newStatus }));
             fetchData();
         } catch (error) {
             console.error('Error updating status:', error);
-            toast.error('Error al actualizar el estado');
+            toast.error(t('driver_dashboard.update_error'));
         }
     };
 
@@ -142,13 +135,11 @@ const MotoristaDashboard = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // ... (rest of logic) ...
-
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: isMobile ? '80px' : '0' }}>
+            <SEO title={t('nav.dashboard')} />
             <InstallPrompt />
 
-            {/* Responsive Header */}
             <header style={{
                 backgroundColor: 'white',
                 padding: isMobile ? '1rem' : '1.25rem 2rem',
@@ -168,12 +159,11 @@ const MotoristaDashboard = () => {
                             {isMobile ? 'MotoTX Driver' : 'MotoTX Motorista v1.1'}
                         </h1>
                         <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem', color: '#6b7280' }}>
-                            {user?.name || 'Motorista'}
+                            {user?.name || t('driver_dashboard.driver_role')}
                         </span>
                     </div>
                 </div>
 
-                {/* Desktop Nav - Hidden on Mobile */}
                 {!isMobile && (
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         <div
@@ -192,7 +182,7 @@ const MotoristaDashboard = () => {
                                 border: isOnline ? `2px solid ${colors.secondary}` : '2px solid transparent'
                             }}
                         >
-                            {currentTrip ? '🟢 En servicio' : (isOnline ? '🟢 En Línea' : '⚪ Desconectado')}
+                            {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? t('driver_dashboard.status_online') : t('driver_dashboard.status_offline'))}
                             {!currentTrip && <span style={{ fontSize: '0.75rem' }}>↻</span>}
                         </div>
                         <button
@@ -207,7 +197,21 @@ const MotoristaDashboard = () => {
                                 cursor: 'pointer',
                             }}
                         >
-                            📋 Historial
+                            {t('client_dashboard.history')}
+                        </button>
+                        <button
+                            onClick={() => navigate('/motorista/suscripciones')}
+                            style={{
+                                padding: '0.5rem 1.25rem',
+                                background: '#f59e0b',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            👑 {t('nav.forfaits')}
                         </button>
                         <button
                             onClick={() => navigate('/motorista/perfil')}
@@ -221,7 +225,7 @@ const MotoristaDashboard = () => {
                                 cursor: 'pointer',
                             }}
                         >
-                            👤 Perfil
+                            {t('client_dashboard.profile')}
                         </button>
                         <button
                             onClick={handleLogout}
@@ -235,12 +239,11 @@ const MotoristaDashboard = () => {
                                 cursor: 'pointer',
                             }}
                         >
-                            Salir
+                            {t('common.logout')}
                         </button>
                     </div>
                 )}
 
-                {/* Mobile Status Toggle (Mini) */}
                 {isMobile && (
                     <div
                         onClick={currentTrip ? null : handleToggleStatus}
@@ -255,12 +258,11 @@ const MotoristaDashboard = () => {
                             border: isOnline ? `2px solid ${colors.secondary}` : '1px solid #d1d5db'
                         }}
                     >
-                        {currentTrip ? 'En servicio' : (isOnline ? 'ON' : 'OFF')}
+                        {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? 'ON' : 'OFF')}
                     </div>
                 )}
             </header>
 
-            {/* Mobile Bottom Nav */}
             {isMobile && (
                 <div style={{
                     position: 'fixed',
@@ -277,32 +279,30 @@ const MotoristaDashboard = () => {
                 }}>
                     <button onClick={() => { }} style={{ background: 'none', border: 'none', color: colors.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
                         <span style={{ fontSize: '1.25rem' }}>🏠</span>
-                        Inicio
+                        {t('nav.dashboard')}
                     </button>
                     <button onClick={() => navigate('/motorista/historial')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
                         <span style={{ fontSize: '1.25rem' }}>📋</span>
-                        Historial
+                        {t('client_dashboard.history')}
                     </button>
                     <button onClick={() => navigate('/motorista/perfil')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
                         <span style={{ fontSize: '1.25rem' }}>👤</span>
-                        Perfil
+                        {t('client_dashboard.profile')}
                     </button>
                     <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: colors.error, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
                         <span style={{ fontSize: '1.25rem' }}>🚪</span>
-                        Salir
+                        {t('common.logout')}
                     </button>
                 </div>
             )}
 
-            {/* Main Content */}
             <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
                 {loading && (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                        Cargando...
+                        {t('common.loading')}
                     </div>
                 )}
 
-                {/* Current Trip */}
                 {currentTrip && (
                     <div style={{
                         backgroundColor: 'white',
@@ -313,17 +313,17 @@ const MotoristaDashboard = () => {
                         border: `2px solid ${colors.secondary}`
                     }}>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.secondary, marginBottom: '1.5rem' }}>
-                            🚀 Viaje Activo
+                            🚀 {t('client_dashboard.trip_active')}
                         </h2>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
                             <div>
-                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>Cliente</div>
+                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>{t('client_dashboard.client')}</div>
                                 <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>
                                     {currentTrip.cliente?.name || 'N/A'}
                                 </div>
                             </div>
                             <div>
-                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>Estado</div>
+                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>{t('client_dashboard.state')}</div>
                                 <div style={{
                                     fontSize: '1.125rem',
                                     fontWeight: '600',
@@ -360,7 +360,7 @@ const MotoristaDashboard = () => {
                                         e.target.style.boxShadow = `0 4px 12px ${colors.primary}40`;
                                     }}
                                 >
-                                    Iniciar Viaje
+                                    {t('driver_dashboard.start_trip')}
                                 </button>
                             )}
                             {currentTrip.estado === 'en_curso' && (
@@ -387,18 +387,17 @@ const MotoristaDashboard = () => {
                                         e.target.style.boxShadow = `0 4px 12px ${colors.secondary}40`;
                                     }}
                                 >
-                                    Completar Viaje
+                                    {t('driver_dashboard.complete_trip')}
                                 </button>
                             )}
                         </div>
                     </div>
                 )}
 
-                {/* Pending Trips */}
                 {!currentTrip && (
                     <div>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
-                            📋 Solicitudes Pendientes
+                            📋 {t('driver_dashboard.pending_requests')}
                         </h2>
                         {viajes.length === 0 ? (
                             <div style={{
@@ -410,7 +409,7 @@ const MotoristaDashboard = () => {
                             }}>
                                 <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
                                 <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
-                                    No hay solicitudes pendientes en este momento
+                                    {t('driver_dashboard.no_requests')}
                                 </p>
                             </div>
                         ) : (
@@ -437,7 +436,7 @@ const MotoristaDashboard = () => {
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
                                             <div>
-                                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>Cliente</div>
+                                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>{t('client_dashboard.client')}</div>
                                                 <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>
                                                     {viaje.cliente?.name || 'N/A'}
                                                 </div>
@@ -450,7 +449,7 @@ const MotoristaDashboard = () => {
                                                 fontSize: '0.875rem',
                                                 fontWeight: '600'
                                             }}>
-                                                Nuevo
+                                                {t('driver_dashboard.new_tag')}
                                             </div>
                                         </div>
                                         <button
@@ -476,7 +475,7 @@ const MotoristaDashboard = () => {
                                                 e.target.style.boxShadow = `0 4px 12px ${colors.primary}40`;
                                             }}
                                         >
-                                            Aceptar Viaje
+                                            {t('driver_dashboard.accept_trip')}
                                         </button>
                                     </div>
                                 ))}

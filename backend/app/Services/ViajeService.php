@@ -82,6 +82,15 @@ class ViajeService
 
         if ($newStatus === 'completado') {
             $updateData['fecha_fin'] = Carbon::now();
+
+            // Decrement trial trips if applicable
+            $perfil = MotoristaPerfil::where('usuario_id', $motorista->id)->first();
+            if ($perfil) {
+                $hasSubscription = $perfil->activeSubscription()->exists();
+                if (!$hasSubscription && $perfil->viajes_prueba_restantes > 0) {
+                    $perfil->decrement('viajes_prueba_restantes');
+                }
+            }
         }
 
         $viaje->update($updateData);

@@ -191,6 +191,31 @@ const ClienteProfile = () => {
                             {saving ? 'Guardando...' : 'Guardar Cambios'}
                         </button>
                     </form>
+
+                    <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e5e7eb' }}>
+                        <h3 style={{ fontSize: '1rem', color: colors.error, marginBottom: '0.5rem' }}>Zona de Peligro</h3>
+                        <button
+                            onClick={() => {
+                                if (window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+                                    // Simulación de borrado o llamada al endpoint
+                                    toast.error('Por favor contacta a soporte@mototx.ml para eliminar tu cuenta permanentemente por seguridad.');
+                                }
+                            }}
+                            type="button"
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem',
+                                border: `1px solid ${colors.error}`,
+                                backgroundColor: '#fef2f2',
+                                color: colors.error,
+                                borderRadius: '0.5rem',
+                                fontWeight: '600',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Eliminar Cuenta
+                        </button>
+                    </div>
                 </div>
 
                 {/* Forfaits Section */}
@@ -327,8 +352,8 @@ const ClienteProfile = () => {
                     </div>
                 </div>
 
-            </main>
-        </div>
+            </main >
+        </div >
     );
 };
 
