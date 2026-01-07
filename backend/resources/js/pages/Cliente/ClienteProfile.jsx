@@ -3,6 +3,15 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
+/**
+ * ClienteProfile Component
+ *
+ * [ES] Gestión del perfil del cliente.
+ *      Permite al usuario editar sus datos, ver sus forfaits activos y consultar el historial de compras de créditos de viaje.
+ *
+ * [FR] Gestion du profil du client.
+ *      Permet à l'utilisateur de modifier ses données, de voir ses forfaits actifs et de consulter l'historique des achats de crédits de voyage.
+ */
 const ClienteProfile = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();

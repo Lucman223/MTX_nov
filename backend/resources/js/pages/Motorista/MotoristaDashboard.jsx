@@ -8,14 +8,21 @@ import InstallPrompt from '../../components/Common/InstallPrompt';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/Common/SEO';
 
+/**
+ * MotoristaDashboard Component
+ *
+ * [ES] Interfaz dedicada para Conductores (Motoristas).
+ *      Funcionalidades Clave: Toggle Online/Offline, Gestión de viajes, Resumen de ganancias.
+ *
+ * [FR] Interface dédiée pour les Chauffeurs (Motoristas).
+ *      Fonctionnalités Clés : Bascule En ligne/Hors ligne, Gestion des voyages, Aperçu des revenus.
+ *
+ * @component
+ */
 const MotoristaDashboard = () => {
     const { logout, user } = useAuth();
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const [viajes, setViajes] = useState([]);
-    const [currentTrip, setCurrentTrip] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [isOnline, setIsOnline] = useState(false);
 
     // Color system
     const colors = {
@@ -25,16 +32,37 @@ const MotoristaDashboard = () => {
         error: '#ef4444'
     };
 
+    const [stats, setStats] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [viajes, setViajes] = useState([]);
+    const [currentTrip, setCurrentTrip] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [isOnline, setIsOnline] = useState(false);
+    const [profile, setProfile] = useState(null);
+
     const fetchData = async () => {
         setLoading(true);
         try {
-            const activeRes = await axios.get('/api/viajes/actual');
+            // Fetch Stats
+            try {
+                const statsRes = await axios.get('/api/motorista/stats');
+                setStats(statsRes.data);
+            } catch (e) { console.error('Error fetching stats', e); }
+
+            // Fetch Profile (Wallet Balance)
+            try {
+                const profileRes = await axios.get('/api/motorista/perfil');
+                setProfile(profileRes.data);
+                setIsOnline(profileRes.data.estado_actual === 'activo');
+            } catch (e) { console.error('Error fetching profile', e); }
+
+            const activeRes = await axios.get('/api/motorista/viajes/actual'); // Corrected endpoint if needed
             if (activeRes.data && activeRes.data.id) {
                 setCurrentTrip(activeRes.data);
                 setViajes([]);
             } else {
                 setCurrentTrip(null);
-                const pendingRes = await axios.get('/api/viajes/pendientes');
+                const pendingRes = await axios.get('/api/motorista/viajes/solicitados');
                 setViajes(Array.isArray(pendingRes.data) ? pendingRes.data : []);
             }
         } catch (error) {
@@ -43,6 +71,8 @@ const MotoristaDashboard = () => {
             setLoading(false);
         }
     };
+
+    // ... (rest of useEffects) ...
 
     useEffect(() => {
         fetchData();
@@ -118,12 +148,27 @@ const MotoristaDashboard = () => {
     const handleUpdateStatus = async (newStatus) => {
         if (!currentTrip) return;
         try {
-            await axios.put(`/api/viajes/${currentTrip.id}/estado`, { estado: newStatus });
+            await axios.put(`/api/motorista/viajes/${currentTrip.id}/status`, { estado: newStatus });
             toast.success(t('driver_dashboard.status_updated', { status: newStatus }));
             fetchData();
         } catch (error) {
             console.error('Error updating status:', error);
             toast.error(t('driver_dashboard.update_error'));
+        }
+    };
+
+    const handleWithdraw = async () => {
+        if (!profile || profile.billetera <= 0) {
+            toast.error(t('driver_dashboard.insufficient_funds'));
+            return;
+        }
+
+        try {
+            const res = await axios.post('/api/motorista/retirar', { monto: profile.billetera });
+            toast.success(t('driver_dashboard.withdraw_success'));
+            fetchData();
+        } catch (error) {
+            toast.error(error.response?.data?.error || 'Error processing withdrawal');
         }
     };
 
@@ -300,6 +345,65 @@ const MotoristaDashboard = () => {
                 {loading && (
                     <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
                         {t('common.loading')}
+                    </div>
+                )}
+
+                {/* Wallet & Earnings Card */}
+                {profile && (
+                    <div style={{
+                        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                        borderRadius: '1rem',
+                        padding: '1.5rem',
+                        color: 'white',
+                        marginBottom: '2rem',
+                        boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)',
+                        display: 'flex',
+                        flexDirection: isMobile ? 'column' : 'row',
+                        justifyContent: 'space-between',
+                        alignItems: isMobile ? 'start' : 'center',
+                        gap: '1rem'
+                    }}>
+                        <div>
+                            <div style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.25rem' }}>
+                                {t('driver_dashboard.wallet_title')}
+                            </div>
+                            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
+                                {profile.billetera} <span style={{ fontSize: '1rem', opacity: 0.8 }}>CFA</span>
+                            </div>
+                            <div style={{ fontSize: '0.75rem', opacity: 0.8, marginTop: '0.25rem' }}>
+                                {t('driver_dashboard.payout_daily_desc')}
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: isMobile ? 'stretch' : 'end' }}>
+                            <button
+                                onClick={handleWithdraw}
+                                disabled={profile.billetera <= 0}
+                                style={{
+                                    backgroundColor: 'white',
+                                    color: colors.secondary,
+                                    border: 'none',
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '0.75rem',
+                                    fontWeight: 'bold',
+                                    cursor: profile.billetera <= 0 ? 'not-allowed' : 'pointer',
+                                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                                    opacity: profile.billetera <= 0 ? 0.7 : 1
+                                }}
+                            >
+                                💸 {t('driver_dashboard.withdraw_btn')}
+                            </button>
+                            <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.5rem' }}>
+                                <div>
+                                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{t('nav.trips')} (Hoy)</div>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{stats?.today_trips || 0}</div>
+                                </div>
+                                <div style={{ borderLeft: '1px solid rgba(255,255,255,0.3)', paddingLeft: '1rem' }}>
+                                    <div style={{ fontSize: '0.7rem', color: '#fbbf24', fontWeight: 'bold' }}>⚡ Ahorro</div>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{stats?.commission_saved || 0} CFA</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
 

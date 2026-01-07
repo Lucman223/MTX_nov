@@ -4,6 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class MotoristaPerfil
+ *
+ * [ES] Perfil extendido para usuarios con rol 'motorista'.
+ *      Almacena datos del vehículo, licencia, e información de geolocalización en tiempo real.
+ *
+ * [FR] Profil étendu pour les utilisateurs avec le rôle 'motorista'.
+ *      Stocke les données du véhicule, le permis et les informations de géolocalisation en temps réel.
+ *
+ * @package App\Models
+ */
 class MotoristaPerfil extends Model
 {
     protected $table = 'motoristas_perfiles';
@@ -18,6 +29,7 @@ class MotoristaPerfil extends Model
         'latitud_actual',
         'longitud_actual',
         'viajes_prueba_restantes',
+        'billetera',
     ];
 
     public function suscripciones()

@@ -8,7 +8,26 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject; // Import JWTSubject
 
-class User extends Authenticatable implements JWTSubject // Implement JWTSubject
+/**
+ * Class User
+ *
+ * [ES] Representa un usuario registrado en el sistema.
+ *      El atributo 'rol' determina las capacidades (admin, motorista, cliente).
+ *      Implementa JWTSubject para interfaz con paquete jwt-auth.
+ *
+ * [FR] Représente un utilisateur enregistré dans le système.
+ *      L'attribut 'rol' détermine les capacités (admin, motorista, client).
+ *      Implémente JWTSubject pour l'interface avec le package jwt-auth.
+ *
+ * @property int $id [ES] Identificador único [FR] Identifiant unique
+ * @property string $name [ES] Nombre completo [FR] Nom complet
+ * @property string $email [ES] Correo electrónico único [FR] Adresse email unique
+ * @property string $password [ES] Contraseña hasheada [FR] Mot de passe haché
+ * @property string $rol [ES] Rol del usuario: 'admin', 'motorista', 'cliente' [FR] Rôle de l'utilisateur
+ *
+ * @package App\Models
+ */
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -50,6 +69,7 @@ class User extends Authenticatable implements JWTSubject // Implement JWTSubject
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
+     * Use the primary key of the model.
      *
      * @return mixed
      */
@@ -60,6 +80,7 @@ class User extends Authenticatable implements JWTSubject // Implement JWTSubject
 
     /**
      * Return a key value array of custom claims to be added to the JWT.
+     * Can be used to embed roles or permissions directly in the token payload.
      *
      * @return array
      */
@@ -68,11 +89,23 @@ class User extends Authenticatable implements JWTSubject // Implement JWTSubject
         return [];
     }
 
+    /**
+     * Relationship: A user (specifically a 'motorista') has one driver profile
+     * containing vehicle and license details.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function motorista_perfil()
     {
         return $this->hasOne(MotoristaPerfil::class, 'usuario_id');
     }
 
+    /**
+     * Relationship: A user (specifically a 'cliente' or 'motorista' buying for themselves)
+     * can have multiple subscription records.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function clienteForfaits()
     {
         return $this->hasMany(ClienteForfait::class, 'cliente_id');

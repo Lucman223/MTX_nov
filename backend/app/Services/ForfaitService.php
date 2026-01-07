@@ -10,7 +10,8 @@ use Carbon\Carbon;
 class ForfaitService
 {
     /**
-     * Create a new forfait type (administrative).
+     * [ES] Crea un nuevo tipo de forfait (administrativo).
+     * [FR] Crée un nouveau type de forfait (administratif).
      *
      * @param array $data Validated data for the new forfait.
      * @return Forfait The newly created forfait model.

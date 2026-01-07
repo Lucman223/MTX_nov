@@ -18,7 +18,12 @@
         "pending_requests": "Pending Requests",
         "no_requests": "No pending requests at the moment",
         "accept_trip": "Accept Trip",
-        "new_tag": "New"
+        "new_tag": "New",
+        "wallet_title": "💰 Available Balance",
+        "withdraw_btn": "Withdraw Earnings",
+        "withdraw_success": "Withdrawal processed successfully",
+        "insufficient_funds": "Insufficient balance",
+        "payout_daily_desc": "Earnings ready to withdraw (Today)"
     },
     "common": {
         "login": "Login",

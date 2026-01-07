@@ -4,6 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 
+/**
+ * MotoristaProfile Component
+ *
+ * [ES] Gestión del perfil de conductor.
+ *      Permite actualizar datos personales (nombre, email, teléfono) y visualizar la información técnica del vehículo registrado.
+ *
+ * [FR] Gestion du profil du chauffeur.
+ *      Permet de mettre à jour les données personnelles (nom, email, téléphone) et de visualiser les informations techniques du véhicule enregistré.
+ */
 const MotoristaProfile = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();

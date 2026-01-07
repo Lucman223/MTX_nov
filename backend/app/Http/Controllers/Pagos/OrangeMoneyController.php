@@ -3,6 +3,12 @@ use App\Models\User;
 use App\Http\Requests\Pagos\InitiatePaymentRequest;
 use App\Services\OrangeMoneyService;
 
+/**
+ * Class OrangeMoneyController
+ *
+ * [ES] Controlador para la integración con la pasarela de pago Orange Money Mock.
+ * [FR] Contrôleur pour l'intégration avec la passerelle de paiement Orange Money Mock.
+ */
 class OrangeMoneyController extends Controller
 {
     protected $orangeMoneyService;

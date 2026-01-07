@@ -3,6 +3,12 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/Common/SEO';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * PrivacyPolicy Component
+ *
+ * [ES] Página informativa sobre el tratamiento de datos personales y privacidad.
+ * [FR] Page informative sur le traitement des données personnelles et la confidentialité.
+ */
 const PrivacyPolicy = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();

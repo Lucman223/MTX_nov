@@ -29,6 +29,30 @@ Route::get('/debug-full', function () {
     ]);
 });
 
+/* 
+// Debug Routes - Uncomment for Demo Data Generation
+Route::get('/debug/create-trip', function() {
+    $motoristas = \App\Models\User::where('rol', 'motorista')->latest()->take(10)->get();
+    $c = \App\Models\User::where('rol', 'cliente')->latest()->first();
+    
+    if($motoristas->count() > 0 && $c) {
+        foreach($motoristas as $m) {
+            \App\Models\Viaje::create([
+                'cliente_id' => $c->id,
+                'motorista_id' => $m->id,
+                'estado' => 'completado',
+                'origen_lat' => 12.6392, 'origen_lng' => -8.0029, 'destino_lat' => 12.6450, 'destino_lng' => -7.9950,
+                'fecha_solicitud' => now(),
+                'fecha_fin' => now(),
+                'updated_at' => now()
+            ]);
+        }
+        return 'Trips Created for ' . $motoristas->count() . ' drivers';
+    }
+    return 'Users Not Found';
+});
+*/
+
 // Include segregated API routes
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/register', [\App\Http\Controllers\Auth\AuthController::class, 'register']);

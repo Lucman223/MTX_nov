@@ -3,6 +3,15 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 
+/**
+ * RegisterPage Component
+ *
+ * [ES] Página de registro de nuevos usuarios.
+ *      Permite la creación de cuentas para Clientes y Motoristas.
+ *
+ * [FR] Page d'inscription des nouveaux utilisateurs.
+ *      Permet la création de comptes pour les Clients et les Chauffeurs.
+ */
 function RegisterPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();

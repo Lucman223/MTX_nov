@@ -5,6 +5,15 @@ import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 import { useAuth } from '../../context/AuthContext';
 import SEO from '../../components/Common/SEO';
 
+/**
+ * LoginPage Component
+ *
+ * [ES] Página de inicio de sesión de la plataforma.
+ *      Maneja la autenticación de usuarios y redirige según el rol (Admin, Cliente, Motorista).
+ *
+ * [FR] Page de connexion de la plateforme.
+ *      Gère l'authentification des utilisateurs et redirige selon le rôle (Admin, Client, Chauffeur).
+ */
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

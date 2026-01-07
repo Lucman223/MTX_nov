@@ -17,6 +17,15 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+/**
+ * DriverActiveTrip Component
+ *
+ * [ES] Panel de control del motorista durante un viaje activo.
+ *      Permite al conductor cambiar el estado de la solicitud (aceptado -> en_curso -> completado) y abrir navegación externa.
+ *
+ * [FR] Panneau de contrôle du chauffeur pendant un trajet actif.
+ *      Permet au chauffeur de changer le statut de la demande (accepté -> en_cours -> terminé) et d'ouvrir la navigation externe.
+ */
 const DriverActiveTrip = () => {
     const navigate = useNavigate();
     const [viaje, setViaje] = useState(null);
@@ -113,7 +122,7 @@ const DriverActiveTrip = () => {
                     </div>
                     <div className="text-right">
                         <span className={`px-2 py-1 text-xs rounded-full font-semibold ${viaje.estado === 'en_curso' ? 'bg-green-100 text-green-700' :
-                                'bg-blue-100 text-blue-700'
+                            'bg-blue-100 text-blue-700'
                             }`}>
                             {viaje.estado.replace('_', ' ').toUpperCase()}
                         </span>

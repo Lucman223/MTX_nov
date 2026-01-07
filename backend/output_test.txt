@@ -1,0 +1,17 @@
+
+
+
+
+
+
+
+
+
+--- MOTO-TX: PRUEBA DE RETIRO ---
+Motorista: Motorista Pruebas (moto@mototx.com)
+Saldo en Billetera: 2000 CFA
+1. Simulando ingreso de viaje: +5000 CFA
+   Nuevo Saldo: 7000 CFA
+2. Solicitando Retiro Diario: -3000 CFA
+   ✅ CANJE EXITOSO. Saldo Final: 4000 CFA
+---------------------------------

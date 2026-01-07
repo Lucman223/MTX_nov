@@ -1,6 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * LanguageSwitcher Component
+ *
+ * [ES] Selector global de idioma que utiliza i18next para cambiar la localización de la app.
+ *      Sincroniza el estado visual con el idioma actualmente cargado.
+ *
+ * [FR] Sélecteur de langue global utilisant i18next pour changer la localisation de l'application.
+ *      Synchronise l'état visuel avec la langue actuellement chargée.
+ */
 const LanguageSwitcher = () => {
     const { i18n } = useTranslation();
 

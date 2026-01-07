@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
 
+/**
+ * RatingModal Component
+ *
+ * [ES] Modal interactivo para calificar trayectos finalizados.
+ *      Permite al cliente asignar una puntuación (1-5 estrellas) y dejar un comentario opcional sobre el conductor.
+ *
+ * [FR] Modal interactif pour noter les trajets terminés.
+ *      Permet au client d'attribuer une note (1-5 étoiles) et de laisser un commentaire facultatif sur le chauffeur.
+ *
+ * @param {Object} props
+ * @param {boolean} props.isOpen - [ES] Estado de visibilidad [FR] État de visibilité
+ * @param {Function} props.onClose - [ES] Manejador de cierre [FR] Gestionnaire de fermeture
+ * @param {Function} props.onSubmit - [ES] Envío de datos al API [FR] Envoi des données à l'API
+ * @param {string} props.motoristaName - [ES] Nombre del conductor a calificar [FR] Nom du chauffeur à noter
+ */
 const RatingModal = ({ isOpen, onClose, onSubmit, motoristaName }) => {
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
@@ -65,8 +80,8 @@ const RatingModal = ({ isOpen, onClose, onSubmit, motoristaName }) => {
                             type="submit"
                             disabled={rating === 0}
                             className={`flex-1 py-3 px-4 font-semibold rounded-lg text-white transition-colors ${rating === 0
-                                    ? 'bg-blue-300 cursor-not-allowed'
-                                    : 'bg-blue-600 hover:bg-blue-700 shadow-lg'
+                                ? 'bg-blue-300 cursor-not-allowed'
+                                : 'bg-blue-600 hover:bg-blue-700 shadow-lg'
                                 }`}
                         >
                             Enviar Calificación

@@ -3,6 +3,15 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+/**
+ * MotoristaHistory Component
+ *
+ * [ES] Historial de servicios realizados por el conductor.
+ *      Muestra estadísticas de viajes totales y calificación media, además de la lista detallada de trayectos finalizados.
+ *
+ * [FR] Historique des services effectués par le chauffeur.
+ *      Affiche les statistiques des trajets totaux et la note moyenne, ainsi que la liste détaillée des trajets terminés.
+ */
 const MotoristaHistory = () => {
     const { logout, user } = useAuth();
     const navigate = useNavigate();

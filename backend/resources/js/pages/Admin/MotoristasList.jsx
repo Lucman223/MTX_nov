@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+/**
+ * MotoristasList Component
+ *
+ * [ES] Interfaz de administración para la gestión y validación de conductores.
+ *      Permite al administrador aprobar o rechazar el registro de motoristas basándose en sus datos y vehículo.
+ *
+ * [FR] Interface d'administration pour la gestion et la validation des chauffeurs.
+ *      Permet à l'administrateur d'approuver ou de rejeter l'inscription des chauffeurs en fonction de leurs données et de leur véhicule.
+ */
 const MotoristasList = () => {
     const [motoristas, setMotoristas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -60,7 +69,7 @@ const MotoristasList = () => {
     if (loading) return <div className="text-center p-10">Cargando...</div>;
 
     return (
-        <div style={{ paddingBottom: isMobile ? '80px' : '0' }}>
+        <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Gestión de Motoristas</h2>
 
             {/* Desktop Table View */}

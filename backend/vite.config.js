@@ -15,7 +15,7 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             devOptions: {
-                enabled: true
+                enabled: false // Disabled to prevent caching issues in dev tunnel
             },
             manifest: {
                 name: 'MotoTX - Plataforma de Mototaxi',
@@ -66,12 +66,8 @@ export default defineConfig({
     ],
     server: {
         host: '0.0.0.0',
-        port: 5174,
+        port: 5173,
         strictPort: true,
-        // hmr: {
-        //     host: '192.168.1.129',
-        //     clientPort: 5174,
-        // },
         proxy: {
             '/api': {
                 target: 'http://127.0.0.1:8000',

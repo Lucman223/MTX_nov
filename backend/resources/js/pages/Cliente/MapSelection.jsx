@@ -30,6 +30,15 @@ const MapClickHandler = ({ puntoActivo, setOrigen, setDestino }) => {
     return null;
 };
 
+/**
+ * MapSelection Component
+ *
+ * [ES] Componente interactivo de mapa para seleccionar origen y destino.
+ *      Gestiona clics en el mapa para capturar coordenadas y visualiza marcadores y la posición del motorista.
+ *
+ * [FR] Composant de carte interactif pour sélectionner l'origine et la destination.
+ *      Gère les clics sur la carte pour capturer les coordonnées et visualise les marqueurs et la position du chauffeur.
+ */
 const MapSelection = ({ origen, setOrigen, destino, setDestino, puntoActivo, motoristaPos }) => {
     const bamakoCoords = [12.6392, -8.0029];
 
@@ -37,7 +46,7 @@ const MapSelection = ({ origen, setOrigen, destino, setDestino, puntoActivo, mot
         <MapContainer
             center={bamakoCoords}
             zoom={13}
-            style={{ height: '100%', width: '100%', borderRadius: '0.75rem', zIndex: 0 }}
+            style={{ height: '100%', width: '100%', minHeight: '300px', borderRadius: '0.75rem', zIndex: 0 }}
         >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

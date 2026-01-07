@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getForfaits, createForfait, updateForfait, deleteForfait } from '../../services/ForfaitService';
 
+/**
+ * ForfaitManager Component
+ *
+ * [ES] Interfaz administrativa para el ciclo de vida completo de los forfaits (planes de clientes).
+ *      Permite crear, leer, actualizar y eliminar (CRUD) planes, gestionando estados de carga y errores.
+ *
+ * [FR] Interface administrative pour le cycle de vie complet des forfaits (plans clients).
+ *      Permet de créer, lire, mettre à jour et supprimer (CRUD) des plans, en gérant les états de chargement et les erreurs.
+ */
 const ForfaitManager = () => {
     const [forfaits, setForfaits] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -108,7 +117,7 @@ const ForfaitManager = () => {
     return (
         <div style={styles.container}>
             <h2>Gestión de Forfaits</h2>
-            
+
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
             <form onSubmit={handleSubmit} style={styles.form}>
@@ -133,7 +142,7 @@ const ForfaitManager = () => {
                         <th style={styles.th}>Nombre</th>
                         <th style={styles.th}>Precio</th>
                         <th style
-={styles.th}>Viajes</th>
+                            ={styles.th}>Viajes</th>
                         <th style={styles.th}>Validez (días)</th>
                         <th style={styles.th}>Estado</th>
                         <th style={styles.th}>Acciones</th>
@@ -148,8 +157,8 @@ const ForfaitManager = () => {
                             <td style={styles.td}>{forfait.dias_validez}</td>
                             <td style={styles.td}>{forfait.estado}</td>
                             <td style={styles.td}>
-                                <button onClick={() => handleEdit(forfait)} style={{...styles.button, ...styles.actionButton}}>Editar</button>
-                                <button onClick={() => handleDelete(forfait.id)} style={{...styles.button, ...styles.actionButton, background: '#dc3545'}}>Eliminar</button>
+                                <button onClick={() => handleEdit(forfait)} style={{ ...styles.button, ...styles.actionButton }}>Editar</button>
+                                <button onClick={() => handleDelete(forfait.id)} style={{ ...styles.button, ...styles.actionButton, background: '#dc3545' }}>Eliminar</button>
                             </td>
                         </tr>
                     )) : (

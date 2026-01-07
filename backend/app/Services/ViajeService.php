@@ -41,12 +41,12 @@ class ViajeService
     public function acceptTrip(User $motorista, Viaje $viaje): Viaje
     {
         if ($motorista->rol !== 'motorista') {
-            throw new \Exception('Forbidden: Only motoristas can accept trips');
+            throw new \Exception('[ES] Prohibido: Solo motoristas pueden aceptar viajes [FR] Interdit: Seuls les motoristes peuvent accepter des voyages');
         }
 
         $motoristaPerfil = MotoristaPerfil::where('usuario_id', $motorista->id)->first();
         if (!$motoristaPerfil || $motoristaPerfil->estado_actual !== 'activo') {
-            throw new \Exception('Motorista is not active or profile not found');
+            throw new \Exception('[ES] Motorista no activo o perfil no encontrado [FR] Motoriste non actif ou profil introuvable');
         }
 
         if ($viaje->estado !== 'solicitado' || $viaje->motorista_id !== null) {
@@ -75,7 +75,7 @@ class ViajeService
         ];
 
         if (!isset($validTransitions[$currentStatus]) || !in_array($newStatus, $validTransitions[$currentStatus])) {
-            throw new \Exception("Invalid state transition from {$currentStatus} to {$newStatus}");
+            throw new \Exception("[ES] Transición de estado inválida de {$currentStatus} a {$newStatus} [FR] Transition d'état invalide de {$currentStatus} à {$newStatus}");
         }
 
         $updateData = ['estado' => $newStatus];
@@ -86,6 +86,9 @@ class ViajeService
             // Decrement trial trips if applicable
             $perfil = MotoristaPerfil::where('usuario_id', $motorista->id)->first();
             if ($perfil) {
+                // Add trip cost to wallet
+                $perfil->increment('billetera', $viaje->costo);
+
                 $hasSubscription = $perfil->activeSubscription()->exists();
                 if (!$hasSubscription && $perfil->viajes_prueba_restantes > 0) {
                     $perfil->decrement('viajes_prueba_restantes');

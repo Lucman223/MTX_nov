@@ -18,7 +18,12 @@
         "pending_requests": "Demandes en attente",
         "no_requests": "Aucune demande en attente pour le moment",
         "accept_trip": "Accepter la course",
-        "new_tag": "Nouveau"
+        "new_tag": "Nouveau",
+        "wallet_title": "💰 Solde Disponible",
+        "withdraw_btn": "Retirer les Gains",
+        "withdraw_success": "Retrait traité avec succès",
+        "insufficient_funds": "Solde insuffisant",
+        "payout_daily_desc": "Gains prêts à être retirés (Aujourd’hui)"
     },
     "common": {
         "login": "Connexion",

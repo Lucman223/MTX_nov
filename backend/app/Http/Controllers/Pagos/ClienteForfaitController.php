@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Pagos\BuyForfaitRequest;
 use App\Services\ForfaitService;
 
+/**
+ * Class ClienteForfaitController
+ *
+ * [ES] Gestiona la compra y verificación de forfaits (planes de suscripción) por parte de los clientes.
+ * [FR] Gère l'achat et la vérification des forfaits (plans d'abonnement) par les clients.
+ */
 class ClienteForfaitController extends Controller
 {
     protected $orangeMoneyService;
@@ -19,28 +25,37 @@ class ClienteForfaitController extends Controller
         $this->orangeMoneyService = $orangeMoneyService;
     }
 
+    /**
+     * [ES] Lista los forfaits activos disponibles.
+     * [FR] Liste les forfaits actifs disponibles.
+     */
     public function index()
     {
         // Use Forfait model directly or Service
         return \App\Models\Forfait::where('estado', 'activo')->get();
     }
 
+    /**
+     * [ES] Inicia el proceso de compra de un forfait.
+     * [FR] Initie le processus d'achat d'un forfait.
+     */
     public function buyForfait(BuyForfaitRequest $request)
     {
         $user = auth()->user();
         $phone = $request->input('phone_number', '00000000');
         
-        // 1. Get Forfait Price (In real app, fetch from DB)
+        // [ES] 1. Obtener precio del Forfait (En app real, obtener de BD)
+        // [FR] 1. Obtenir le prix du Forfait (Dans une vraie application, récupérer depuis la BD)
         // For demo, we trust the ID exists because of validation, but we should fetch price.
-        // As per previous code, we just simulate with 5000 or fetch from DB if we had the model loaded.
-        // Let's rely on Service to handle the "Charge".
         $amount = 5000; // Placeholder, ideally $forfait->price
 
         try {
-            // 2. Initiate Payment (Simulated or Real)
+            // [ES] 2. Iniciar Pago (Simulado o Real)
+            // [FR] 2. Initier le Paiement (Simulé ou Réel)
             $paymentInit = $this->orangeMoneyService->initiatePayment($phone, $amount);
 
-            // 3. Return Pending State
+            // [ES] 3. Retornar estado Pendiente
+            // [FR] 3. Retourner l'état En attente
             return response()->json([
                 'message' => 'Payment initiated. Please confirm on your mobile.',
                 'order_id' => $paymentInit['order_id'] ?? null,
@@ -53,6 +68,10 @@ class ClienteForfaitController extends Controller
         }
     }
 
+    /**
+     * [ES] Verifica el estado de una transacción y finaliza la compra si es exitosa.
+     * [FR] Vérifie l'état d'une transaction et finalise l'achat si elle est réussie.
+     */
     public function checkStatus(Request $request)
     {
         $request->validate([
@@ -61,12 +80,13 @@ class ClienteForfaitController extends Controller
         ]);
 
         try {
-            // 1. Check Status
+            // [ES] 1. Verificar Estado
+            // [FR] 1. Vérifier le Statut
             $statusData = $this->orangeMoneyService->checkStatus($request->order_id);
 
             if (isset($statusData['status']) && strtoupper($statusData['status']) === 'SUCCESS') {
-                // 2. Finalize Purchase (prevent double assignment if already done?)
-                // Ideally check if Transaction ID already exists in our DB to avoid duplicates.
+                // [ES] 2. Finalizar Compra (evitar doble asignación si ya se hizo)
+                // [FR] 2. Finaliser l'Achat (éviter la double attribution si déjà fait)
                 
                 $user = auth()->user();
                 $clienteForfait = $this->forfaitService->buyForfait($user, $request->forfait_id);

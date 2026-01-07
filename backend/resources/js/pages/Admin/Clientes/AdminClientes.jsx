@@ -3,6 +3,15 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * AdminClientes Component
+ *
+ * [ES] Panel de gestión de usuarios con rol de Cliente.
+ *      Muestra una lista de todos los clientes registrados, su información de contacto y permite la eliminación de cuentas.
+ *
+ * [FR] Panneau de gestion des utilisateurs avec le rôle de Client.
+ *      Affiche une liste de tous les clients inscrits, leurs coordonnées et permet la suppression de comptes.
+ */
 const AdminClientes = () => {
     const navigate = useNavigate();
     const [clientes, setClientes] = useState([]);

@@ -31,6 +31,15 @@ const ClientIcon = L.icon({
     iconAnchor: [17, 35]
 });
 
+/**
+ * ClientActiveTrip Component
+ *
+ * [ES] Pantalla principal del cliente durante un viaje en curso. 
+ *      Incluye mapa Leaflet, estado del trayecto (aceptado, en curso), datos del conductor y modal de calificación al finalizar.
+ *
+ * [FR] Écran principal du client lors d'un trajet en cours.
+ *      Comprend une carte Leaflet, le statut du trajet (accepté, en cours), les données du chauffeur et un modal de notation à la fin.
+ */
 const ClientActiveTrip = () => {
     const navigate = useNavigate();
     const [viaje, setViaje] = useState(null);
@@ -133,8 +142,8 @@ const ClientActiveTrip = () => {
                         <h2 className="text-lg font-bold text-gray-800">En Viaje</h2>
                         <div className="flex items-center gap-2 mt-1">
                             <span className={`px-2 py-1 text-xs rounded-full font-semibold ${viaje.estado === 'en_curso' ? 'bg-green-100 text-green-700' :
-                                    viaje.estado === 'aceptado' ? 'bg-blue-100 text-blue-700' :
-                                        'bg-gray-100 text-gray-700'
+                                viaje.estado === 'aceptado' ? 'bg-blue-100 text-blue-700' :
+                                    'bg-gray-100 text-gray-700'
                                 }`}>
                                 {viaje.estado.replace('_', ' ').toUpperCase()}
                             </span>

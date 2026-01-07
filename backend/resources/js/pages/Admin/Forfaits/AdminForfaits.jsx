@@ -3,6 +3,15 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * AdminForfaits Component
+ *
+ * [ES] Gestor administrativo de planes (forfaits) para clientes.
+ *      Implementa un CRUD completo para definir nombres, precios, viajes incluidos y validez de los paquetes.
+ *
+ * [FR] Gestionnaire administratif de forfaits pour les clients.
+ *      Implémente un CRUD complet pour définir les noms, les prix, les trajets inclus et la validité des forfaits.
+ */
 const AdminForfaits = () => {
     const navigate = useNavigate();
     const [forfaits, setForfaits] = useState([]);

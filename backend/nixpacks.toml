@@ -1,0 +1,30 @@
+# Configuración de Build para Railway (Nixpacks)
+
+# 1. Setup: Definimos lenguajes y versiones
+[phases.setup]
+nixPkgs = ["php82", "php82Extensions.pdo_mysql", "php82Extensions.bcmath", "php82Extensions.gd", "php82Extensions.zip", "nodejs_20", "npm"]
+
+# 2. Install: Instalamos dependencias (Sobrescribimos el default para fixear error de React 19)
+[phases.install]
+dependsOn = ["setup"]
+cmds = [
+    "composer install --no-dev --optimize-autoloader --ignore-platform-reqs",
+    "npm install --legacy-peer-deps" 
+]
+
+# 3. Build: Compilamos assets y preparamos cache
+[phases.build]
+dependsOn = ["install"]
+cmds = [
+    "mkdir -p storage/framework/sessions",
+    "mkdir -p storage/framework/views",
+    "mkdir -p storage/framework/cache",
+    "npm run build",
+    "php artisan config:clear",
+    "php artisan route:clear",
+    "php artisan view:clear"
+]
+
+# 4. Start: Comando de arranque
+[start]
+cmd = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"

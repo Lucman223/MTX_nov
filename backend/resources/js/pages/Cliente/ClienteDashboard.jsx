@@ -9,6 +9,17 @@ import { toast } from 'sonner';
 import useNotifications from '../../hooks/useNotifications';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * ClienteDashboard Component
+ *
+ * [ES] Interfaz principal para el rol de Cliente.
+ *      Características: Mapa interactivo (Leaflet), actualizaciones en tiempo real, saldo de Forfait.
+ *
+ * [FR] Interface principale pour le rôle Client.
+ *      Fonctionnalités : Carte interactive (Leaflet), mises à jour en temps réel, solde Forfait.
+ *
+ * @component
+ */
 const ClienteDashboard = () => {
     const { logout, user } = useAuth();
     const { t } = useTranslation();
@@ -423,7 +434,7 @@ const ClienteDashboard = () => {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                     position: 'relative',
                     border: '1px solid #e5e7eb',
-                    minHeight: isMobile ? '300px' : 'auto', // Ensure map has height on mobile
+                    height: isMobile ? '350px' : 'auto', // Fixed height on mobile to prevent Leaflet collapse
                     order: isMobile ? 1 : 2
                 }}>
                     <MapSelection

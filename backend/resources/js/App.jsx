@@ -33,6 +33,15 @@ import ErrorBoundary from './components/ErrorBoundary';
 
 
 
+/**
+ * App Component
+ *
+ * [ES] Punto de entrada principal de la aplicación React.
+ *      Configura el enrutamiento global (Router), el proveedor de autenticación (AuthProvider) y el sistema de manejo de errores.
+ *
+ * [FR] Point d'entrée principal de l'application React.
+ *      Configure le routage global (Router), le fournisseur d'authentification (AuthProvider) et le système de gestion des erreurs.
+ */
 function App() {
     return (
         <Router>

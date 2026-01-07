@@ -4,6 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DashboardCharts from '../../components/Admin/DashboardCharts';
 
+/**
+ * AdminDashboard Component
+ *
+ * [ES] El centro de mando para los administradores de la plataforma.
+ *      Proporciona una visión general en tiempo real de KPIs, gráficos y acciones rápidas.
+ *      Características: Tarjetas de estadísticas, Gráficos interactivos, Feed de actividad reciente.
+ *
+ * [FR] Le centre de commandement pour les administrateurs de la plateforme.
+ *      Fournit une vue d'ensemble en temps réel des KPI, des graphiques et des actions rapides.
+ *      Fonctionnalités : Cartes de statistiques, Graphiques interactifs, Flux d'activité récente.
+ *
+ * @component
+ */
 const AdminDashboard = () => {
     const { logout, user } = useAuth();
     const navigate = useNavigate();
@@ -20,10 +33,17 @@ const AdminDashboard = () => {
         purple: '#7c3aed'
     };
 
+    /**
+     * Effect: Fetches initial dashboard data on mount.
+     */
     useEffect(() => {
         fetchStatistics();
     }, []);
 
+    /**
+     * Asynchronously retrieves dashboard statistics and chart data from the API.
+     * Updates local state and handles loading states.
+     */
     const fetchStatistics = async () => {
         setLoading(true);
         try {
@@ -46,6 +66,13 @@ const AdminDashboard = () => {
     // ...
 
     // Recent Activity Render Logic
+    // Recent Activity Render Logic
+    /**
+     * Renders the Recent Activity feed list.
+     * Handles different data structures (array vs object) returned by the API.
+     *
+     * @returns {JSX.Element} The rendered activity list.
+     */
     const renderActivity = () => {
         if (!stats?.recentActivity) return <div style={{ color: '#6b7280', padding: '1rem' }}>No hay actividad reciente.</div>;
 
@@ -154,89 +181,10 @@ const AdminDashboard = () => {
     }, []);
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: isMobile ? '80px' : '0' }}>
-            {/* Header */}
-            <header style={{
-                backgroundColor: 'white',
-                padding: isMobile ? '1rem' : '1.25rem 2rem',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottom: `3px solid ${colors.purple}`,
-                position: isMobile ? 'sticky' : 'static',
-                top: 0,
-                zIndex: 50
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <img src="/logo.png" alt="MotoTX" style={{ height: isMobile ? '2.5rem' : '3.5rem', objectFit: 'contain' }} />
-                    <div>
-                        <h1 style={{ fontSize: isMobile ? '1.1rem' : '1.5rem', fontWeight: 'bold', color: colors.purple, margin: 0 }}>
-                            {isMobile ? 'Admin Panel' : 'MotoTX Admin v1.1'}
-                        </h1>
-                        <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem', color: '#6b7280' }}>
-                            {user?.name || 'Admin'}
-                        </span>
-                    </div>
-                </div>
-
-                {/* Desktop Nav */}
-                {!isMobile && (
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <button
-                            onClick={handleLogout}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                backgroundColor: 'white',
-                                color: colors.error,
-                                border: `2px solid ${colors.error}`,
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            Cerrar Sesión
-                        </button>
-                    </div>
-                )}
-            </header>
-
-            {/* Mobile Bottom Nav */}
-            {isMobile && (
-                <div style={{
-                    position: 'fixed',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: 'white',
-                    borderTop: '1px solid #e5e7eb',
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    padding: '0.75rem',
-                    boxShadow: '0 -2px 10px rgba(0,0,0,0.05)',
-                    zIndex: 100
-                }}>
-                    <button onClick={() => { }} style={{ background: 'none', border: 'none', color: colors.purple, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>📊</span>
-                        Stats
-                    </button>
-                    <button onClick={() => navigate('/admin/motoristas')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>🏍️</span>
-                        Motos
-                    </button>
-                    <button onClick={() => navigate('/admin/clientes')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>👥</span>
-                        Users
-                    </button>
-                    <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: colors.error, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>🚪</span>
-                        Salir
-                    </button>
-                </div>
-            )}
-
+        <div style={{ backgroundColor: '#f9fafb' }}>
             {/* Main Content */}
-            <main style={{ padding: isMobile ? '1rem' : '2rem', maxWidth: '1400px', margin: '0 auto' }}>
+            <main style={{ padding: isMobile ? '0' : '0', maxWidth: '1400px', margin: '0 auto' }}>
+
 
                 {/* Welcome Section */}
                 <div style={{ marginBottom: '2rem' }}>
@@ -336,7 +284,7 @@ const AdminDashboard = () => {
                     </h3>
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
                         gap: '1.5rem'
                     }}>
                         {quickActions.map((action, index) => (

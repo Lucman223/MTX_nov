@@ -4,6 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 
+/**
+ * SuscripcionesMotorista Component
+ *
+ * [ES] Gestión de abonos para motoristas. 
+ *      Permite al conductor visualizar su estado actual (habilitado/bloqueado) y adquirir planes para poder recibir viajes.
+ *
+ * [FR] Gestion des abonnements pour les chauffeurs.
+ *      Permet au chauffeur de visualiser son statut actuel (activé/bloqué) et d'acquérir des plans pour recevoir des trajets.
+ */
 const SuscripcionesMotorista = () => {
     const { user } = useAuth();
     const navigate = useNavigate();

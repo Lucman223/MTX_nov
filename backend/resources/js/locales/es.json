@@ -18,7 +18,12 @@
         "pending_requests": "Solicitudes Pendientes",
         "no_requests": "No hay solicitudes pendientes en este momento",
         "accept_trip": "Aceptar Viaje",
-        "new_tag": "Nuevo"
+        "new_tag": "Nuevo",
+        "wallet_title": "💰 Saldo Disponible",
+        "withdraw_btn": "Retirar Ganancias",
+        "withdraw_success": "Retiro procesado con éxito",
+        "insufficient_funds": "Saldo insuficiente",
+        "payout_daily_desc": "Ganancias listas para retirar (Hoy)"
     },
     "common": {
         "login": "Iniciar Sesión",

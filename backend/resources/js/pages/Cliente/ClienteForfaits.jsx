@@ -5,6 +5,15 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * ClienteForfaits Component
+ *
+ * [ES] Página de compra de paquetes de viajes para clientes.
+ *      Lista los forfaits disponibles, maneja la integración de pagos con Orange Money y el seguimiento del estado del pago.
+ *
+ * [FR] Page d'achat de forfaits de voyage pour les clients.
+ *      Répertorie les forfaits disponibles, gère l'intégration des paiements avec Orange Money et le suivi de l'état du paiement.
+ */
 const ClienteForfaits = () => {
     const { user } = useAuth();
     const { t } = useTranslation();

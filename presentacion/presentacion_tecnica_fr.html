@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Présentation Technique MotoTX</title>
+    <!-- PrismJS for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* Layout: Split Screen */
+        .main-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #2d2d2d;
+            position: relative;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .code-panel {
+            flex: 1;
+            background-color: #1e1e1e;
+            border-left: 2px solid #444;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            width: 0;
+            /* Default hidden if no code */
+            transition: width 0.3s ease;
+        }
+
+        .code-panel.active {
+            width: 50%;
+            /* Show half screen when active */
+        }
+
+        /* When code is active, slide panel takes other half */
+        .code-panel.active~.slide-panel,
+        .main-container.has-code .slide-panel {
+            flex: 1;
+        }
+
+        .code-header {
+            padding: 10px 20px;
+            background-color: #252526;
+            border-bottom: 1px solid #333;
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #9cdcfe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-content {
+            flex: 1;
+            overflow: auto;
+            padding: 0;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        /* Slide Content Styles */
+        .slide-block {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide-block.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #81C784;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        h3 {
+            color: #A5D6A7;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        p,
+        ul {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 800px;
+            color: #ddd;
+        }
+
+        ul {
+            text-align: left;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 50vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            width: 80%;
+            z-index: 10;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 30px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+        /* Syntax Highlighter Overrides */
+        pre[class*="language-"] {
+            margin: 0 !important;
+            height: 100%;
+            border-radius: 0 !important;
+        }
+
+        /* Modal for full screen image */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-container" id="mainContainer">
+
+        <!-- Left Panel: Content -->
+        <div class="slide-panel">
+
+            <!-- Slide 1 -->
+            <div class="slide-block active" data-code="">
+                <h1>Présentation de la Plateforme MotoTX</h1>
+                <p>Bienvenue dans la documentation visuelle et <strong>TECHNIQUE</strong> de <strong>MotoTX</strong>.
+                </p>
+                <p>Cette présentation inclut le code source réel qui propulse chaque vue.</p>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide-block">
+                <h2>1. Vues Générales</h2>
+            </div>
+
+            <!-- Slide 3: Landing -->
+            <div class="slide-block" data-code="code-landing">
+                <h3>Page d'Accueil (Landing Page)</h3>
+                <p>La porte d'entrée de la plateforme. Elle présente la proposition de valeur, permet un accès rapide à
+                    l'inscription et à la connexion, et fournit des informations générales sur le service.</p>
+                <img src="general_home.png" alt="Home Page" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 4: Registro -->
+            <div class="slide-block" data-code="code-register">
+                <h3>Inscription des Utilisateurs</h3>
+                <p>Un formulaire unifié permettant aux nouveaux utilisateurs de s'inscrire en sélectionnant leur rôle
+                    (Client ou Conducteur). Design épuré et validation en temps réel.</p>
+                <img src="general_registro.png" alt="Registre" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 5 -->
+            <div class="slide-block">
+                <h2>2. Rôle : Client</h2>
+                <p>Logique métier côté client.</p>
+            </div>
+
+            <!-- Slide 6: Dashboard Cliente -->
+            <div class="slide-block" data-code="code-client-dash">
+                <h3>Tableau de Bord Client</h3>
+                <p>Le panneau principal où le client peut :</p>
+                <ul>
+                    <li>Voir son solde de trajets disponibles (Forfaits).</li>
+                    <li>Demander un nouveau trajet en sélectionnant l'origine et la destination sur la carte
+                        interactive.</li>
+                    <li>Voir l'état de sa demande actuelle.</li>
+                </ul>
+                <img src="cliente_dashboard.png" alt="Dashboard Client" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 7: Forfaits -->
+            <div class="slide-block" data-code="code-client-forfaits">
+                <h3>Achat de Forfaits</h3>
+                <p>Section dédiée au rechargement de trajets. Les clients peuvent acheter des packs de trajets
+                    (forfaits) en utilisant des passerelles de paiement intégrées (Simulation Orange Money).</p>
+                <img src="cliente_forfaits.png" alt="Achat Forfaits" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 8: Historial -->
+            <div class="slide-block" data-code="code-client-hist">
+                <h3>Historique des Trajets</h3>
+                <p>Registre complet des trajets effectués, avec des détails tels que la date, le conducteur assigné et
+                    l'état du trajet.</p>
+                <img src="cliente_historial.png" alt="Historique" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 9: Perfil -->
+            <div class="slide-block" data-code="code-client-prof">
+                <h3>Profil Client</h3>
+                <p>Gestion des données personnelles, du mot de passe et des préférences du compte.</p>
+                <img src="cliente_perfil.png" alt="Profil" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 10 -->
+            <div class="slide-block">
+                <h2>3. Rôle : Motard</h2>
+                <p>Interface de travail en temps réel.</p>
+            </div>
+
+            <!-- Slide 11: Dashboard Motorista -->
+            <div class="slide-block" data-code="code-moto-dash">
+                <h3>Tableau de Bord Motard</h3>
+                <p>Outil de travail quotidien. Il permet de :</p>
+                <ul>
+                    <li>Se mettre "En Ligne" ou "Hors Ligne" pour recevoir des demandes.</li>
+                    <li>Voir et accepter de nouvelles demandes de trajet en temps réel.</li>
+                    <li>Gérer l'état du trajet actuel (Accepter -> En Cours -> Terminer).</li>
+                </ul>
+                <img src="motorista_dashboard.png" alt="Dashboard Moto" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 12: Historial Motorista -->
+            <div class="slide-block" data-code="code-moto-hist">
+                <h3>Historique des Services</h3>
+                <p>Journal de tous les trajets effectués par le conducteur, utile pour suivre son activité.</p>
+                <img src="motorista_historial.png" alt="Historique Moto" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 13: Perfil Motorista -->
+            <div class="slide-block" data-code="code-moto-prof">
+                <h3>Profil Motard</h3>
+                <p>Informations personnelles du conducteur.</p>
+                <img src="motorista_perfil.png" alt="Profil Moto" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 14 -->
+            <div class="slide-block">
+                <h2>4. Rôle : Administrateur</h2>
+                <p>Gestion et supervision globale.</p>
+            </div>
+
+            <!-- Slide 15: Admin Dash -->
+            <div class="slide-block" data-code="code-admin-dash">
+                <h3>Tableau de Bord Admin</h3>
+                <p>Vue globale de l'état du système. Affiche des KPI importants tels que :</p>
+                <ul>
+                    <li>Total des conducteurs et des clients.</li>
+                    <li>Revenus du mois.</li>
+                    <li>Graphiques d'activité et de performance.</li>
+                </ul>
+                <img src="admin_dashboard.png" alt="Admin Dash" onclick="openModal(this)">
+            </div>
+
+            <!-- Slide 16: Admin Clientes -->
+            <div class="slide-block" data-code="code-admin-clients">
+                <h3>Gestion des Clients</h3>
+                <p>Tableau complet de tous les clients inscrits, permettant de voir les détails et de gérer les comptes.
+                </p>
+                <img src="admin_clientes.png" alt="Admin Clients" onclick="openModal(this)">
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="controls">
+                <button id="prevBtn" onclick="plusSlides(-1)">❮</button>
+                <span class="slide-number">1 / 16</span>
+                <button id="nextBtn" onclick="plusSlides(1)">❯</button>
+                <button onclick="toggleCode()" id="codeToggleBtn" style="background:#2196F3; font-size:0.9em">👁️
+                    Code</button>
+            </div>
+
+        </div>
+
+        <!-- Right Panel: Code -->
+        <div class="code-panel" id="codePanel">
+            <div class="code-header">
+                <span id="fileName">Source.jsx</span>
+            </div>
+            <div class="code-content">
+                <pre><code id="codeBlock" class="language-jsx">// Le code apparaîtra ici...</code></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <!-- Hidden Data Stores for Code -->
+    <script type="text/plain" id="code-landing">
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const LandingPage = () => {
+    // Hook de navigation React Router pour rediriger sans recharger la page
+    const navigate = useNavigate();
+    
+    // Objet de configuration pour les cartes "Caractéristiques"
+    // Utiliser un tableau d'objets permet de rendre des listes dynamiques avec .map()
+    // facilitant la maintenance et l'évolutivité du contenu.
+    const features = [
+        { icon: '🚀', title: 'Rapide', desc: 'En quelques minutes...' },
+        { icon: '💰', title: 'Économique', desc: 'Prix justes...' }
+    ];
+
+    // Rendu du composant visuel (JSX)
+    return (
+        <div className="landing-container">
+            {/* Header : Barre de navigation supérieure */}
+            <header>
+                {/* Titre principal de l'application */}
+                <h1>MotoTX</h1>
+                {/* Bouton d'accès : Navigue vers la route protégée /login */}
+                <button onClick={() => navigate('/login')}>Login</button>
+            </header>
+            
+            {/* Hero Section : Zone mise en avant pour capter l'attention de l'utilisateur */}
+            <section className="hero">
+                <h2>Votre transport à Bamako</h2>
+                {/* CTA (Call to Action) principal : Démarre le flux d'inscription */}
+                <button onClick={() => navigate('/register')}>Commencer</button>
+            </section>
+
+            {/* Grille de Features : Affiche les avantages compétitifs */}
+            <section className="features">
+                {/* Nous itérons sur le tableau 'features' pour générer les éléments du DOM */}
+                {features.map((f, i) => (
+                    // La prop 'key' est essentielle pour l'algorithme de réconciliation de React
+                    <div key={i} className="feature-card">
+                        <span>{f.icon}</span>
+                        <h3>{f.title}</h3>
+                    </div>
+                ))}
+            </section>
+        </div>
+    );
+};
+// Exportation par défaut pour permettre le Code Splitting et le Lazy Loading
+export default LandingPage;
+    </script>
+
+    <script type="text/plain" id="code-register">
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+function RegisterPage() {
+    // Hook useState : Contrôle l'état local du 'rôle' sélectionné.
+    // Initialisé à 'client' par défaut. Détermine la logique métier à appliquer.
+    const [rol, setRol] = useState('cliente');
+    
+    // Hook useState : Objet unique pour gérer plusieurs champs du formulaire.
+    // Évite d'avoir plusieurs variables d'état séparées.
+    const [formData, setFormData] = useState({
+        name: '', email: '', password: ''
+    });
+
+    // Fonction asynchrone pour gérer l'envoi du formulaire au Backend
+    const handleSubmit = async (e) => {
+        // Empêche le rechargement automatique de la page par défaut en HTML
+        e.preventDefault();
+        try {
+            // Requête HTTP POST utilisant Axios vers l'API RESTful de Laravel
+            // Utilisation du Spread Operator (...) pour combiner les données du form + le rôle sélectionné
+            await axios.post('/api/register', { ...formData, rol });
+            
+            // Si la promesse est résolue avec succès (HTTP 200/201),
+            // nous redirigeons l'utilisateur vers son tableau de bord privé
+            navigate('/dashboard');
+        } catch (error) {
+            // Gestion basique des erreurs (en prod nous utiliserions un Toast ou une Alerte)
+            console.error("Erreur d'inscription", error);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            {/* Feedback visuel dynamique selon le rôle actuel */}
+            <h2>Inscription {rol}</h2>
+            
+            {/* Toggle Switch personnalisé pour la sélection des rôles */}
+            <div className="role-selector">
+                {/* Au clic, nous mettons à jour l'état 'rol' à 'client' */}
+                <button onClick={() => setRol('cliente')}>Client</button>
+                {/* Au clic, nous mettons à jour l'état 'rol' à 'motorista' (Motard) */}
+                <button onClick={() => setRol('motorista')}>Motard</button>
+            </div>
+
+            {/* Champ Contrôlé (Controlled Input) */}
+            <input type="text" placeholder="Nom" 
+                // Mise à jour immuable de l'objet d'état 'formData'
+                onChange={e => setFormData({...formData, name: e.target.value})} />
+            
+            <button type="submit">Créer le Compte</button>
+        </form>
+    );
+}
+export default RegisterPage;
+    </script>
+
+    <script type="text/plain" id="code-client-dash">
+const ClienteDashboard = () => {
+    // État Local : Stocke les informations du trajet actuel en cours (si existant)
+    const [activeTrip, setActiveTrip] = useState(null);
+    // États pour les coordonnées sélectionnées sur la carte
+    const [origen, setOrigen] = useState(null);
+    const [destino, setDestino] = useState(null);
+
+    // useEffect avec [] de dépendances : S'exécute uniquement au montage du composant
+    // Implémente un modèle de "Long Polling" simplifié
+    useEffect(() => {
+        // Intervalle qui s'exécute toutes les 5000ms (5 secondes)
+        const interval = setInterval(async () => {
+            // Requête GET pour vérifier l'état actuel de l'utilisateur
+            // Cela permet de mettre à jour l'UI si le conducteur accepte le trajet en temps réel
+            const res = await axios.get('/api/viajes/actual');
+            setActiveTrip(res.data);
+        }, 5000);
+        
+        // Cleanup Function : Nettoie le timer lorsque le composant est démonté
+        // Évite les fuites de mémoire et les appels fantômes
+        return () => clearInterval(interval);
+    }, []);
+
+    // Gestionnaire de l'événement de demande de trajet
+    const handleSolicitarWrapper = async () => {
+        // Validation précoce : Ne pas permettre l'envoi s'il manque des points
+        if(!origen || !destino) return; 
+        
+        // Requête POST pour créer une nouvelle entrée dans la table 'trips'
+        await axios.post('/api/viajes/solicitar', {
+            origen, destino // Payload avec les coordonnées
+        });
+        // L'UI se mettra à jour automatiquement lors du prochain cycle de l'intervalle
+    };
+
+    return (
+        <div className="dashboard">
+            {/* Sidebar : Panneau de contrôle latéral */}
+            <div className="sidebar">
+                {/* Composant de Présentation : Affiche l'état (En attente, En cours, etc.) */}
+                <StatusCard trip={activeTrip} />
+                <button onClick={handleSolicitarWrapper}>
+                    Commander un Trajet
+                </button>
+            </div>
+            
+            {/* Conteneur de la Carte (Wrapper Leaflet/Google Maps) */}
+            <div className="map-container">
+                {/* Nous passons les setters comme props pour remonter l'état depuis la carte */}
+                <MapSelection 
+                    setOrigen={setOrigen} 
+                    setDestino={setDestino} 
+                />
+            </div>
+        </div>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-client-forfaits">
+const ClienteForfaits = () => {
+    // État pour stocker la liste des produits (paquets de trajets)
+    const [forfaits, setForfaits] = useState([]);
+    
+    // Chargement des données à l'initialisation du composant
+    useEffect(() => {
+        // Appel à l'API publique pour obtenir le catalogue des prix
+        axios.get('/api/forfaits/disponibles')
+             .then(res => setForfaits(res.data)); // Sauvegarder la réponse dans l'état
+    }, []);
+
+    // Logique pour initier le flux de paiement mobile
+    const handleBuy = async (forfaitId) => {
+        // 1. Nous initions la transaction dans notre backend pour obtenir un OrderID
+        // Cela contacte l'API d'Orange Money / prestataire de paiement
+        const res = await axios.post('/api/pay/init', { forfaitId });
+        
+        // 2. Si la passerelle répond 'pending', nous devons attendre la confirmation
+        if(res.data.status === 'pending') {
+            // Nous initions le sondage de l'état de cette transaction spécifique
+            pollPaymentStatus(res.data.orderId);
+        }
+    };
+
+    return (
+        <div className="grid-forfaits">
+            {/* Rendu dynamique de la liste des produits */}
+            {forfaits.map(f => (
+                // Carte interactive qui initie l'achat au clic
+                <Card key={f.id} onClick={() => handleBuy(f.id)}>
+                    <h3>{f.nombre}</h3>
+                    <p>{f.precio} CFA</p> {/* Prix formaté */}
+                    <span>{f.viajes} Trajets</span> {/* Crédits offerts */}
+                </Card>
+            ))}
+        </div>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-client-hist">
+const ClienteHistory = () => {
+    // Stocke l'historique complet des trajets de l'utilisateur
+    const [viajes, setViajes] = useState([]);
+
+    // Fonction exécutée lorsque l'utilisateur envoie une notation (1-5 étoiles)
+    const rateTrip = async (id, score) => {
+        // Nous envoyons la note au point de terminaison spécifique de ce trajet
+        await axios.post(`/api/viajes/${id}/rate`, { score });
+        // Nous rechargeons la liste pour montrer la nouvelle note et retirer le bouton
+        refreshList(); 
+    };
+
+    return (
+        <div className="list-container">
+            {/* Nous itérons sur le tableau des trajets historiques */}
+            {viajes.map(v => (
+                <div className="trip-item">
+                    {/* Détails de base du trajet */}
+                    <span>{v.fecha}</span>
+                    <span>Motard : {v.motorista.name}</span>
+                    <div className="status">{v.estado}</div> {/* ex: 'completed' */}
+                    
+                    {/* Rendu Conditionnel : */}
+                    {/* Nous affichons le bouton seulement si 'v.rating' est null/undefined */}
+                    {!v.rating && (
+                        <button onClick={() => openModal(v.id)}>
+                            Noter
+                        </button>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-client-prof">
+const ClienteProfile = () => {
+    // Destructuring du Contexte Global AuthContext
+    // 'user' contient l'objet utilisateur connecté avec toutes ses propriétés
+    const { user } = useAuth();
+    
+    // État local pour afficher le solde (pourrait être obtenu de user.wallet)
+    const [balance, setBalance] = useState(0);
+
+    return (
+        <div className="profile">
+            {/* Carte d'Informations Personnelles : Lecture seule */}
+            <div className="info-card">
+                <img src={user.avatar} /> {/* Image de profil */}
+                <h2>{user.name}</h2>
+                <p>{user.email}</p>
+            </div>
+
+            {/* Carte de Métriques / Actions Importantes */}
+            <div className="stats-card">
+                <h3>Mes Trajets Restants</h3>
+                <div className="big-number">{balance}</div>
+                <button>Recharger</button> {/* Navigation vers Forfaits */}
+            </div>
+        </div>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-moto-dash">
+const MotoristaDashboard = () => {
+    // État Critique : Détermine si le motard reçoit des demandes ou non
+    const [isOnline, setIsOnline] = useState(false);
+    // Liste des demandes de trajet entrantes en temps réel
+    const [requests, setRequests] = useState([]);
+
+    // Hook de Géolocalisation Active
+    // S'exécute chaque fois que l'état 'isOnline' change
+    useEffect(() => {
+        // API native du navigateur pour suivre la position
+        const watcher = navigator.geolocation.watchPosition(pos => {
+            // Nous mettons à jour le serveur seulement si le conducteur travaille
+            if(isOnline) {
+                // Requête PUT pour mettre à jour lat/lng dans la table des motards
+                // Cela rend le motard visible sur les cartes des clients proches
+                axios.put('/api/moto/location', {
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude
+                });
+            }
+        });
+        // Nous nettoyons le watcher au démontage pour économiser la batterie
+        return () => navigator.geolocation.clearWatch(watcher);
+    }, [isOnline]);
+
+    // Fonction pour accepter un travail (gestion de race condition gérée en backend)
+    const acceptTrip = async (id) => {
+        // Tentative d'appropriation du trajet (Transaction Atomique en DB)
+        await axios.post(`/api/viajes/${id}/accept`);
+        // Si succès : Changement de vue vers Mode Navigation (GPS)
+    };
+
+    return (
+        <div>
+            <header>
+                {/* Switch Maître : Contrôle la disponibilité globale du conducteur */}
+                <Toggle checked={isOnline} onChange={setIsOnline} />
+                <span>État : {isOnline ? 'EN LIGNE' : 'HORS LIGNE'}</span>
+            </header>
+
+            {/* Rendu du Flux de Demandes (Push Notifications / WebSockets) */}
+            {requests.map(req => (
+                <TripRequestCard 
+                    trip={req} 
+                    onAccept={() => acceptTrip(req.id)} 
+                />
+            ))}
+        </div>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-moto-hist">
+const MotoristaHistory = () => {
+    // État calculé : Total des revenus générés sur la période
+    const [earnings, setEarnings] = useState(0);
+
+    return (
+        <div>
+            {/* Widget de Résumé Financier */}
+            <div className="earnings-summary">
+                <h3>Gains du Mois</h3>
+                {/* Formatage en monnaie locale (CFA) */}
+                <span>{earnings} CFA</span>
+                {/* Bouton pour initier le processus de paiement vers compte mobile */}
+                <button>Demander Retrait</button>
+            </div>
+
+            {/* Conteneur de liste (Virtual Scroll pour performance si beaucoup d'éléments) */}
+            <div className="completed-trips">
+               {/* Liste des trajets complétés avec détails du tarif et date */}
+            </div>
+        </div>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-moto-prof">
+const MotoristaProfile = () => {
+    // État pour garder l'info spécifique du véhicule (Relation 1:1 en BD)
+    const [motoInfo, setMotoInfo] = useState({});
+
+    // Composant en lecture seule pour montrer la fiche technique
+    // Ces données sont validées par l'Admin avant d'activer le compte
+    return (
+        <div className="moto-details">
+            <h2>Mon Véhicule</h2>
+            <div className="field">
+                <label>Immatriculation</label>
+                <span>{motoInfo.license_plate}</span>
+            </div>
+            <div className="field">
+                <label>Modèle</label>
+                <span>{motoInfo.model}</span>
+            </div>
+        </div>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-admin-dash">
+const AdminDashboard = () => {
+    // État global des métriques du système
+    const [stats, setStats] = useState({});
+
+    // Chargement des données au montage du tableau de bord
+    useEffect(() => {
+        // Endpoint agrégé qui calcule les totaux :
+        // COUNT(users), COUNT(trips), SUM(earnings), etc.
+        axios.get('/api/admin/kpi').then(res => setStats(res.data));
+    }, []);
+
+    return (
+        <div className="grid-dashboard">
+            {/* Composants de Carte Réutilisables pour KPIs */}
+            <StatCard icon="👥" label="Utilisateurs" val={stats.users} />
+            <StatCard icon="🏍️" label="Motards" val={stats.drivers} />
+            <StatCard icon="💰" label="Revenus" val={stats.revenue} />
+            
+            {/* Conteneur Graphiques (Chart.js / Recharts) */}
+            <div className="chart-container">
+                {/* Visualisation de la tendance de croissance */}
+                <GrowthChart data={stats.monthlyGrowth} />
+            </div>
+        </div>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-admin-clients">
+const AdminClientes = () => {
+    // Liste de tous les utilisateurs inscrits avec le rôle 'client'
+    const [users, setUsers] = useState([]);
+
+    // Fonction administrative pour supprimer des utilisateurs (Soft Delete)
+    const deleteUser = (id) => {
+        // Confirmation native du navigateur avant action destructive
+        if(confirm('Supprimer l\'utilisateur ?')) {
+            // Appel DELETE à l'API REST
+            axios.delete(`/api/users/${id}`);
+            // Mise à jour optimiste de l'UI ou rechargement de la liste
+        }
+    };
+
+    return (
+        <table>
+            {/* En-tête du tableau de gestion */}
+            <thead>
+                <tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {/* Rendu des lignes en itérant sur le tableau d'utilisateurs */}
+                {users.map(u => (
+                    <tr>
+                        <td>{u.name}</td>
+                        <td>{u.email}</td>
+                        <td>{u.role}</td>
+                        <td>
+                            {/* Boutons d'action par ligne */}
+                            <button onClick={()=>edit(u)}>Éditer</button>
+                            <button onClick={()=>deleteUser(u.id)}>Supprimer</button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
+};
+    </script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+
+    <script>
+        let slideIndex = 1;
+        const slides = document.getElementsByClassName("slide-block");
+        const slideNumberText = document.querySelector(".slide-number");
+        const codePanel = document.getElementById("codePanel");
+        const codeBlock = document.getElementById("codeBlock");
+        const mainContainer = document.getElementById("mainContainer");
+        const fileNameLabel = document.getElementById("fileName");
+
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+
+            // Hide all slides
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+
+            // Show current
+            const current = slides[slideIndex - 1];
+            current.classList.add("active");
+            slideNumberText.innerText = slideIndex + " / " + slides.length;
+
+            // Update Code View if applicable
+            const codeId = current.getAttribute('data-code');
+            if (codeId) {
+                const codeContent = document.getElementById(codeId).textContent;
+                codeBlock.textContent = codeContent.trim();
+                fileNameLabel.innerText = getFileNameForId(codeId);
+                Prism.highlightElement(codeBlock);
+
+                // Auto-show code panel if it was previously open or if we want to force it?
+                // Let's keep user preference. But if user enables code, we update content.
+                // If user toggles code ON, and current slide has NO code, we might want to hide it or show empty.
+                if (codePanel.classList.contains('active')) {
+                    // Keep it open
+                }
+            } else {
+                codeBlock.textContent = "// Pas de code pertinent pour cette vue générale.";
+                fileNameLabel.innerText = "Information";
+                Prism.highlightElement(codeBlock);
+            }
+        }
+
+        function toggleCode() {
+            codePanel.classList.toggle("active");
+            mainContainer.classList.toggle("has-code");
+        }
+
+        function getFileNameForId(id) {
+            const map = {
+                'code-landing': 'LandingPage.jsx',
+                'code-register': 'RegisterPage.jsx',
+                'code-client-dash': 'ClienteDashboard.jsx',
+                'code-client-forfaits': 'ClienteForfaits.jsx',
+                'code-client-hist': 'ClienteHistory.jsx',
+                'code-client-prof': 'ClienteProfile.jsx',
+                'code-moto-dash': 'MotoristaDashboard.jsx',
+                'code-moto-hist': 'MotoristaHistory.jsx',
+                'code-moto-prof': 'MotoristaProfile.jsx',
+                'code-admin-dash': 'AdminDashboard.jsx',
+                'code-admin-clients': 'AdminClientes.jsx',
+            };
+            return map[id] || 'Composant';
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "ArrowRight" || event.key === " " || event.key === "Enter") {
+                plusSlides(1);
+            } else if (event.key === "ArrowLeft") {
+                plusSlides(-1);
+            } else if (event.key === "Escape") {
+                closeModal();
+            } else if (event.key === "c" || event.key === "C") {
+                toggleCode();
+            }
+        });
+
+        // Modal Logic
+        function openModal(element) {
+            var modal = document.getElementById("myModal");
+            var modalImg = document.getElementById("img01");
+            modal.style.display = "flex";
+            modal.style.justifyContent = "center";
+            modal.style.alignItems = "center";
+            modalImg.src = element.src;
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        document.getElementById("myModal").onclick = function (e) {
+            if (e.target === this) closeModal();
+        }
+
+    </script>
+</body>
+
+</html>

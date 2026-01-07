@@ -8,6 +8,12 @@ use App\Http\Requests\Viajes\RateMotoristaRequest;
 use App\Http\Requests\Viajes\RateClienteRequest;
 use App\Services\CalificacionService;
 
+/**
+ * Class CalificacionController
+ *
+ * [ES] Maneja la creación y recuperación de calificaciones para viajes completados.
+ * [FR] Gère la création et la récupération des notes pour les voyages terminés.
+ */
 class CalificacionController extends Controller
 {
     protected $calificacionService;

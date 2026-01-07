@@ -12,7 +12,8 @@ use Carbon\Carbon;
 class MotoristaPlanController extends Controller
 {
     /**
-     * List all available plans
+     * [ES] Lista todos los planes disponibles.
+     * [FR] Liste tous les plans disponibles.
      */
     public function index()
     {
@@ -21,7 +22,8 @@ class MotoristaPlanController extends Controller
     }
 
     /**
-     * Get current subscription status of the motorista
+     * [ES] Obtiene el estado actual de la suscripción del motorista.
+     * [FR] Obtient l'état actuel de l'abonnement du chauffeur.
      */
     public function getStatus()
     {
@@ -48,7 +50,8 @@ class MotoristaPlanController extends Controller
     }
 
     /**
-     * Subscribe to a plan (Mock Payment)
+     * [ES] Suscribirse a un plan (Pago Simulado).
+     * [FR] S'abonner à un plan (Paiement Simulé).
      */
     public function subscribe(Request $request)
     {

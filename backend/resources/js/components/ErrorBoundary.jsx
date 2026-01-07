@@ -1,5 +1,14 @@
 import React from 'react';
 
+/**
+ * ErrorBoundary Component
+ *
+ * [ES] Capturador de errores de nivel superior para la aplicación.
+ *      Evita que toda la app se cuelgue ante un error de renderizado, mostrando un mensaje de error amigable y detalles técnicos.
+ *
+ * [FR] Captureur d'erreurs de haut niveau pour l'application.
+ *      Empêche toute l'application de planter en cas d'erreur de rendu, affichant un message d'erreur convivial et des détails techniques.
+ */
 class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);

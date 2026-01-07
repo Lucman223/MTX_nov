@@ -1,6 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * AdminReportes Component
+ *
+ * [ES] Panel de estadísticas y análisis del sistema (En construcción).
+ *      Destinado a mostrar informes de ingresos, eficiencia y métricas de usuario para la toma de decisiones.
+ *
+ * [FR] Panneau de statistiques et d'analyse du système (En construction).
+ *      Destiné à afficher des rapports de revenus, d'efficacité et des mesures d'utilisateurs pour la prise de décision.
+ */
 const AdminReportes = () => {
     const navigate = useNavigate();
 

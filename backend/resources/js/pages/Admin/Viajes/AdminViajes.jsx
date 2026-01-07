@@ -3,6 +3,15 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * AdminViajes Component
+ *
+ * [ES] Panel de administración para visualizar el historial global de todos los viajes.
+ *      Permite filtrar por estado (pendiente, en curso, completado) y muestra detalles de cliente, motorista y tarifa.
+ *
+ * [FR] Panneau d'administration pour visualiser l'historique global de tous les trajets.
+ *      Permet de filtrer par statut (en attente, en cours, terminé) et affiche les détails du client, du chauffeur et du tarif.
+ */
 const AdminViajes = () => {
     const navigate = useNavigate();
     const [viajes, setViajes] = useState([]);

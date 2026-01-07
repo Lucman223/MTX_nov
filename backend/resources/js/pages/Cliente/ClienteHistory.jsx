@@ -4,6 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RatingModal from '../../components/RatingModal';
 
+/**
+ * ClienteHistory Component
+ *
+ * [ES] Historial de trayectos del cliente.
+ *      Muestra todos los viajes realizados, su estado, tarifa y permite calificar aquellos que aún no tengan puntuación.
+ *
+ * [FR] Historique des trajets du client.
+ *      Affiche tous les voyages effectués, leur statut, leur tarif et permet de noter ceux qui n'ont pas encore de note.
+ */
 const ClienteHistory = () => {
     const { logout, user } = useAuth();
     const navigate = useNavigate();

@@ -1,0 +1,119 @@
+# 🏍️ MotoTX - Documentación de Presentación Final
+**Duración Estimada:** 60 Minutos
+**Audiencia:** Jueces Técnicos y de Negocio
+
+---
+
+## 1. 📢 Introducción y Visión (5 Minutos)
+
+### El Problema
+En Bamako, el transporte en moto-taxi es caótico, inseguro y con precios impredecibles. Los clientes no saben en quién confiar y los conductores (motoristas) sufren de ingresos inestables.
+
+### La Solución: MotoTX
+MotoTX no es solo una app de transporte; es un **ecosistema profesionalizado**.
+- **Para el Cliente:** Seguridad (conductores validados), Precios fijos (Forfaits) y Rapidez.
+- **Para el Motorista:** Herramienta de trabajo digna ("Pay-to-Work") que garantiza clientes serios.
+- **Tecnología:** Plataforma Web/PWA en tiempo real, accesible y moderna.
+
+---
+
+## 2. 📱 Demostración Funcional "En Vivo" (20 Minutos)
+
+*Guion sugerido para mostrar el flujo completo durante la presentación:*
+
+### Escenario A: El Modelo de Negocio (Suscripciones)
+1.  **Login Motorista Nuevo**: Entrar con un usuario motorista sin suscripción.
+2.  **Intento de "En Línea"**: Mostrar cómo el sistema **bloquea** el acceso: *"Acceso Denegado: Suscripción Requerida"*.
+3.  **Compra de Plan**:
+    - Ir a "Suscripciones".
+    - Explicar los planes (Diario, Semanal, VIP).
+    - Simular compra (Click en "Activar").
+    - **Resultado**: El sistema desbloquea el estado. El motorista se pone "En Línea" (Verde).
+    - *Punto Clave:* Esto demuestra la monetización B2B (Driver-as-Customer).
+
+### Escenario B: El Viaje en Tiempo Real
+1.  **Cliente Solicita**:
+    - Login como Cliente.
+    - Dashboard muestra mapa y saldo de viajes ("Forfaits").
+    - Solicitar viaje (Origen/Destino).
+2.  **Motorista Recibe**:
+    - *Efecto WOW*: Mostrar las dos pantallas a la vez. La alerta salta en el Motorista instantáneamente (WebSockets).
+3.  **Aceptación y Curso**:
+    - Motorista acepta -> Cliente recibe notificación.
+    - Cambio de estados: En Curso -> Completado.
+4.  **Finalización**:
+    - El saldo de viajes del cliente se reduce.
+    - El motorista queda libre para el siguiente.
+
+---
+
+## 3. 🛠️ Arquitectura Técnica (20 Minutos)
+
+*Ideal para responder a las preguntas de "Cómo está hecho".*
+
+### Stack Tecnológico
+- **Frontend**: React 18 + Vite.
+    - **SPA (Single Page Application)**: Experiencia fluida sin recargas.
+    - **PWA Ready**: Preparado para instalarse en móviles como App nativa.
+    - **Internacionalización (i18n)**: Soporte completo ES, FR, AR (RTL), EN.
+- **Backend**: Laravel 10 (PHP).
+    - **API RESTful**: Segregación total entre Front y Back.
+    - **Seguridad**: JWT (JSON Web Tokens) para autenticación stateless.
+- **Base de Datos**: SQLite (Entorno Dev/Demo) / MySQL (Producción).
+- **Tiempo Real**: **Laravel Reverb**.
+    - *Destacado*: Implementación propia de WebSockets. No dependemos de servicios externos caros como Pusher. Latencia < 100ms.
+
+### Seguridad y Compliance (Normativa)
+- **Roles y Permisos**: Middleware estricto (`MotoristaMiddleware`, `AdminMiddleware`). Nadie entra donde no debe.
+- **RGPD (Privacidad)**:
+    - Política de privacidad accesible.
+    - Funcionalidad de "Derecho al Olvido" (Eliminación de cuenta).
+- **Accesibilidad (WCAG AA)**:
+    - Contraste de colores verificado (>4.5:1).
+    - Navegación por teclado y etiquetas ARIA para lectores de pantalla.
+
+### Base de Datos (Estructura Clave)
+- **`users`**: Tabla única con discriminador de `rol`.
+- **`planes_motorista`** & **`suscripciones_motorista`**: Motor del modelo de negocio.
+- **`suscripciones`** vs **`forfaits`**: Diferenciación clara entre "Tiempo" (Motoristas pagan por tiempo) y "Uso" (Clientes pagan por viajes).
+
+---
+
+## 4. 💼 Modelo de Negocio y Diferenciación (10 Minutos)
+
+### ¿Por qué funcionará?
+1.  **Economía de Escala**: Al vender "Packs de Viajes" (Forfaits) al cliente, aseguramos liquidez por adelantado (Pre-pago).
+2.  **Filtro de Calidad**: Al cobrar suscripción al motorista, eliminamos a los conductores ocasionales o peligrosos. Solo los profesionales pagan por trabajar.
+3.  **Escalabilidad**: La arquitectura desacoplada permite lanzar Apps iOS/Android nativas en el futuro usando la misma API.
+
+### 💰 Flujo de Dinero (Revenue Model)
+*Explicación clave para el jurado:*
+
+1.  **Ingreso para la Plataforma (MotoTX)**:
+    *   **B2C (Cliente)**: Compra Forfaits (ej. 5000 CFA). El dinero entra a MotoTX.
+    *   **B2B (Motorista)**: Paga Suscripción (ej. 2500 CFA). El dinero entra a MotoTX.
+
+2.  **Ingreso para el Motorista**:
+    *   ¿Cómo cobra si el cliente paga con Forfait (Virtual)?
+    *   **Respuesta**: El sistema funciona con **Liquidación (Settlement)**. Cada viaje realizado con Forfait genera un saldo a favor del conductor en el sistema.
+    *   La plataforma paga a los conductores periódicamente (semanal/mensual) el valor de los viajes realizados, descontando la comisión (o sin comisión si pagan suscripción VIP).
+    *   *Nota:* En esta versión MVP no mostramos el módulo de "Payouts" (Pagos a conductores), pero es parte del Back-office administrativo.
+
+---
+
+## 5. ❓ Preguntas Frecuentes (Q&A Prep) (5 Minutos)
+
+**P: ¿Qué pasa si falla internet?**
+R: La PWA tiene estrategias de caché (Service Workers) para cargar la interfaz básica, aunque se requiere conexión para pedir viajes.
+
+**P: ¿Es seguro el pago?**
+R: La integración está preparada para APIs de Mobile Money (Orange Money, Moov). No almacenamos tarjetas, solo tokens de transacción.
+
+**P: ¿Cómo gestionan la ubicación?**
+R: Usamos la API de Geolocalización del navegador (HTML5) enviando coordenadas al backend cada 10 segundos mientras el viaje está activo.
+
+---
+
+### 📝 Notas para el Presentador
+- **Ambiente**: Asegúrate de tener el Backend (`php artisan serve`) y el WebSocket (`php artisan reverb:start`) corriendo antes de empezar.
+- **Idioma**: La demo está configurada en Español, pero recuerda mostrar el cambio de idioma a Francés/Árabe para impresionar con la localización regional.

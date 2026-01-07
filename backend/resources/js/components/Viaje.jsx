@@ -11,6 +11,15 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
+/**
+ * Viaje Component
+ *
+ * [ES] Visualizador de mapas genérico para el seguimiento de la ubicación del motorista mediante WebSockets (Echo).
+ *      Se suscribe a canales privados para recibir actualizaciones de coordenadas en tiempo real.
+ *
+ * [FR] Visualiseur de cartes générique pour le suivi de la localisation du chauffeur via WebSockets (Echo).
+ *      S'abonne à des canaux privés pour recevoir des mises à jour de coordonnées en temps réel.
+ */
 function Viaje() {
   const { viajeId } = useParams();
   const [position, setPosition] = useState(null); // [lat, lng]
@@ -22,7 +31,7 @@ function Viaje() {
     console.log(`Suscribiéndose al canal: viaje.${viajeId}`);
 
     const channel = window.Echo.private(`viaje.${viajeId}`);
-    
+
     channel.listen('.location-updated', (data) => {
       console.log('Ubicación recibida:', data);
       const newPosition = [parseFloat(data.lat), parseFloat(data.lng)];
@@ -45,9 +54,9 @@ function Viaje() {
   }, [position]);
 
   return (
-    <MapContainer 
-      center={position || initialCenter} 
-      zoom={13} 
+    <MapContainer
+      center={position || initialCenter}
+      zoom={13}
       style={{ height: '100vh', width: '100%' }}
       whenCreated={map => mapRef.current = map}
     >

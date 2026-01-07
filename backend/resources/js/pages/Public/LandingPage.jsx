@@ -2,7 +2,17 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../../components/Common/SEO';
 import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 
+/**
+ * LandingPage Component
+ *
+ * [ES] Página de inicio pública de la plataforma MotoTX.
+ *      Presenta la propuesta de valor, características principales y opciones de registro para clientes y motoristas.
+ *
+ * [FR] Page d'accueil publique de la plateforme MotoTX.
+ *      Présente la proposition de valeur, les principales caractéristiques et les options d'inscription pour les clients et les chauffeurs.
+ */
 const LandingPage = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -86,30 +96,36 @@ const LandingPage = () => {
                     <img src="/logo_clean.png" alt="MotoTX" style={{ height: '2.5rem', objectFit: 'contain' }} />
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.primary, margin: 0 }}>MotoTX</h1>
                 </div>
-                <button
-                    onClick={() => navigate('/login')}
-                    style={{
-                        padding: '0.5rem 1.5rem',
-                        background: colors.primary,
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0.5rem',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)'
-                    }}
-                    onMouseOver={(e) => {
-                        e.target.style.transform = 'translateY(-2px)';
-                        e.target.style.boxShadow = '0 4px 8px rgba(37, 99, 235, 0.3)';
-                    }}
-                    onMouseOut={(e) => {
-                        e.target.style.transform = 'translateY(0)';
-                        e.target.style.boxShadow = '0 2px 4px rgba(37, 99, 235, 0.2)';
-                    }}
-                >
-                    Iniciar Sesión
-                </button>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div style={{ transform: 'scale(0.9)' }}>
+                        <LanguageSwitcher />
+                    </div>
+
+                    <button
+                        onClick={() => navigate('/login')}
+                        style={{
+                            padding: '0.5rem 1.5rem',
+                            background: colors.primary,
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)'
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.transform = 'translateY(-2px)';
+                            e.target.style.boxShadow = '0 4px 8px rgba(37, 99, 235, 0.3)';
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.transform = 'translateY(0)';
+                            e.target.style.boxShadow = '0 2px 4px rgba(37, 99, 235, 0.2)';
+                        }}
+                    >
+                        {t('login', 'Iniciar Sesión')}
+                    </button>
+                </div>
             </header>
 
             {/* Hero Section */}
