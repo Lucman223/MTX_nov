@@ -255,9 +255,6 @@ const ClienteDashboard = () => {
                 flex: 1,
                 padding: isMobile ? '1rem' : '2rem',
                 display: 'flex',
-                flexDirection: isMobile ? 'column-reverse' : 'row', // On mobile, map goes top (or bottom?) - Let's keep controls accessible. Actually map on top is standard but controllers bottom. Let's stack naturally but reserve order? No, keep Controls on top for easy access?
-                // Better UX: Map on Top, Controls Below? 
-                // Let's stick to standard flex column for mobile
                 flexDirection: isMobile ? 'column' : 'row',
                 gap: '2rem',
                 // height: isMobile ? 'auto' : 'calc(100vh - 90px)' // Allow scrolling on mobile
