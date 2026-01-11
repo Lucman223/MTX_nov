@@ -253,6 +253,47 @@
                 <p>Cette présentation inclut le code source réel qui propulse chaque vue.</p>
             </div>
 
+            <!-- Slide: Architecture Section -->
+            <div class="slide-block">
+                <h2>Architecture Technique</h2>
+                <p>Vue d'ensemble de la structure du projet (Monolithe).</p>
+            </div>
+
+            <!-- Slide: Global Structure -->
+            <div class="slide-block" data-code="code-arch-global">
+                <h3>Architecture Globale</h3>
+                <p>Le projet suit une approche <strong>Monolithique</strong> :</p>
+                <ul>
+                    <li><strong>Backend :</strong> Laravel (PHP) - API & Base de données.</li>
+                    <li><strong>Frontend :</strong> React (JS) - Interface Utilisateur.</li>
+                    <li><strong>Intégration :</strong> Les deux résident dans le même dépôt. Laravel sert l'application
+                        React via Vite.</li>
+                </ul>
+            </div>
+
+            <!-- Slide: Backend Structure -->
+            <div class="slide-block" data-code="code-arch-backend">
+                <h3>Structure Backend (Laravel)</h3>
+                <p>Organisation modulaire standard de Laravel :</p>
+                <ul>
+                    <li><strong>Controllers :</strong> Point d'entrée des requêtes API.</li>
+                    <li><strong>Services :</strong> Logique métier complexe.</li>
+                    <li><strong>Models :</strong> Représentation des données (DB).</li>
+                    <li><strong>Routes :</strong> Définition des endpoints API.</li>
+                </ul>
+            </div>
+
+            <!-- Slide: Frontend Structure -->
+            <div class="slide-block" data-code="code-arch-frontend">
+                <h3>Structure Frontend (React)</h3>
+                <p>Le code React se trouve dans <code>backend/resources/js</code>.</p>
+                <ul>
+                    <li><strong>Pages :</strong> Vues principales (Login, Dashboard).</li>
+                    <li><strong>Components :</strong> Éléments réutilisables.</li>
+                    <li><strong>Context :</strong> Gestion d'état global (Auth).</li>
+                </ul>
+            </div>
+
             <!-- Slide 2 -->
             <div class="slide-block">
                 <h2>1. Vues Générales</h2>
@@ -377,7 +418,7 @@
             <!-- CONTROLS -->
             <div class="controls">
                 <button id="prevBtn" onclick="plusSlides(-1)">❮</button>
-                <span class="slide-number">1 / 16</span>
+                <span class="slide-number">1 / 20</span>
                 <button id="nextBtn" onclick="plusSlides(1)">❯</button>
                 <button onclick="toggleCode()" id="codeToggleBtn" style="background:#2196F3; font-size:0.9em">👁️
                     Code</button>
@@ -404,6 +445,57 @@
     </div>
 
     <!-- Hidden Data Stores for Code -->
+    <script type="text/plain" id="code-arch-global">
+// 📂 STRUCTURE DU PROJET
+
+/backend (Racine du Projet)
+├── /app                # Code Backend (PHP)
+├── /routes             # Routes API
+├── /resources
+│   ├── /views          # Vues Blade (entry point)
+│   └── /js             # ⚛️ CODE FRONTEND (React)
+├── /public             # Assets publics
+├── .env                # Configuration
+└── package.json        # Dépendances JS
+    </script>
+
+    <script type="text/plain" id="code-arch-backend">
+// 🔧 STRUCTURE BACKEND (Laravel)
+
+/app
+├── /Http/Controllers   # 🎮 Contrôleurs
+│   ├── AuthController.php
+│   ├── ViajeController.php
+│   └── ...
+├── /Models             # 📦 Modèles (DB)
+│   ├── User.php
+│   ├── Viaje.php
+│   └── ...
+├── /Services           # 🧠 Logique Métier
+│   └── MotoristaService.php
+└── ...
+
+/routes
+└── api.php             # 🛣️ Routes API
+    </script>
+
+    <script type="text/plain" id="code-arch-frontend">
+// 🎨 STRUCTURE FRONTEND (React)
+// Chemin: backend/resources/js
+
+/resources/js
+├── /pages              # 📄 Écrans
+│   ├── /Public (Login, Landing)
+│   ├── /Cliente (Dashboard...)
+│   └── /Motorista (Dashboard...)
+├── /components         # 🧩 Composants Réutilisables
+│   ├── Navbar.jsx
+│   ├── Map.jsx
+│   └── ...
+├── /context            # 🌐 État Global
+│   └── AuthContext.jsx
+└── app_entry.jsx       # 🚪 Point d'Entrée
+    </script>
     <script type="text/plain" id="code-landing">
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
