@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import SEO from '../../components/Common/SEO';
+import { Card, Button, Badge } from '../../components/Common/UIComponents';
 import RatingModal from '../../components/RatingModal';
+import '../../css/components.css';
 
 /**
  * ClienteHistory Component
@@ -21,13 +25,7 @@ const ClienteHistory = () => {
     const [selectedTrip, setSelectedTrip] = useState(null);
     const [showRatingModal, setShowRatingModal] = useState(false);
 
-    // Color system
-    const colors = {
-        primary: '#2563eb',
-        secondary: '#10b981',
-        accent: '#f59e0b',
-        error: '#ef4444'
-    };
+    const { t } = useTranslation();
 
     useEffect(() => {
         fetchHistory();
@@ -57,9 +55,9 @@ const ClienteHistory = () => {
 
     const renderStars = (rating) => {
         return (
-            <div style={{ display: 'flex', gap: '0.25rem' }}>
+            <div className="stars-container">
                 {[1, 2, 3, 4, 5].map((star) => (
-                    <span key={star} style={{ color: star <= rating ? colors.accent : '#d1d5db', fontSize: '1.25rem' }}>
+                    <span key={star} className={`star ${star <= rating ? 'filled' : 'empty'}`}>
                         ★
                     </span>
                 ))}
@@ -68,128 +66,76 @@ const ClienteHistory = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-            {/* Header */}
-            <header style={{
-                backgroundColor: 'white',
-                padding: '1.25rem 2rem',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottom: `3px solid ${colors.primary}`
-            }}>
+        <div className="dashboard-container">
+            <SEO title={t('client_dashboard.history')} />
+
+            <header className="mtx-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <span style={{ fontSize: '2rem' }}>🏍️</span>
                     <div>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.primary, margin: 0 }}>
-                            Historial de Viajes
+                        <h1 className="header-title" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)', margin: 0 }}>
+                            {t('client_dashboard.history')}
                         </h1>
-                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-                            {user?.name || 'Cliente'}
+                        <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                            {user?.name || t('common.client')}
                         </span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button
-                        onClick={() => navigate('/cliente')}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            background: colors.primary,
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                    >
+
+                <div className="desktop-nav" style={{ display: 'flex', gap: '1rem' }}>
+                    <Button onClick={() => navigate('/cliente')} label="Dashboard">
                         ← Dashboard
-                    </button>
-                    <button
-                        onClick={() => navigate('/cliente/perfil')}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            background: 'white',
-                            color: '#4b5563',
-                            border: '1px solid #d1d5db',
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                    >
-                        👤 Perfil
-                    </button>
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            padding: '0.5rem 1.25rem',
-                            backgroundColor: 'white',
-                            color: colors.error,
-                            border: `2px solid ${colors.error}`,
-                            borderRadius: '0.5rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                    >
-                        Cerrar Sesión
-                    </button>
+                    </Button>
+                    <Button variant="outline" onClick={() => navigate('/cliente/perfil')} label={t('client_dashboard.profile')}>
+                        👤 {t('client_dashboard.profile')}
+                    </Button>
+                    <Button variant="error" onClick={handleLogout} label={t('common.logout')}>
+                        {t('common.logout')}
+                    </Button>
                 </div>
             </header>
 
-            {/* Main Content */}
-            <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+            {/* Mobile Bottom Nav */}
+            <nav className="mobile-bottom-nav">
+                <Button variant="ghost" onClick={() => navigate('/cliente')} label="Dashboard">
+                    <span style={{ fontSize: '1.25rem' }}>🏠</span>
+                    {t('nav.dashboard')}
+                </Button>
+                <Button variant="ghost" className="active" label={t('client_dashboard.history')}>
+                    <span style={{ fontSize: '1.25rem' }}>📋</span>
+                    {t('client_dashboard.history')}
+                </Button>
+                <Button variant="ghost" onClick={() => navigate('/cliente/perfil')} label={t('client_dashboard.profile')}>
+                    <span style={{ fontSize: '1.25rem' }}>👤</span>
+                    {t('client_dashboard.profile')}
+                </Button>
+            </nav>
+
+            <main className="main-content-centered">
                 {loading ? (
-                    <div style={{ textAlign: 'center', padding: '3rem', color: '#6b7280' }}>
-                        Cargando historial...
+                    <div className="loading-state">
+                        {t('common.loading')}
                     </div>
                 ) : viajes.length === 0 ? (
-                    <div style={{
-                        backgroundColor: 'white',
-                        padding: '3rem',
-                        borderRadius: '1rem',
-                        textAlign: 'center',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
-                    }}>
-                        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📋</div>
-                        <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
-                            No tienes viajes completados aún
+                    <Card className="empty-state">
+                        <div className="empty-icon">📋</div>
+                        <p className="empty-text">
+                            {t('client_dashboard.no_trips')}
                         </p>
-                        <button
+                        <Button
                             onClick={() => navigate('/cliente')}
-                            style={{
-                                marginTop: '1.5rem',
-                                padding: '0.875rem 2rem',
-                                background: colors.primary,
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '0.75rem',
-                                fontWeight: '600',
-                                cursor: 'pointer'
-                            }}
+                            className="mt-6"
                         >
-                            Solicitar Viaje
-                        </button>
-                    </div>
+                            {t('client_dashboard.request_trip')}
+                        </Button>
+                    </Card>
                 ) : (
-                    <div style={{ display: 'grid', gap: '1.5rem' }}>
+                    <div className="history-grid" style={{ display: 'grid', gap: '1.5rem' }}>
                         {viajes.map((viaje) => (
-                            <div
-                                key={viaje.id}
-                                style={{
-                                    backgroundColor: 'white',
-                                    padding: '2rem',
-                                    borderRadius: '1rem',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                                    border: '1px solid #e5e7eb',
-                                    transition: 'all 0.2s'
-                                }}
-                            >
+                            <Card key={viaje.id} className="history-item">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.5rem' }}>
                                     <div>
-                                        <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+                                        <div className="history-date" style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
                                             {new Date(viaje.updated_at).toLocaleDateString('es-ES', {
                                                 year: 'numeric',
                                                 month: 'long',
@@ -198,40 +144,23 @@ const ClienteHistory = () => {
                                                 minute: '2-digit'
                                             })}
                                         </div>
-                                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#111827' }}>
-                                            Motorista: {viaje.motorista?.name || 'N/A'}
+                                        <div className="history-driver" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-main)' }}>
+                                            {t('client_dashboard.driver')}: {viaje.motorista?.name || 'N/A'}
                                         </div>
                                     </div>
-                                    <div style={{
-                                        padding: '0.5rem 1rem',
-                                        background: `${colors.secondary}20`,
-                                        color: colors.secondary,
-                                        borderRadius: '0.5rem',
-                                        fontSize: '0.875rem',
-                                        fontWeight: '600'
-                                    }}>
-                                        Completado
-                                    </div>
+                                    <Badge variant="secondary">Completado</Badge>
                                 </div>
 
-                                <div style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: '1fr 1fr',
-                                    gap: '1rem',
-                                    marginBottom: '1.5rem',
-                                    padding: '1rem',
-                                    background: '#f9fafb',
-                                    borderRadius: '0.5rem'
-                                }}>
-                                    <div>
-                                        <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '0.25rem' }}>ORIGEN</div>
-                                        <div style={{ fontSize: '0.9rem', color: '#374151' }}>
+                                <div className="trip-details-grid" style={{ background: 'var(--bg-light)', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
+                                    <div className="detail-item">
+                                        <div className="detail-label">ORIGEN</div>
+                                        <div className="detail-value" style={{ fontSize: '0.9rem' }}>
                                             {viaje.origen_lat?.toFixed(4)}, {viaje.origen_lng?.toFixed(4)}
                                         </div>
                                     </div>
-                                    <div>
-                                        <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '0.25rem' }}>DESTINO</div>
-                                        <div style={{ fontSize: '0.9rem', color: '#374151' }}>
+                                    <div className="detail-item">
+                                        <div className="detail-label">DESTINO</div>
+                                        <div className="detail-value" style={{ fontSize: '0.9rem' }}>
                                             {viaje.destino_lat?.toFixed(4)}, {viaje.destino_lng?.toFixed(4)}
                                         </div>
                                     </div>
@@ -239,50 +168,27 @@ const ClienteHistory = () => {
 
                                 {/* Rating Section */}
                                 {viaje.calificacion ? (
-                                    <div style={{
-                                        padding: '1rem',
-                                        background: `${colors.accent}10`,
-                                        borderRadius: '0.5rem',
-                                        borderLeft: `3px solid ${colors.accent}`
-                                    }}>
-                                        <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>
-                                            Tu calificación:
+                                    <div className="rating-display" style={{ padding: '1rem', background: 'rgba(245, 158, 11, 0.1)', borderRadius: '0.5rem', borderLeft: '3px solid var(--accent-color)' }}>
+                                        <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+                                            {t('client_dashboard.your_rating')}:
                                         </div>
                                         {renderStars(viaje.calificacion.puntuacion)}
                                         {viaje.calificacion.comentario && (
-                                            <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#374151', fontStyle: 'italic' }}>
+                                            <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontStyle: 'italic' }}>
                                                 "{viaje.calificacion.comentario}"
                                             </div>
                                         )}
                                     </div>
                                 ) : (
-                                    <button
+                                    <Button
+                                        variant="accent"
                                         onClick={() => openRatingModal(viaje)}
-                                        style={{
-                                            width: '100%',
-                                            padding: '0.875rem',
-                                            background: colors.accent,
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '0.75rem',
-                                            fontWeight: 'bold',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s',
-                                            boxShadow: `0 4px 12px ${colors.accent}40`
-                                        }}
-                                        onMouseOver={(e) => {
-                                            e.target.style.transform = 'translateY(-2px)';
-                                            e.target.style.boxShadow = `0 6px 16px ${colors.accent}50`;
-                                        }}
-                                        onMouseOut={(e) => {
-                                            e.target.style.transform = 'translateY(0)';
-                                            e.target.style.boxShadow = `0 4px 12px ${colors.accent}40`;
-                                        }}
+                                        className="w-full"
                                     >
-                                        ⭐ Calificar este viaje
-                                    </button>
+                                        ⭐ {t('client_dashboard.rate_trip')}
+                                    </Button>
                                 )}
-                            </div>
+                            </Card>
                         ))}
                     </div>
                 )}

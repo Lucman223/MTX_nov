@@ -3,6 +3,10 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
+import SEO from '../../components/Common/SEO';
+import { Card, Button, Badge } from '../../components/Common/UIComponents';
+import '../../css/components.css';
 /**
  * ClienteProfile Component
  *
@@ -21,17 +25,7 @@ const ClienteProfile = () => {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
-    const colors = {
-        primary: '#2563eb',
-        primaryHover: '#1d4ed8',
-        secondary: '#10b981',
-        background: '#f3f4f6',
-        cardBg: '#ffffff',
-        text: '#111827',
-        subtext: '#6b7280',
-        border: '#e5e7eb',
-        error: '#ef4444'
-    };
+    const { t } = useTranslation();
 
     useEffect(() => { fetchProfile(); }, []);
 
@@ -69,190 +63,123 @@ const ClienteProfile = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: colors.background, fontFamily: "'Inter', sans-serif" }}>
-            {/* Header with Gradient */}
-            <div style={{
-                background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryHover})`,
-                color: 'white',
-                padding: '2rem',
-                borderBottom: '4px solid rgba(255,255,255,0.2)'
-            }}>
-                <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div style={{
-                            background: 'rgba(255,255,255,0.2)',
-                            padding: '0.75rem',
-                            borderRadius: '50%',
-                            fontSize: '2rem',
-                            width: '4rem',
-                            height: '4rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
-                            👤
-                        </div>
-                        <div>
-                            <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                                Mi Perfil
-                            </h1>
-                            <p style={{ margin: 0, opacity: 0.9, fontSize: '0.95rem' }}>Gestiona tu cuenta y forfaits</p>
-                        </div>
+        <div className="dashboard-container">
+            <SEO title={t('client_dashboard.profile')} />
+
+            <header className="mtx-header" style={{ padding: '2rem', background: 'linear-gradient(to right, var(--primary-color), #2563eb)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'white' }}>
+                    <div style={{
+                        background: 'rgba(255,255,255,0.2)',
+                        padding: '0.75rem',
+                        borderRadius: '50%',
+                        fontSize: '2rem',
+                        width: '4rem',
+                        height: '4rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        👤
                     </div>
                     <div>
-                        <button
-                            onClick={() => navigate('/cliente')}
-                            style={{
-                                padding: '0.6rem 1.25rem',
-                                backgroundColor: 'white',
-                                color: colors.primary,
-                                border: 'none',
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-                                transition: 'transform 0.1s'
-                            }}
-                        >
-                            ← Dashboard
-                        </button>
+                        <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0, color: 'white' }}>
+                            {t('client_dashboard.profile')}
+                        </h1>
+                        <p style={{ margin: 0, opacity: 0.9, fontSize: '0.95rem' }}>Gestiona tu cuenta y forfaits</p>
                     </div>
                 </div>
-            </div>
+                <div className="desktop-nav">
+                    <Button onClick={() => navigate('/cliente')} label="Dashboard">
+                        ← Dashboard
+                    </Button>
+                </div>
+            </header>
 
-            {/* Main Content */}
-            <main style={{ maxWidth: '1000px', margin: '-2rem auto 2rem', padding: '0 1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+            {/* Mobile Bottom Nav */}
+            <nav className="mobile-bottom-nav">
+                <Button variant="ghost" onClick={() => navigate('/cliente')} label="Dashboard">
+                    <span style={{ fontSize: '1.25rem' }}>🏠</span>
+                    {t('nav.dashboard')}
+                </Button>
+                <Button variant="ghost" onClick={() => navigate('/cliente/history')} label={t('client_dashboard.history')}>
+                    <span style={{ fontSize: '1.25rem' }}>📋</span>
+                    {t('client_dashboard.history')}
+                </Button>
+                <Button variant="ghost" className="active" label={t('client_dashboard.profile')}>
+                    <span style={{ fontSize: '1.25rem' }}>👤</span>
+                    {t('client_dashboard.profile')}
+                </Button>
+            </nav>
 
-                {/* Personal Info */}
-                <div style={{
-                    backgroundColor: colors.cardBg,
-                    borderRadius: '1rem',
-                    padding: '2rem',
-                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)'
-                }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: colors.text }}>
+            <main className="main-content-centered" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginTop: '-2rem' }}>
+                <Card className="profile-info-card">
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)' }}>
                         Información Personal
                     </h2>
 
                     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.25rem' }}>
                         <div>
-                            <label style={{ display: 'block', textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: '700', color: colors.subtext, marginBottom: '0.5rem' }}>Nombre</label>
+                            <label className="form-label">Nombre</label>
                             <input
                                 type="text"
                                 value={formData.name}
                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.75rem',
-                                    borderRadius: '0.5rem',
-                                    border: `1px solid ${colors.border}`,
-                                    backgroundColor: '#f9fafb'
-                                }}
+                                className="mtx-input"
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: '700', color: colors.subtext, marginBottom: '0.5rem' }}>Email</label>
+                            <label className="form-label">Email</label>
                             <input
                                 type="email"
                                 value={formData.email}
                                 onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.75rem',
-                                    borderRadius: '0.5rem',
-                                    border: `1px solid ${colors.border}`,
-                                    backgroundColor: '#f9fafb'
-                                }}
+                                className="mtx-input"
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: '700', color: colors.subtext, marginBottom: '0.5rem' }}>Teléfono</label>
+                            <label className="form-label">Teléfono</label>
                             <input
                                 type="text"
                                 value={formData.telefono}
                                 onChange={e => setFormData({ ...formData, telefono: e.target.value })}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.75rem',
-                                    borderRadius: '0.5rem',
-                                    border: `1px solid ${colors.border}`,
-                                    backgroundColor: '#f9fafb'
-                                }}
+                                className="mtx-input"
                             />
                         </div>
 
-                        <button
+                        <Button
                             type="submit"
                             disabled={saving}
-                            style={{
-                                marginTop: '1rem',
-                                width: '100%',
-                                padding: '0.875rem',
-                                backgroundColor: colors.primary,
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                opacity: saving ? 0.7 : 1
-                            }}
+                            className="w-full"
                         >
                             {saving ? 'Guardando...' : 'Guardar Cambios'}
-                        </button>
+                        </Button>
                     </form>
 
-                    <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e5e7eb' }}>
-                        <h3 style={{ fontSize: '1rem', color: colors.error, marginBottom: '0.5rem' }}>Zona de Peligro</h3>
-                        <button
+                    <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
+                        <h3 style={{ fontSize: '1rem', color: 'var(--error-color)', marginBottom: '0.5rem' }}>Zona de Peligro</h3>
+                        <Button
                             onClick={() => {
                                 if (window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-                                    // Simulación de borrado o llamada al endpoint
                                     toast.error('Por favor contacta a soporte@mototx.ml para eliminar tu cuenta permanentemente por seguridad.');
                                 }
                             }}
-                            type="button"
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem',
-                                border: `1px solid ${colors.error}`,
-                                backgroundColor: '#fef2f2',
-                                color: colors.error,
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer'
-                            }}
+                            variant="error"
+                            className="w-full"
                         >
                             Eliminar Cuenta
-                        </button>
+                        </Button>
                     </div>
-                </div>
+                </Card>
 
                 {/* Forfaits Section */}
-                <div style={{
-                    backgroundColor: colors.cardBg,
-                    borderRadius: '1rem',
-                    padding: '2rem',
-                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-                    height: 'fit-content'
-                }}>
+                <Card className="profile-forfaits-card" style={{ height: 'fit-content' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: colors.text }}>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-main)' }}>
                             💳 Mis Forfaits
                         </h2>
-                        <button
-                            onClick={() => navigate('/cliente/forfaits')}
-                            style={{
-                                fontSize: '0.85rem',
-                                color: colors.primary,
-                                fontWeight: '600',
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                textDecoration: 'underline'
-                            }}
-                        >
+                        <Button variant="ghost" onClick={() => navigate('/cliente/forfaits')} label="Comprar Más">
                             Comprar Más
-                        </button>
+                        </Button>
                     </div>
 
                     {forfaits.length === 0 ? (
@@ -298,17 +225,11 @@ const ClienteProfile = () => {
                             ))}
                         </div>
                     )}
-                </div>
+                </Card>
 
                 {/* Purchase History */}
-                <div style={{
-                    backgroundColor: colors.cardBg,
-                    borderRadius: '1rem',
-                    padding: '2rem',
-                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-                    gridColumn: '1 / -1' // Span full width
-                }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: colors.text }}>
+                <Card className="profile-history-card" style={{ gridColumn: '1 / -1' }}>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)' }}>
                         📜 Historial de Compras
                     </h2>
 
@@ -359,7 +280,7 @@ const ClienteProfile = () => {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </Card>
 
             </main >
         </div >

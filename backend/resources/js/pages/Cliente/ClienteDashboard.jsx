@@ -8,6 +8,8 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import useNotifications from '../../hooks/useNotifications';
 import { useTranslation } from 'react-i18next';
+import { Card, Button, Badge } from '../../components/Common/UIComponents';
+import '../../css/components.css';
 
 /**
  * ClienteDashboard Component
@@ -109,306 +111,132 @@ const ClienteDashboard = () => {
 
     console.log('UserData:', user, 'Forfaits:', forfaits, 'Balance:', viajesDisponibles);
 
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    // Simplified: No longer need isMobile state as we use CSS Media Queries
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', flexDirection: 'column', paddingBottom: isMobile ? '80px' : '0' }}>
+        <div className="dashboard-container">
             <SEO title={t('nav.dashboard')} />
-            {/* Responsive Header */}
-            <header style={{
-                backgroundColor: 'white',
-                padding: isMobile ? '1rem' : '1.25rem 2rem',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottom: `3px solid ${colors.primary} `,
-                position: isMobile ? 'sticky' : 'static',
-                top: 0,
-                zIndex: 50
-            }}>
+
+            {/* Header */}
+            <header className="mtx-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <img src="/logo.png" alt="MotoTX" style={{ height: isMobile ? '2.5rem' : '3.5rem', objectFit: 'contain' }} />
+                    <img src="/logo.png" alt="MotoTX Logo" className="mtx-header-logo" style={{ height: '3.5rem', objectFit: 'contain' }} />
                     <div>
-                        <h1 style={{ fontSize: isMobile ? '1.1rem' : '1.5rem', fontWeight: 'bold', color: colors.primary, margin: 0 }}>MotoTX</h1>
-                        <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem', color: '#6b7280' }}>
+                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)', margin: 0 }}>MotoTX</h1>
+                        <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
                             {user?.name || 'Cliente'}
                         </span>
                     </div>
                 </div>
 
                 {/* Desktop Nav */}
-                {!isMobile && (
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <div style={{
-                            padding: '0.5rem 1rem',
-                            background: `linear - gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                            borderRadius: '0.5rem',
-                            color: 'white',
-                            fontWeight: '600',
-                            fontSize: '0.875rem'
-                        }}>
-                            {t('client_dashboard.trips_badge', { count: viajesDisponibles })}
-                        </div>
-                        <button
-                            onClick={() => navigate('/cliente/historial')}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                background: 'white',
-                                color: colors.primary,
-                                border: `2px solid ${colors.primary} `,
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            {t('client_dashboard.history')}
-                        </button>
-                        <button
-                            onClick={() => navigate('/cliente/perfil')}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                background: 'white',
-                                color: '#4b5563',
-                                border: '1px solid #d1d5db',
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            {t('client_dashboard.profile')}
-                        </button>
-                        <button
-                            onClick={handleLogout}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                backgroundColor: 'white',
-                                color: colors.error,
-                                border: `2px solid ${colors.error} `,
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            {t('common.logout')}
-                        </button>
-                    </div>
-                )}
+                <div className="desktop-nav" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <Badge variant="premium">
+                        {t('client_dashboard.trips_badge', { count: viajesDisponibles })}
+                    </Badge>
 
-                {/* Mobile Balance Badge (Right) */}
-                {isMobile && (
-                    <div style={{
-                        padding: '0.25rem 0.75rem',
-                        background: `linear - gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                        borderRadius: '1rem',
-                        color: 'white',
-                        fontWeight: '600',
-                        fontSize: '0.75rem'
-                    }}>
-                        {viajesDisponibles} 🎫
-                    </div>
-                )}
+                    <Button onClick={() => navigate('/cliente/historial')} variant="outline" className="nav-btn-history">
+                        {t('client_dashboard.history')}
+                    </Button>
+
+                    <Button onClick={() => navigate('/cliente/perfil')} variant="outline" className="nav-btn-profile">
+                        {t('client_dashboard.profile')}
+                    </Button>
+
+                    <Button onClick={handleLogout} variant="error" className="nav-btn-logout">
+                        {t('common.logout')}
+                    </Button>
+                </div>
+
+                {/* Mobile Balance Badge (Visible via CSS) */}
+                <div className="mobile-balance-badge">
+                    <Badge variant="premium">{viajesDisponibles} 🎫</Badge>
+                </div>
             </header>
 
             {/* Mobile Bottom Nav */}
-            {isMobile && (
-                <div style={{
-                    position: 'fixed',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: 'white',
-                    borderTop: '1px solid #e5e7eb',
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    padding: '0.75rem',
-                    boxShadow: '0 -2px 10px rgba(0,0,0,0.05)',
-                    zIndex: 100
-                }}>
-                    <button onClick={() => { }} style={{ background: 'none', border: 'none', color: colors.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>🏠</span>
-                        {t('nav.dashboard')}
-                    </button>
-                    <button onClick={() => navigate('/cliente/historial')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>📋</span>
-                        {t('client_dashboard.history')}
-                    </button>
-                    <button onClick={() => navigate('/cliente/perfil')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>👤</span>
-                        {t('client_dashboard.profile')}
-                    </button>
-                    <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: colors.error, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>🚪</span>
-                        {t('common.logout')}
-                    </button>
-                </div>
-            )}
+            <nav className="mobile-bottom-nav">
+                <Button variant="ghost" className="active" label={t('nav.dashboard')}>
+                    <span style={{ fontSize: '1.25rem' }}>🏠</span>
+                    {t('nav.dashboard')}
+                </Button>
+                <Button variant="ghost" onClick={() => navigate('/cliente/historial')} label={t('client_dashboard.history')}>
+                    <span style={{ fontSize: '1.25rem' }}>📋</span>
+                    {t('client_dashboard.history')}
+                </Button>
+                <Button variant="ghost" onClick={() => navigate('/cliente/perfil')} label={t('client_dashboard.profile')}>
+                    <span style={{ fontSize: '1.25rem' }}>👤</span>
+                    {t('client_dashboard.profile')}
+                </Button>
+                <Button variant="ghost" onClick={handleLogout} label={t('common.logout')} className="text-error">
+                    <span style={{ fontSize: '1.25rem' }}>🚪</span>
+                    {t('common.logout')}
+                </Button>
+            </nav>
 
             {/* Main Content */}
-            <main style={{
-                flex: 1,
-                padding: isMobile ? '1rem' : '2rem',
-                display: 'flex',
-                flexDirection: isMobile ? 'column' : 'row',
-                gap: '2rem',
-                // height: isMobile ? 'auto' : 'calc(100vh - 90px)' // Allow scrolling on mobile
-            }}>
-
+            <main className="main-content">
                 {/* Left Panel: Controls & Info */}
-                <div style={{ flex: isMobile ? 'auto' : '0 0 380px', display: 'flex', flexDirection: 'column', gap: '1.5rem', order: isMobile ? 2 : 1 }}>
-
-                    {/* Status Card */}
-                    <div style={{
-                        backgroundColor: 'white',
-                        padding: '2rem',
-                        borderRadius: '1rem',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                        border: '1px solid #e5e7eb'
-                    }}>
-                        <h2 style={{
-                            fontSize: '1.25rem',
-                            fontWeight: 'bold',
-                            marginBottom: '1.5rem',
-                            color: '#111827',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem'
-                        }}>
+                <div className="side-panel">
+                    <Card>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span>📍</span> {t('client_dashboard.plan_trip')}
                         </h2>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <button
                                 onClick={() => setPuntoActivo('origen')}
-                                style={{
-                                    padding: '1.25rem',
-                                    borderRadius: '0.75rem',
-                                    border: `2px solid ${puntoActivo === 'origen' ? colors.primary : '#e5e7eb'} `,
-                                    backgroundColor: puntoActivo === 'origen' ? `${colors.primary} 10` : 'white',
-                                    textAlign: 'left',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    boxShadow: puntoActivo === 'origen' ? `0 4px 12px ${colors.primary} 20` : 'none'
-                                }}
+                                className={`point-selector ${puntoActivo === 'origen' ? 'active-origen' : ''}`}
                             >
-                                <div style={{ fontSize: '0.75rem', color: colors.primary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>{t('client_dashboard.origin')}</div>
-                                <div style={{ fontWeight: '600', color: origen ? '#111827' : '#9ca3af', fontSize: '0.95rem' }}>
-                                    {origen ? `${origen[0].toFixed(4)}, ${origen[1].toFixed(4)} ` : t('client_dashboard.tap_map')}
+                                <div className="point-label-origen">{t('client_dashboard.origin')}</div>
+                                <div className="point-value">
+                                    {origen ? `${origen[0].toFixed(4)}, ${origen[1].toFixed(4)}` : t('client_dashboard.tap_map')}
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => setPuntoActivo('destino')}
-                                style={{
-                                    padding: '1.25rem',
-                                    borderRadius: '0.75rem',
-                                    border: `2px solid ${puntoActivo === 'destino' ? colors.secondary : '#e5e7eb'} `,
-                                    backgroundColor: puntoActivo === 'destino' ? `${colors.secondary} 10` : 'white',
-                                    textAlign: 'left',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    boxShadow: puntoActivo === 'destino' ? `0 4px 12px ${colors.secondary} 20` : 'none'
-                                }}
+                                className={`point-selector ${puntoActivo === 'destino' ? 'active-destino' : ''}`}
                             >
-                                <div style={{ fontSize: '0.75rem', color: colors.secondary, marginBottom: '0.5rem', fontWeight: '600', letterSpacing: '0.05em' }}>{t('client_dashboard.destination')}</div>
-                                <div style={{ fontWeight: '600', color: destino ? '#111827' : '#9ca3af', fontSize: '0.95rem' }}>
-                                    {destino ? `${destino[0].toFixed(4)}, ${destino[1].toFixed(4)} ` : t('client_dashboard.tap_map')}
+                                <div className="point-label-destino">{t('client_dashboard.destination')}</div>
+                                <div className="point-value">
+                                    {destino ? `${destino[0].toFixed(4)}, ${destino[1].toFixed(4)}` : t('client_dashboard.tap_map')}
                                 </div>
                             </button>
                         </div>
 
-                        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e5e7eb' }}>
-                            <button
+                        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
+                            <Button
                                 onClick={handleSolicitarViaje}
                                 disabled={!origen || !destino}
-                                style={{
-                                    width: '100%',
-                                    padding: '1.125rem',
-                                    background: (!origen || !destino) ? '#d1d5db' : `linear - gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '0.75rem',
-                                    fontWeight: 'bold',
-                                    fontSize: '1.05rem',
-                                    cursor: (!origen || !destino) ? 'not-allowed' : 'pointer',
-                                    boxShadow: (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary} 40`,
-                                    transition: 'all 0.2s'
-                                }}
-                                onMouseOver={(e) => {
-                                    if (origen && destino) {
-                                        e.target.style.transform = 'translateY(-2px)';
-                                        e.target.style.boxShadow = `0 6px 16px ${colors.primary} 50`;
-                                    }
-                                }}
-                                onMouseOut={(e) => {
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = (!origen || !destino) ? 'none' : `0 4px 12px ${colors.primary} 40`;
-                                }}
+                                className="w-full btn-request"
                             >
                                 {t('client_dashboard.request_now')}
-                            </button>
+                            </Button>
                         </div>
-                    </div>
+                    </Card>
 
                     {/* Forfaits Card */}
-                    <div style={{
-                        backgroundColor: 'white',
-                        padding: '2rem',
-                        borderRadius: '1rem',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                        border: '1px solid #e5e7eb',
-                        background: `linear - gradient(135deg, white 0 %, ${colors.primary}05 100 %)`
-                    }}>
-                        <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#111827', marginBottom: '1rem' }}>{t('client_dashboard.balance_title')}</h3>
-                        <div style={{ fontSize: '3rem', fontWeight: 'bold', color: colors.primary, margin: '1rem 0' }}>
+                    <Card accent className="mt-6">
+                        <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', marginBottom: '1rem' }}>{t('client_dashboard.balance_title')}</h3>
+                        <div className="balance-value">
                             {viajesDisponibles}
                         </div>
-                        <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1.5rem' }}>
+                        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
                             {viajesDisponibles > 0 ? t('client_dashboard.available_trips', { count: viajesDisponibles }) : t('client_dashboard.no_trips')}
                         </p>
-                        <button
+                        <Button
                             onClick={() => navigate('/cliente/forfaits')}
-                            style={{
-                                width: '100%',
-                                padding: '0.875rem',
-                                fontSize: '0.95rem',
-                                color: 'white',
-                                background: colors.accent,
-                                border: 'none',
-                                borderRadius: '0.75rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                boxShadow: `0 4px 12px ${colors.accent} 40`
-                            }}
-                            onMouseOver={(e) => {
-                                e.target.style.transform = 'translateY(-2px)';
-                                e.target.style.boxShadow = `0 6px 16px ${colors.accent} 50`;
-                            }}
-                            onMouseOut={(e) => {
-                                e.target.style.transform = 'translateY(0)';
-                                e.target.style.boxShadow = `0 4px 12px ${colors.accent} 40`;
-                            }}
+                            variant="accent"
+                            className="w-full"
                         >
                             {t('client_dashboard.buy_forfait')}
-                        </button>
-                    </div>
+                        </Button>
+                    </Card>
 
                     {/* Active Trip Status */}
                     {activeTrip && (
-                        <div style={{
-                            backgroundColor: colors.secondary,
-                            color: 'white',
-                            padding: '1.5rem',
-                            borderRadius: '1rem',
-                            boxShadow: `0 4px 12px ${colors.secondary} 40`
-                        }}>
+                        <div className="active-trip-banner">
                             <div style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t('client_dashboard.trip_active')}</div>
                             <div style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>
                                 {t('client_dashboard.state')}: {activeTrip.estado}
@@ -423,17 +251,7 @@ const ClienteDashboard = () => {
                 </div>
 
                 {/* Right Panel: Map */}
-                <div style={{
-                    flex: 1,
-                    backgroundColor: 'white',
-                    borderRadius: '1rem',
-                    overflow: 'hidden',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                    position: 'relative',
-                    border: '1px solid #e5e7eb',
-                    height: isMobile ? '350px' : 'auto', // Fixed height on mobile to prevent Leaflet collapse
-                    order: isMobile ? 1 : 2
-                }}>
+                <div className="map-panel">
                     <MapSelection
                         origen={origen}
                         setOrigen={setOrigen}
