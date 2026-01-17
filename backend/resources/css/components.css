@@ -1,0 +1,281 @@
+/* [ES] Sistema de diseño de componentes para MotoTX */
+/* [FR] Système de design de composants pour MotoTX */
+
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #059669;
+    --accent-color: #f59e0b;
+    --error-color: #ef4444;
+    --bg-light: #f9fafb;
+    --bg-white: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+}
+
+/* Layout */
+.dashboard-container {
+    min-height: 100vh;
+    background-color: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.main-content-centered {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding-bottom: 80px;
+    }
+
+    .main-content,
+    .main-content-centered {
+        padding: 1rem;
+        flex-direction: column;
+    }
+}
+
+/* Components */
+.mtx-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.mtx-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.mtx-button {
+    padding: 0.875rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.mtx-button-primary {
+    background: linear-gradient(135deg, var(--primary-color), #2563eb);
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.mtx-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* Form Elements */
+.mtx-input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    background-color: #f9fafb;
+    transition: border-color 0.2s;
+}
+
+.mtx-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: white;
+}
+
+.form-label {
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    marginBottom: 0.5rem;
+}
+
+/* Navigation */
+.mtx-header {
+    background: white;
+    padding: 1.25rem 2rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.desktop-nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none;
+    }
+
+    .mtx-header {
+        padding: 1rem;
+    }
+
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid var(--border-color);
+        justify-content: space-around;
+        padding: 0.75rem;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        z-index: 100;
+    }
+}
+
+/* History & Stars */
+.stars-container {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.star {
+    font-size: 1.25rem;
+    color: #d1d5db;
+}
+
+.star.filled {
+    color: var(--accent-color);
+}
+
+.history-item:hover {
+    transform: translateY(-4px);
+}
+
+.rating-display {
+    border-left: 4px solid var(--accent-color);
+}
+
+/* Trip Details Grid */
+.trip-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.detail-value {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* Driver Theme */
+.driver-theme {
+    --primary-color: #059669;
+    --secondary-color: #059669;
+}
+
+.driver-header {
+    border-bottom: 3px solid var(--secondary-color);
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.status-badge.online {
+    background: var(--secondary-color);
+    color: white;
+    border: 2px solid var(--secondary-color);
+}
+
+.status-badge.offline {
+    background: #e5e7eb;
+    color: var(--text-muted);
+    border: 2px solid transparent;
+}
+
+.status-badge.in-service {
+    background: var(--secondary-color);
+    color: white;
+    cursor: default;
+}
+
+/* Wallet Card */
+.wallet-card {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: white !important;
+}
+
+/* Utilities */
+.w-full {
+    width: 100%;
+}
+
+.mt-6 {
+    margin-top: 1.5rem;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.empty-text {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+}
