@@ -7,6 +7,8 @@ import useNotifications from '../../hooks/useNotifications';
 import InstallPrompt from '../../components/Common/InstallPrompt';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/Common/SEO';
+import { Card, Button, Badge } from '../../components/Common/UIComponents';
+import '../../css/components.css';
 
 /**
  * MotoristaDashboard Component
@@ -172,416 +174,172 @@ const MotoristaDashboard = () => {
         }
     };
 
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    // Simplified: No longer need isMobile state as we use CSS Media Queries
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: isMobile ? '80px' : '0' }}>
+        <div className="dashboard-container driver-theme">
             <SEO title={t('nav.dashboard')} />
             <InstallPrompt />
 
-            <header style={{
-                backgroundColor: 'white',
-                padding: isMobile ? '1rem' : '1.25rem 2rem',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottom: `3px solid ${colors.secondary}`,
-                position: isMobile ? 'sticky' : 'static',
-                top: 0,
-                zIndex: 50
-            }}>
+            <header className="mtx-header driver-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <img src="/logo.png" alt="MotoTX" style={{ height: isMobile ? '2.5rem' : '3.5rem', objectFit: 'contain' }} />
+                    <img src="/logo.png" alt="MotoTX Logo" className="mtx-header-logo" style={{ height: '3.5rem', objectFit: 'contain' }} />
                     <div>
-                        <h1 style={{ fontSize: isMobile ? '1.1rem' : '1.5rem', fontWeight: 'bold', color: colors.secondary, margin: 0 }}>
-                            {isMobile ? 'MotoTX Driver' : 'MotoTX Motorista v1.1'}
+                        <h1 className="header-title" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--secondary-color)', margin: 0 }}>
+                            MotoTX Motorista
                         </h1>
-                        <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem', color: '#6b7280' }}>
+                        <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
                             {user?.name || t('driver_dashboard.driver_role')}
                         </span>
                     </div>
                 </div>
 
-                {!isMobile && (
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <div
-                            onClick={currentTrip ? null : handleToggleStatus}
-                            style={{
-                                padding: '0.5rem 1rem',
-                                background: currentTrip ? colors.secondary : (isOnline ? colors.secondary : '#e5e7eb'),
-                                borderRadius: '2rem',
-                                color: currentTrip ? 'white' : (isOnline ? 'white' : '#6b7280'),
-                                fontWeight: '600',
-                                fontSize: '0.875rem',
-                                cursor: currentTrip ? 'default' : 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                border: isOnline ? `2px solid ${colors.secondary}` : '2px solid transparent'
-                            }}
-                        >
-                            {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? t('driver_dashboard.status_online') : t('driver_dashboard.status_offline'))}
-                            {!currentTrip && <span style={{ fontSize: '0.75rem' }}>↻</span>}
-                        </div>
-                        <button
-                            onClick={() => navigate('/motorista/historial')}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                background: 'white',
-                                color: colors.secondary,
-                                border: `2px solid ${colors.secondary}`,
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            {t('client_dashboard.history')}
-                        </button>
-                        <button
-                            onClick={() => navigate('/motorista/suscripciones')}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                background: '#f59e0b',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            👑 {t('nav.forfaits')}
-                        </button>
-                        <button
-                            onClick={() => navigate('/motorista/perfil')}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                background: 'white',
-                                color: '#4b5563',
-                                border: '1px solid #d1d5db',
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            {t('client_dashboard.profile')}
-                        </button>
-                        <button
-                            onClick={handleLogout}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                backgroundColor: 'white',
-                                color: colors.error,
-                                border: `2px solid ${colors.error}`,
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            {t('common.logout')}
-                        </button>
-                    </div>
-                )}
-
-                {isMobile && (
+                <div className="desktop-nav" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                     <div
                         onClick={currentTrip ? null : handleToggleStatus}
-                        style={{
-                            padding: '0.25rem 0.75rem',
-                            background: currentTrip ? colors.secondary : (isOnline ? colors.secondary : '#e5e7eb'),
-                            borderRadius: '2rem',
-                            color: currentTrip ? 'white' : (isOnline ? 'white' : '#6b7280'),
-                            fontWeight: '600',
-                            fontSize: '0.75rem',
-                            cursor: currentTrip ? 'default' : 'pointer',
-                            border: isOnline ? `2px solid ${colors.secondary}` : '1px solid #d1d5db'
-                        }}
+                        className={`status-badge ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}
                     >
-                        {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? 'ON' : 'OFF')}
+                        {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? t('driver_dashboard.status_online') : t('driver_dashboard.status_offline'))}
+                        {!currentTrip && <span className="refresh-icon">↻</span>}
                     </div>
-                )}
+
+                    <Button variant="outline" onClick={() => navigate('/motorista/historial')} className="nav-btn-secondary">
+                        {t('client_dashboard.history')}
+                    </Button>
+
+                    <Button variant="accent" onClick={() => navigate('/motorista/suscripciones')} className="nav-btn-premium">
+                        👑 {t('nav.forfaits')}
+                    </Button>
+
+                    <Button variant="outline" onClick={() => navigate('/motorista/perfil')} className="nav-btn-profile">
+                        {t('client_dashboard.profile')}
+                    </Button>
+
+                    <Button variant="error" onClick={handleLogout} className="nav-btn-logout">
+                        {t('common.logout')}
+                    </Button>
+                </div>
+
+                {/* Mobile Status Badge */}
+                <div
+                    className={`mobile-status-toggle ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}
+                    onClick={currentTrip ? null : handleToggleStatus}
+                >
+                    {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? 'ON' : 'OFF')}
+                </div>
             </header>
 
-            {isMobile && (
-                <div style={{
-                    position: 'fixed',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: 'white',
-                    borderTop: '1px solid #e5e7eb',
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    padding: '0.75rem',
-                    boxShadow: '0 -2px 10px rgba(0,0,0,0.05)',
-                    zIndex: 100
-                }}>
-                    <button onClick={() => { }} style={{ background: 'none', border: 'none', color: colors.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>🏠</span>
-                        {t('nav.dashboard')}
-                    </button>
-                    <button onClick={() => navigate('/motorista/historial')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>📋</span>
-                        {t('client_dashboard.history')}
-                    </button>
-                    <button onClick={() => navigate('/motorista/perfil')} style={{ background: 'none', border: 'none', color: '#6b7280', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>👤</span>
-                        {t('client_dashboard.profile')}
-                    </button>
-                    <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: colors.error, display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                        <span style={{ fontSize: '1.25rem' }}>🚪</span>
-                        {t('common.logout')}
-                    </button>
-                </div>
-            )}
+            {/* Mobile Bottom Nav */}
+            <nav className="mobile-bottom-nav">
+                <Button variant="ghost" className="active" label={t('nav.dashboard')}>
+                    <span style={{ fontSize: '1.25rem' }}>🏠</span>
+                    {t('nav.dashboard')}
+                </Button>
+                <Button variant="ghost" onClick={() => navigate('/motorista/historial')} label={t('client_dashboard.history')}>
+                    <span style={{ fontSize: '1.25rem' }}>📋</span>
+                    {t('client_dashboard.history')}
+                </Button>
+                <Button variant="ghost" onClick={() => navigate('/motorista/perfil')} label={t('client_dashboard.profile')}>
+                    <span style={{ fontSize: '1.25rem' }}>👤</span>
+                    {t('client_dashboard.profile')}
+                </Button>
+                <Button variant="ghost" onClick={handleLogout} label={t('common.logout')} className="text-error">
+                    <span style={{ fontSize: '1.25rem' }}>🚪</span>
+                    {t('common.logout')}
+                </Button>
+            </nav>
 
-            <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-                {loading && (
-                    <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                        {t('common.loading')}
-                    </div>
-                )}
+            <main className="main-content-centered">
+                {loading && <div className="loading-state">{t('common.loading')}</div>}
 
-                {/* Wallet & Earnings Card */}
+                {/* Wallet Card */}
                 {profile && (
-                    <div style={{
-                        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                        borderRadius: '1rem',
-                        padding: '1.5rem',
-                        color: 'white',
-                        marginBottom: '2rem',
-                        boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)',
-                        display: 'flex',
-                        flexDirection: isMobile ? 'column' : 'row',
-                        justifyContent: 'space-between',
-                        alignItems: isMobile ? 'start' : 'center',
-                        gap: '1rem'
-                    }}>
-                        <div>
-                            <div style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.25rem' }}>
-                                {t('driver_dashboard.wallet_title')}
+                    <Card className="wallet-card">
+                        <div className="wallet-info">
+                            <div className="wallet-label">{t('driver_dashboard.wallet_title')}</div>
+                            <div className="wallet-amount">
+                                {profile.billetera} <span className="currency">CFA</span>
                             </div>
-                            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-                                {profile.billetera} <span style={{ fontSize: '1rem', opacity: 0.8 }}>CFA</span>
-                            </div>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.8, marginTop: '0.25rem' }}>
-                                {t('driver_dashboard.payout_daily_desc')}
-                            </div>
+                            <div className="wallet-desc">{t('driver_dashboard.payout_daily_desc')}</div>
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: isMobile ? 'stretch' : 'end' }}>
-                            <button
+                        <div className="wallet-actions">
+                            <Button
                                 onClick={handleWithdraw}
                                 disabled={profile.billetera <= 0}
-                                style={{
-                                    backgroundColor: 'white',
-                                    color: colors.secondary,
-                                    border: 'none',
-                                    padding: '0.75rem 1.5rem',
-                                    borderRadius: '0.75rem',
-                                    fontWeight: 'bold',
-                                    cursor: profile.billetera <= 0 ? 'not-allowed' : 'pointer',
-                                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                                    opacity: profile.billetera <= 0 ? 0.7 : 1
-                                }}
+                                className="withdraw-btn"
                             >
                                 💸 {t('driver_dashboard.withdraw_btn')}
-                            </button>
-                            <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.5rem' }}>
-                                <div>
-                                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{t('nav.trips')} (Hoy)</div>
-                                    <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{stats?.today_trips || 0}</div>
+                            </Button>
+
+                            <div className="stats-row">
+                                <div className="stat-item">
+                                    <div className="stat-label">{t('nav.trips')} (Hoy)</div>
+                                    <div className="stat-value">{stats?.today_trips || 0}</div>
                                 </div>
-                                <div style={{ borderLeft: '1px solid rgba(255,255,255,0.3)', paddingLeft: '1rem' }}>
-                                    <div style={{ fontSize: '0.7rem', color: '#fbbf24', fontWeight: 'bold' }}>⚡ Ahorro</div>
-                                    <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{stats?.commission_saved || 0} CFA</div>
+                                <div className="stat-item highlight">
+                                    <div className="stat-label">⚡ Ahorro</div>
+                                    <div className="stat-value">{stats?.commission_saved || 0} CFA</div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </Card>
                 )}
 
+                {/* Active Trip */}
                 {currentTrip && (
-                    <div style={{
-                        backgroundColor: 'white',
-                        padding: '2rem',
-                        borderRadius: '1rem',
-                        marginBottom: '2rem',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                        border: `2px solid ${colors.secondary}`
-                    }}>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.secondary, marginBottom: '1.5rem' }}>
-                            🚀 {t('client_dashboard.trip_active')}
-                        </h2>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
-                            <div>
-                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>{t('client_dashboard.client')}</div>
-                                <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>
-                                    {currentTrip.cliente?.name || 'N/A'}
-                                </div>
+                    <Card className="active-trip-card">
+                        <h2 className="card-title-active">🚀 {t('client_dashboard.trip_active')}</h2>
+                        <div className="trip-details-grid">
+                            <div className="detail-item">
+                                <div className="detail-label">{t('client_dashboard.client')}</div>
+                                <div className="detail-value">{currentTrip.cliente?.name || 'N/A'}</div>
                             </div>
-                            <div>
-                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>{t('client_dashboard.state')}</div>
-                                <div style={{
-                                    fontSize: '1.125rem',
-                                    fontWeight: '600',
-                                    color: colors.secondary,
-                                    textTransform: 'capitalize'
-                                }}>
-                                    {currentTrip.estado}
-                                </div>
+                            <div className="detail-item">
+                                <div className="detail-label">{t('client_dashboard.state')}</div>
+                                <div className="detail-value status-active">{currentTrip.estado}</div>
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        <div className="trip-actions">
                             {currentTrip.estado === 'aceptado' && (
-                                <button
-                                    onClick={() => handleUpdateStatus('en_curso')}
-                                    style={{
-                                        flex: 1,
-                                        padding: '1rem',
-                                        background: colors.primary,
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '0.75rem',
-                                        fontWeight: 'bold',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        boxShadow: `0 4px 12px ${colors.primary}40`
-                                    }}
-                                    onMouseOver={(e) => {
-                                        e.target.style.transform = 'translateY(-2px)';
-                                        e.target.style.boxShadow = `0 6px 16px ${colors.primary}50`;
-                                    }}
-                                    onMouseOut={(e) => {
-                                        e.target.style.transform = 'translateY(0)';
-                                        e.target.style.boxShadow = `0 4px 12px ${colors.primary}40`;
-                                    }}
-                                >
+                                <Button onClick={() => handleUpdateStatus('en_curso')} className="w-full">
                                     {t('driver_dashboard.start_trip')}
-                                </button>
+                                </Button>
                             )}
                             {currentTrip.estado === 'en_curso' && (
-                                <button
-                                    onClick={() => handleUpdateStatus('completado')}
-                                    style={{
-                                        flex: 1,
-                                        padding: '1rem',
-                                        background: colors.secondary,
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '0.75rem',
-                                        fontWeight: 'bold',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        boxShadow: `0 4px 12px ${colors.secondary}40`
-                                    }}
-                                    onMouseOver={(e) => {
-                                        e.target.style.transform = 'translateY(-2px)';
-                                        e.target.style.boxShadow = `0 6px 16px ${colors.secondary}50`;
-                                    }}
-                                    onMouseOut={(e) => {
-                                        e.target.style.transform = 'translateY(0)';
-                                        e.target.style.boxShadow = `0 4px 12px ${colors.secondary}40`;
-                                    }}
-                                >
+                                <Button onClick={() => handleUpdateStatus('completado')} variant="secondary" className="w-full">
                                     {t('driver_dashboard.complete_trip')}
-                                </button>
+                                </Button>
                             )}
                         </div>
-                    </div>
+                    </Card>
                 )}
 
+                {/* Pending Requests */}
                 {!currentTrip && (
-                    <div>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
-                            📋 {t('driver_dashboard.pending_requests')}
-                        </h2>
+                    <div className="requests-section">
+                        <h2 className="section-title">📋 {t('driver_dashboard.pending_requests')}</h2>
                         {viajes.length === 0 ? (
-                            <div style={{
-                                backgroundColor: 'white',
-                                padding: '3rem',
-                                borderRadius: '1rem',
-                                textAlign: 'center',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
-                            }}>
-                                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
-                                <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
-                                    {t('driver_dashboard.no_requests')}
-                                </p>
-                            </div>
+                            <Card className="empty-state">
+                                <div className="empty-icon">🔍</div>
+                                <p className="empty-text">{t('driver_dashboard.no_requests')}</p>
+                            </Card>
                         ) : (
-                            <div style={{ display: 'grid', gap: '1.5rem' }}>
+                            <div className="requests-grid">
                                 {viajes.map((viaje) => (
-                                    <div
-                                        key={viaje.id}
-                                        style={{
-                                            backgroundColor: 'white',
-                                            padding: '1.5rem',
-                                            borderRadius: '1rem',
-                                            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                                            border: '1px solid #e5e7eb',
-                                            transition: 'all 0.2s'
-                                        }}
-                                        onMouseOver={(e) => {
-                                            e.currentTarget.style.transform = 'translateY(-4px)';
-                                            e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.12)';
-                                        }}
-                                        onMouseOut={(e) => {
-                                            e.currentTarget.style.transform = 'translateY(0)';
-                                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                                    <Card key={viaje.id} className="request-item-card">
+                                        <div className="request-header">
                                             <div>
-                                                <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>{t('client_dashboard.client')}</div>
-                                                <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>
-                                                    {viaje.cliente?.name || 'N/A'}
-                                                </div>
+                                                <div className="detail-label">{t('client_dashboard.client')}</div>
+                                                <div className="detail-value">{viaje.cliente?.name || 'N/A'}</div>
                                             </div>
-                                            <div style={{
-                                                padding: '0.375rem 0.75rem',
-                                                background: `${colors.accent}20`,
-                                                color: colors.accent,
-                                                borderRadius: '0.5rem',
-                                                fontSize: '0.875rem',
-                                                fontWeight: '600'
-                                            }}>
-                                                {t('driver_dashboard.new_tag')}
-                                            </div>
+                                            <Badge variant="accent">{t('driver_dashboard.new_tag')}</Badge>
                                         </div>
-                                        <button
-                                            onClick={() => handleAcceptTrip(viaje.id)}
-                                            style={{
-                                                width: '100%',
-                                                padding: '0.875rem',
-                                                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: '0.75rem',
-                                                fontWeight: 'bold',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.2s',
-                                                boxShadow: `0 4px 12px ${colors.primary}40`
-                                            }}
-                                            onMouseOver={(e) => {
-                                                e.target.style.transform = 'translateY(-2px)';
-                                                e.target.style.boxShadow = `0 6px 16px ${colors.primary}50`;
-                                            }}
-                                            onMouseOut={(e) => {
-                                                e.target.style.transform = 'translateY(0)';
-                                                e.target.style.boxShadow = `0 4px 12px ${colors.primary}40`;
-                                            }}
-                                        >
+                                        <Button onClick={() => handleAcceptTrip(viaje.id)} className="w-full">
                                             {t('driver_dashboard.accept_trip')}
-                                        </button>
-                                    </div>
+                                        </Button>
+                                    </Card>
                                 ))}
                             </div>
                         )}

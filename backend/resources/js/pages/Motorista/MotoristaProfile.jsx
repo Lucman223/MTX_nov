@@ -3,6 +3,10 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
+import SEO from '../../components/Common/SEO';
+import { Card, Button, Badge } from '../../components/Common/UIComponents';
+import '../../css/components.css';
 
 /**
  * MotoristaProfile Component
@@ -23,18 +27,7 @@ const MotoristaProfile = () => {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
-    const colors = {
-        primary: '#2563eb', // Blue-600
-        primaryHover: '#1d4ed8', // Blue-700
-        secondary: '#10b981', // Emerald-500
-        secondaryHover: '#059669', // Emerald-600
-        background: '#f3f4f6', // Gray-100
-        cardBg: '#ffffff',
-        text: '#111827', // Gray-900
-        subtext: '#6b7280', // Gray-500
-        border: '#e5e7eb', // Gray-200
-        error: '#ef4444'
-    };
+    const { t } = useTranslation();
 
     useEffect(() => { fetchProfile(); }, []);
 
@@ -77,185 +70,132 @@ const MotoristaProfile = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: colors.background, fontFamily: "'Inter', sans-serif" }}>
-            {/* Header */}
-            <div style={{
-                background: `linear-gradient(to right, ${colors.secondary}, ${colors.secondaryHover})`,
-                color: 'white',
-                padding: '2rem',
-                borderBottom: `4px solid ${colors.primary}`
-            }}>
-                <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div style={{
-                            background: 'rgba(255,255,255,0.2)',
-                            padding: '0.75rem',
-                            borderRadius: '1rem',
-                            fontSize: '2rem'
-                        }}>
-                            🛵
-                        </div>
-                        <div>
-                            <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                                Perfil del Motorista
-                            </h1>
-                            <p style={{ margin: 0, opacity: 0.9, fontSize: '0.95rem' }}>Gestiona tus datos y vehículo</p>
-                        </div>
+        <div className="dashboard-container driver-theme">
+            <SEO title={t('driver_dashboard.profile')} />
+
+            <header className="mtx-header driver-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{
+                        background: 'rgba(255,255,255,0.2)',
+                        padding: '0.75rem',
+                        borderRadius: '1rem',
+                        fontSize: '2rem'
+                    }}>
+                        🛵
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <button
-                            onClick={() => navigate('/motorista')}
-                            style={{
-                                padding: '0.6rem 1.25rem',
-                                backgroundColor: 'white',
-                                color: colors.secondary,
-                                border: 'none',
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-                                transition: 'transform 0.1s'
-                            }}
-                        >
-                            ← Volver al Dashboard
-                        </button>
+                    <div>
+                        <h1 className="header-title" style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0 }}>
+                            {t('driver_dashboard.profile')}
+                        </h1>
+                        <p style={{ margin: 0, opacity: 0.9, fontSize: '0.95rem' }}>{t('driver_dashboard.manage_profile')}</p>
                     </div>
                 </div>
-            </div>
+                <div className="desktop-nav">
+                    <Button onClick={() => navigate('/motorista')} label="Dashboard">
+                        ← Dashboard
+                    </Button>
+                </div>
+            </header>
 
-            {/* Main Content */}
-            <main style={{ maxWidth: '1000px', margin: '-2rem auto 2rem', padding: '0 1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+            {/* Mobile Bottom Nav */}
+            <nav className="mobile-bottom-nav">
+                <Button variant="ghost" onClick={() => navigate('/motorista')} label="Dashboard">
+                    <span style={{ fontSize: '1.25rem' }}>🏠</span>
+                    {t('nav.dashboard')}
+                </Button>
+                <Button variant="ghost" onClick={() => navigate('/motorista/history')} label={t('client_dashboard.history')}>
+                    <span style={{ fontSize: '1.25rem' }}>📋</span>
+                    {t('client_dashboard.history')}
+                </Button>
+                <Button variant="ghost" className="active" label={t('client_dashboard.profile')}>
+                    <span style={{ fontSize: '1.25rem' }}>👤</span>
+                    {t('client_dashboard.profile')}
+                </Button>
+            </nav>
 
-                {/* Personal Data Form */}
-                <div style={{
-                    backgroundColor: colors.cardBg,
-                    borderRadius: '1rem',
-                    padding: '2rem',
-                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)'
-                }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: colors.text, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        👤 Datos Personales
+            <main className="main-content-centered" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginTop: '-2rem' }}>
+                <Card className="profile-info-card">
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        👤 {t('driver_dashboard.personal_data')}
                     </h2>
 
                     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.25rem' }}>
                         <div>
-                            <label style={{ display: 'block', textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: '700', color: colors.subtext, marginBottom: '0.5rem' }}>Nombre Completo</label>
+                            <label className="form-label">{t('common.name')}</label>
                             <input
                                 type="text"
                                 value={formData.name}
                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.75rem',
-                                    borderRadius: '0.5rem',
-                                    border: `1px solid ${colors.border}`,
-                                    backgroundColor: '#f9fafb',
-                                    fontSize: '0.95rem',
-                                    color: colors.text
-                                }}
+                                className="mtx-input"
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: '700', color: colors.subtext, marginBottom: '0.5rem' }}>Correo Electrónico</label>
+                            <label className="form-label">{t('common.email')}</label>
                             <input
                                 type="email"
                                 value={formData.email}
                                 onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.75rem',
-                                    borderRadius: '0.5rem',
-                                    border: `1px solid ${colors.border}`,
-                                    backgroundColor: '#f9fafb',
-                                    fontSize: '0.95rem',
-                                    color: colors.text
-                                }}
+                                className="mtx-input"
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: '700', color: colors.subtext, marginBottom: '0.5rem' }}>Teléfono</label>
+                            <label className="form-label">{t('common.phone')}</label>
                             <input
                                 type="text"
                                 value={formData.telefono}
                                 onChange={e => setFormData({ ...formData, telefono: e.target.value })}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.75rem',
-                                    borderRadius: '0.5rem',
-                                    border: `1px solid ${colors.border}`,
-                                    backgroundColor: '#f9fafb',
-                                    fontSize: '0.95rem',
-                                    color: colors.text
-                                }}
+                                className="mtx-input"
                             />
                         </div>
 
-                        <button
+                        <Button
                             type="submit"
                             disabled={saving}
-                            style={{
-                                marginTop: '1rem',
-                                width: '100%',
-                                padding: '0.875rem',
-                                backgroundColor: colors.primary,
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'background-color 0.2s',
-                                opacity: saving ? 0.7 : 1
-                            }}
+                            className="w-full"
                         >
-                            {saving ? 'Guardando...' : 'Guardar Cambios'}
-                        </button>
+                            {saving ? t('common.saving') : t('common.save_changes')}
+                        </Button>
                     </form>
-                </div>
+                </Card>
 
                 {/* Vehicle Info */}
-                <div style={{
-                    backgroundColor: colors.cardBg,
-                    borderRadius: '1rem',
-                    padding: '2rem',
-                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-                    height: 'fit-content'
-                }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: colors.text, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        🏍️ Tu Vehículo
+                <Card className="profile-vehicle-card" style={{ height: 'fit-content' }}>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        🏍️ {t('driver_dashboard.your_vehicle')}
                     </h2>
 
                     <div style={{ display: 'grid', gap: '1rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', backgroundColor: '#f0fdf4', borderRadius: '0.5rem', border: `1px solid ${colors.secondary}30` }}>
-                            <span style={{ color: colors.subtext, fontWeight: '500' }}>Matrícula</span>
-                            <span style={{ fontWeight: 'bold', fontFamily: 'monospace', fontSize: '1.1rem', color: colors.text }}>{motoInfo.matricula || '---'}</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', backgroundColor: 'rgba(5, 150, 105, 0.05)', borderRadius: '0.5rem', border: '1px solid var(--secondary-color)' }}>
+                            <span style={{ color: 'var(--text-muted)', fontWeight: '500' }}>{t('driver_dashboard.license_plate')}</span>
+                            <span style={{ fontWeight: 'bold', fontFamily: 'monospace', fontSize: '1.1rem', color: 'var(--text-main)' }}>{motoInfo.matricula || '---'}</span>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                            <div style={{ padding: '1rem', backgroundColor: colors.background, borderRadius: '0.5rem' }}>
-                                <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: colors.subtext, letterSpacing: '0.05em' }}>Modelo</div>
-                                <div style={{ fontWeight: '600', fontSize: '1.1rem', marginTop: '0.25rem' }}>{motoInfo.modelo_moto || '---'}</div>
+                            <div style={{ padding: '1rem', backgroundColor: 'var(--bg-light)', borderRadius: '0.5rem' }}>
+                                <div className="detail-label">{t('driver_dashboard.model')}</div>
+                                <div className="detail-value" style={{ marginTop: '0.25rem' }}>{motoInfo.modelo_moto || '---'}</div>
                             </div>
-                            <div style={{ padding: '1rem', backgroundColor: colors.background, borderRadius: '0.5rem' }}>
-                                <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: colors.subtext, letterSpacing: '0.05em' }}>Año</div>
-                                <div style={{ fontWeight: '600', fontSize: '1.1rem', marginTop: '0.25rem' }}>{motoInfo.anio_moto || '---'}</div>
+                            <div style={{ padding: '1rem', backgroundColor: 'var(--bg-light)', borderRadius: '0.5rem' }}>
+                                <div className="detail-label">{t('driver_dashboard.year')}</div>
+                                <div className="detail-value" style={{ marginTop: '0.25rem' }}>{motoInfo.anio_moto || '---'}</div>
                             </div>
                         </div>
 
-                        <div style={{ padding: '1rem', backgroundColor: colors.background, borderRadius: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: colors.subtext, letterSpacing: '0.05em' }}>Color</div>
+                        <div style={{ padding: '1rem', backgroundColor: 'var(--bg-light)', borderRadius: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div className="detail-label">{t('driver_dashboard.color')}</div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <span style={{ fontWeight: '600' }}>{motoInfo.color_moto || '---'}</span>
                                 {motoInfo.color_moto && (
-                                    <div style={{ width: '1.5rem', height: '1.5rem', borderRadius: '50%', backgroundColor: motoInfo.color_moto, border: '2px solid white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                                    <div style={{ width: '1.5rem', height: '1.5rem', borderRadius: '50%', backgroundColor: motoInfo.color_moto, border: '2px solid white', boxShadow: 'var(--shadow-sm)' }}></div>
                                 )}
                             </div>
                         </div>
                     </div>
 
-                    <div style={{ marginTop: '1.5rem', fontSize: '0.875rem', color: colors.subtext, textAlign: 'center', fontStyle: 'italic' }}>
-                        * Para modificar datos del vehículo, contacta con soporte.
+                    <div style={{ marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)', textAlign: 'center', fontStyle: 'italic' }}>
+                        * {t('driver_dashboard.vehicle_support_note')}
                     </div>
-                </div>
+                </Card>
             </main>
         </div>
     );
