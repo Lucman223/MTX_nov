@@ -94,5 +94,34 @@
         "trips_count": "{{count}} trajets",
         "default_desc": "Meilleure offre",
         "selected": "Sélectionné"
+    },
+    "admin_dashboard": {
+        "welcome": "Bienvenue, {{name}} 👋",
+        "summary": "Voici un résumé de l'activité de la plateforme",
+        "loading": "Chargement des statistiques...",
+        "stats": {
+            "drivers": "Total Conducteurs",
+            "drivers_pending": "{{count}} en attente",
+            "trips_today": "Trajets d'Aujourd'hui",
+            "trips_total": "{{count}} au total",
+            "income": "Revenus du Mois",
+            "forfaits_sold": "Forfaits vendus",
+            "active_users": "Utilisateurs Actifs"
+        },
+        "actions": {
+            "title": "Actions Rapides",
+            "manage_drivers": "Gérer les Conducteurs",
+            "manage_drivers_desc": "Approuver et rejeter les conducteurs",
+            "manage_clients": "Gérer les Clients",
+            "manage_clients_desc": "Voir la liste des utilisateurs",
+            "manage_forfaits": "Gérer les Forfaits",
+            "manage_forfaits_desc": "Administrer les forfaits et les prix",
+            "reports": "Rapports",
+            "reports_desc": "Statistiques et analyses"
+        },
+        "activity": {
+            "title": "Activité Récente",
+            "empty": "Aucune activité récente."
+        }
     }
 }

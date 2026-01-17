@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación MotoTX</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .slide-container {
+            width: 80%;
+            height: 80%;
+            background-color: #2d2d2d;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 40px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide-container.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #81C784;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        h3 {
+            color: #A5D6A7;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        ul {
+            text-align: left;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 50vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            margin-top: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        img:hover {
+            transform: scale(1.02);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+        /* Modal for full screen image */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: Title -->
+    <div class="slide-container active">
+        <h1>Presentación de la Plataforma MotoTX</h1>
+        <p>Bienvenido a la documentación visual de <strong>MotoTX</strong>, una plataforma integral de transporte en moto que conecta a clientes con motoristas de manera eficiente y segura.</p>
+        <p>A continuación, se detalla el flujo de usuario y las funcionalidades clave para cada rol dentro del sistema.</p>
+    </div>
+
+    <!-- Slide 2: Section 1 Views -->
+    <div class="slide-container">
+        <h2>1. Vistas Generales</h2>
+    </div>
+
+    <!-- Slide 3: Landing Page -->
+    <div class="slide-container">
+        <h3>Página de Inicio (Landing Page)</h3>
+        <p>La puerta de entrada a la plataforma. Presenta la propuesta de valor, permite el acceso rápido al registro e inicio de sesión, y ofrece información general sobre el servicio.</p>
+        <img src="general_home.png" alt="Home Page" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 4: Registro -->
+    <div class="slide-container">
+        <h3>Registro de Usuarios</h3>
+        <p>Un formulario unificado que permite a los nuevos usuarios registrarse seleccionando su rol (Cliente o Motorista). Diseño limpio y validación en tiempo real.</p>
+        <img src="general_registro.png" alt="Registro de Usuario" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 5: Section 2 Cliente -->
+    <div class="slide-container">
+        <h2>2. Rol: Cliente</h2>
+        <p>El cliente es el usuario final que solicita el servicio de transporte.</p>
+    </div>
+
+    <!-- Slide 6: Dashboard Cliente -->
+    <div class="slide-container">
+        <h3>Dashboard de Cliente</h3>
+        <p>El panel principal donde el cliente puede:</p>
+        <ul>
+            <li>Ver su saldo de viajes disponibles (Forfaits).</li>
+            <li>Solicitar un nuevo viaje seleccionando origen y destino en el mapa interactivo.</li>
+            <li>Ver el estado de su solicitud actual.</li>
+        </ul>
+        <img src="cliente_dashboard.png" alt="Dashboard Cliente" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 7: Compra Forfaits -->
+    <div class="slide-container">
+        <h3>Compra de Forfaits</h3>
+        <p>Sección dedicada a la recarga de viajes. Los clientes pueden adquirir paquetes de viajes (forfaits) utilizando pasarelas de pago integradas (Simulación Orange Money).</p>
+        <img src="cliente_forfaits.png" alt="Compra de Forfaits" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 8: Historial Cliente -->
+    <div class="slide-container">
+        <h3>Historial de Viajes</h3>
+        <p>Registro completo de los viajes realizados, con detalles como fecha, motorista asignado, y estado del viaje.</p>
+        <img src="cliente_historial.png" alt="Historial Cliente" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 9: Perfil Cliente -->
+    <div class="slide-container">
+        <h3>Perfil de Usuario</h3>
+        <p>Gestión de datos personales, contraseña y preferencias de la cuenta.</p>
+        <img src="cliente_perfil.png" alt="Perfil Cliente" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 10: Section 3 Motorista -->
+    <div class="slide-container">
+        <h2>3. Rol: Motorista</h2>
+        <p>El motorista es el proveedor del servicio, encargado de aceptar y realizar los viajes.</p>
+    </div>
+
+    <!-- Slide 11: Dashboard Motorista -->
+    <div class="slide-container">
+        <h3>Dashboard de Motorista</h3>
+        <p>Herramienta de trabajo diaria. Permite:</p>
+        <ul>
+            <li>Ponerse "En Línea" u "Offline" para recibir solicitudes.</li>
+            <li>Ver y aceptar nuevas solicitudes de viaje en tiempo real.</li>
+            <li>Gestionar el estado del viaje actual (Aceptar -> En Curso -> Completar).</li>
+        </ul>
+        <img src="motorista_dashboard.png" alt="Dashboard Motorista" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 12: Historial Motorista -->
+    <div class="slide-container">
+        <h3>Historial de Servicios</h3>
+        <p>Bitácora de todos los viajes completados por el motorista, útil para llevar un control de su actividad.</p>
+        <img src="motorista_historial.png" alt="Historial Motorista" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 13: Perfil Motorista -->
+    <div class="slide-container">
+        <h3>Perfil de Motorista</h3>
+        <p>Información del conductor.</p>
+        <img src="motorista_perfil.png" alt="Perfil Motorista" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 14: Section 4 Admin -->
+    <div class="slide-container">
+        <h2>4. Rol: Administrador</h2>
+        <p>El administrador tiene control total sobre la plataforma, gestionando usuarios, finanzas y configuraciones.</p>
+    </div>
+
+    <!-- Slide 15: Dashboard Admin -->
+    <div class="slide-container">
+        <h3>Dashboard de Administración</h3>
+        <p>Visión global del estado del sistema. Muestra KPIs importantes como:</p>
+        <ul>
+            <li>Total de motoristas y clientes.</li>
+            <li>Ingresos del mes.</li>
+            <li>Gráficos de actividad y rendimiento.</li>
+        </ul>
+        <img src="admin_dashboard.png" alt="Dashboard Admin" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 16: Gestion Clientes -->
+    <div class="slide-container">
+        <h3>Gestión de Clientes</h3>
+        <p>Tabla completa con todos los clientes registrados, permitiendo ver detalles y gestionar cuentas.</p>
+        <img src="admin_clientes.png" alt="Gestión Clientes" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 17: Gestion Motoristas -->
+    <div class="slide-container">
+        <h3>Gestión de Motoristas</h3>
+        <p>Control de la flota. Permite validar nuevos motoristas, ver su estado (activo/inactivo) y gestionar sus perfiles.</p>
+        <img src="admin_motoristas.png" alt="Gestión Motoristas" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 18: Gestion Forfaits -->
+    <div class="slide-container">
+        <h3>Gestión de Forfaits</h3>
+        <p>Configuración de los paquetes de viajes y precios disponibles para los clientes.</p>
+        <img src="admin_forfaits.png" alt="Gestión Forfaits" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 19: Historial Global -->
+    <div class="slide-container">
+        <h3>Historial Global de Viajes</h3>
+        <p>Supervisión de todos los viajes realizados en la plataforma, con filtros por estado, fecha y usuario.</p>
+        <img src="admin_viajes.png" alt="Historial Global" onclick="openModal(this)">
+    </div>
+
+    <!-- Slide 20: Reportes -->
+    <div class="slide-container">
+        <h3>Reportes y Análisis</h3>
+        <p>Sección avanzada para la toma de decisiones basada en datos, con reportes detallados sobre el uso de la plataforma.</p>
+        <img src="admin_reportes.png" alt="Reportes" onclick="openModal(this)">
+    </div>
+
+
+    <div class="controls">
+        <button id="prevBtn" onclick="plusSlides(-1)" disabled>❮ Anterior</button>
+        <span class="slide-number">1 / 20</span>
+        <button id="nextBtn" onclick="plusSlides(1)">Siguiente ❯</button>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <script>
+        let slideIndex = 1;
+        const slides = document.getElementsByClassName("slide-container");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const slideNumberText = document.querySelector(".slide-number");
+
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+                slides[i].classList.remove("active");
+            }
+            
+            slides[slideIndex-1].style.display = "flex";
+            slides[slideIndex-1].classList.add("active");
+            
+            slideNumberText.innerText = slideIndex + " / " + slides.length;
+
+            if (slideIndex === 1) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+             if (slideIndex === slides.length) {
+                nextBtn.innerText = "Fin";
+                // Optional: disable next on last slide or keep it to loop back
+                // nextBtn.disabled = true; 
+            } else {
+                nextBtn.innerText = "Siguiente ❯";
+                nextBtn.disabled = false;
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "ArrowRight" || event.key === " " || event.key === "Enter") {
+                plusSlides(1);
+            } else if (event.key === "ArrowLeft") {
+                plusSlides(-1);
+            } else if (event.key === "Escape") {
+                closeModal();
+            }
+        });
+
+        // Modal Logic
+        function openModal(element) {
+            var modal = document.getElementById("myModal");
+            var modalImg = document.getElementById("img01");
+            modal.style.display = "flex";
+            modal.style.justifyContent = "center";
+            modal.style.alignItems = "center";
+            modalImg.src = element.src;
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        // Close modal when clicking outside
+        document.getElementById("myModal").onclick = function(e) {
+             if (e.target === this) {
+                closeModal();
+             }
+        }
+
+    </script>
+</body>
+</html>

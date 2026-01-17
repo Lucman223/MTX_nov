@@ -253,6 +253,35 @@
                 <p>Cette présentation inclut le code source réel qui propulse chaque vue.</p>
             </div>
 
+            <!-- Slide: Deployment (Global Access) -->
+            <div class="slide-block" data-code="code-deploy">
+                <h2>🚀 Lanzamiento / Lancement</h2>
+                <div class="diagram-container">
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>🇪🇸 Español</h4>
+                            <ul>
+                                <li>1. Abrir Terminal en <code>backend/</code></li>
+                                <li>2. Ejecutar Comando de Túnel</li>
+                                <li>3. Copiar enlace <code>trycloudflare.com</code></li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>🇫🇷 Français</h4>
+                            <ul>
+                                <li>1. Ouvrir Terminal dans <code>backend/</code></li>
+                                <li>2. Exécuter Commande Tunnel</li>
+                                <li>3. Copier lien <code>trycloudflare.com</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Cloudflare Tunnel:</strong> Exponemos el servidor local (localhost:8000) a internet de forma
+                    segura y temporal. / Nous exposons le serveur local à Internet de manière sécurisée et temporaire.
+                </div>
+            </div>
+
             <!-- Slide: Architecture Section -->
             <div class="slide-block">
                 <h2>Architecture Technique</h2>
@@ -942,6 +971,22 @@ const AdminClientes = () => {
         </table>
     );
 };
+    </script>
+    <script type="text/plain" id="code-deploy">
+# 💻 COMANDO DE DESPLIEGUE / COMMANDE DE DÉPLOIEMENT
+
+# 1. Asegúrate de que el servidor funciona / Assurez-vous que le serveur fonctionne:
+php artisan serve --host=0.0.0.0 --port=8000
+
+# 2. En otra terminal, lanza el túnel / Dans un autre terminal, lancez le tunnel:
+.\cloudflared.exe tunnel --url http://localhost:8000
+
+# -----------------------------------------------------
+# RESULTADO / RÉSULTAT:
+# +--------------------------------------------------------------------------------------------+
+# |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+# |  https://random-name.trycloudflare.com                                                   |
+# +--------------------------------------------------------------------------------------------+
     </script>
 
 

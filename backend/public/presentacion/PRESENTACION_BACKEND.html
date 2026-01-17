@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Backend MotoTX</title>
+    <!-- PrismJS for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* Layout: Split Screen */
+        .main-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #2d2d2d;
+            position: relative;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .code-panel {
+            flex: 1;
+            background-color: #1e1e1e;
+            border-left: 2px solid #444;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .code-panel.active {
+            width: 50%;
+        }
+
+        .code-panel.active~.slide-panel,
+        .main-container.has-code .slide-panel {
+            flex: 1;
+        }
+
+        .code-header {
+            padding: 10px 20px;
+            background-color: #252526;
+            border-bottom: 1px solid #333;
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #9cdcfe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-content {
+            flex: 1;
+            overflow: auto;
+            padding: 0;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        /* Slide Content Styles */
+        .slide-block {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+            padding-bottom: 60px;
+            /* Space for controls */
+        }
+
+        .slide-block.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #FF9800;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #FFB74D;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        h3 {
+            color: #FFCC80;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        p,
+        ul {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 800px;
+            color: #ddd;
+        }
+
+        ul {
+            text-align: left;
+        }
+
+        /* CUSTOM DIAGRAM STYLES (NO MERMAID) */
+        .diagram-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: #333;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .diagram-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .diagram-node {
+            background-color: #424242;
+            border: 2px solid #FF9800;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .diagram-node.blue {
+            border-color: #2196F3;
+        }
+
+        .diagram-node.green {
+            border-color: #4CAF50;
+        }
+
+        .diagram-node.red {
+            border-color: #F44336;
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: #aaa;
+            font-weight: bold;
+        }
+
+        .arrow-vertical {
+            font-size: 1.5em;
+            color: #aaa;
+            font-weight: bold;
+            transform: rotate(90deg);
+            margin: 5px 0;
+        }
+
+        /* File Tree Styles */
+        .tree ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .tree li {
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .tree li::before {
+            content: "📂";
+            margin-right: 5px;
+        }
+
+        .tree li.file::before {
+            content: "📄";
+            margin-right: 5px;
+        }
+
+        /* Grid for Tables/Classes */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .card {
+            background: #444;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .card h4 {
+            margin-top: 0;
+            color: #FFB74D;
+            border-bottom: 1px solid #666;
+            padding-bottom: 5px;
+        }
+
+        .card ul {
+            padding-left: 20px;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            width: 80%;
+            z-index: 10;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 30px;
+        }
+
+        button {
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #F57C00;
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+        .explanation {
+            background: #333;
+            padding: 15px;
+            border-left: 4px solid #FF9800;
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #ddd;
+            width: 90%;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            height: 100%;
+            border-radius: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-container" id="mainContainer">
+
+        <!-- Left Panel: Content -->
+        <div class="slide-panel">
+
+            <!-- Slide 1: Welcome -->
+            <div class="slide-block active" data-code="">
+                <h1>Backend MotoTX</h1>
+                <p>Documentación <strong>VISUAL</strong> de la Arquitectura del Servidor.</p>
+                <div class="diagram-container">
+                    <div class="diagram-row">
+                        <div class="diagram-node">📱 Cliente</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node">⚡ API</div>
+                    </div>
+                    <div class="arrow-vertical">↓</div>
+                    <div class="diagram-node blue">🔐 JWT Auth</div>
+                    <div class="arrow-vertical">↓</div>
+                    <div class="diagram-row">
+                        <div class="diagram-node green">🎮 Controller</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node green">🧠 Service</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node green">📦 Model (DB)</div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Resumen:</strong> La aplicación sigue una arquitectura MVC limpia. El Cliente envía
+                    peticiones a la API, que primero pasan por la autenticación JWT. El Controlador recibe la petición y
+                    delega la lógica compleja al Servicio, que interactúa con el Modelo para persistir datos.
+                </div>
+            </div>
+
+            <!-- Slide 2: Directory Structure -->
+            <div class="slide-block" data-code="code-structure">
+                <h2>1. Estructura Organizada</h2>
+                <div class="diagram-container tree" style="align-items: flex-start; padding-left: 40px;">
+                    <ul>
+                        <li>backend/
+                            <ul>
+                                <li>app/
+                                    <ul>
+                                        <li>Http/Controllers/ <span style="color:#FFB74D"> (Lógica entrada)</span></li>
+                                        <li>Services/ <span style="color:#4CAF50"> (Reglas de negocio)</span></li>
+                                        <li>Models/ <span style="color:#2196F3"> (Base de datos)</span></li>
+                                    </ul>
+                                </li>
+                                <li>routes/api/ <span style="color:#f44"> (Endpoints)</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="explanation">
+                    <strong>Estructura:</strong> Separamos claramente "qué entra" (Controllers), "qué sucede" (Services)
+                    y "qué se guarda" (Models). Esto facilita el mantenimiento masivo y las pruebas unitarias.
+                </div>
+                <p><em>(Haz clic en 👁️ Código para ver el árbol de directorios)</em></p>
+            </div>
+
+            <!-- Slide 3: Routes -->
+            <div class="slide-block" data-code="code-routes">
+                <h2>2. Rutas Modulares</h2>
+                <p><code>routes/api/viajes.php</code> define los puntos de entrada.</p>
+                <div class="diagram-container">
+                    <div class="diagram-row">
+                        <div class="diagram-node">POST /solicitar</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node">🔒 JWT Middleware</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node green">ViajeController@solicitar</div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Seguridad:</strong> Todas las rutas críticas están agrupadas bajo el middleware
+                    <code>jwt.auth</code>. Esto asegura que solo usuarios con un token válido puedan acceder a estos
+                    endpoints.
+                </div>
+            </div>
+
+            <!-- Slide 4: Controller -->
+            <div class="slide-block" data-code="code-controller">
+                <h2>3. Controlador "Delgado"</h2>
+                <p>El controlador solo recibe y delega.</p>
+                <div class="diagram-container">
+                    <div class="diagram-node green" style="width:100%">ViajeController</div>
+                    <div class="arrow-vertical">↓</div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Responsabilidades</h4>
+                            <ul>
+                                <li>Recibir Request</li>
+                                <li>Validar Formato</li>
+                                <li><strong>Llamar al Servicio</strong></li>
+                                <li>Retornar JSON</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>Métodos</h4>
+                            <ul>
+                                <li>solicitarViaje()</li>
+                                <li>acceptTrip()</li>
+                                <li>updateStatus()</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Diseño:</strong> Usamos el patrón "Thin Controller". El controlador actúa como un
+                    recepcionista: verifica que la petición sea válida y llama al experto (Service) para hacer el
+                    trabajo. NUNCA debe contener lógica de negocio.
+                </div>
+            </div>
+
+            <!-- Slide 5: Service -->
+            <div class="slide-block" data-code="code-service">
+                <h2>4. Servicio (Lógica)</h2>
+                <p><code>ViajeService.php</code></p>
+                <div class="diagram-container">
+                    <div class="diagram-node">1. Inicio</div>
+                    <div class="arrow-vertical">↓</div>
+                    <div class="diagram-node blue">¿Tiene Forfait?</div>
+                    <div class="diagram-row">
+                        <div class="arrow">↙️ No</div>
+                        <div class="arrow">↘️ Si</div>
+                    </div>
+                    <div class="diagram-row">
+                        <div class="diagram-node red">Error</div>
+                        <div class="diagram-node green">Crear Viaje DB<br>Restar Saldo</div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Logica de Negocio:</strong> El Servicio es el corazón de la aplicación. Aquí es donde
+                    verificamos si el cliente tiene saldo, si el motorista está libre, etc. Es código puro de PHP,
+                    independiente del framework HTTP.
+                </div>
+            </div>
+
+            <!-- Slide 6: Model -->
+            <div class="slide-block" data-code="code-model">
+                <h2>5. Modelo (Datos)</h2>
+                <p>Relaciones entre tablas.</p>
+                <div class="diagram-container">
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>User (Tabla)</h4>
+                            <ul>
+                                <li>id</li>
+                                <li>rol (client/moto)</li>
+                                <li>email</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>Viaje (Tabla)</h4>
+                            <ul>
+                                <li>id</li>
+                                <li>cliente_id <strong>(FK)</strong></li>
+                                <li>motorista_id <strong>(FK)</strong></li>
+                                <li>estado</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="diagram-row" style="margin-top:10px">
+                        <div class="diagram-node">Relación 1 a Muchos</div>
+                        <div class="arrow">User 1 -- N Viajes</div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Eloquent ORM:</strong> Definimos las relaciones en los modelos. Gracias a esto, podemos
+                    obtener `viaje->cliente->nombre` sin escribir SQL complejo manualmente.
+                </div>
+            </div>
+
+            <!-- Slide 7: Auth Flow -->
+            <div class="slide-block" data-code="">
+                <h2>Flujo Completo</h2>
+                <div class="diagram-container">
+                    <div class="diagram-row">
+                        <div class="diagram-node">app</div>
+                        <div class="arrow">TOKEN</div>
+                        <div class="diagram-node">backend</div>
+                        <div class="arrow">DATA</div>
+                        <div class="diagram-node">db</div>
+                    </div>
+                    <ul style="margin-top:20px; text-align:left; width:100%">
+                        <li>1. App envía Credenciales -> Backend responde Token.</li>
+                        <li>2. App guarda Token.</li>
+                        <li>3. App envía Petición + <strong>Token</strong>.</li>
+                        <li>4. Backend verifica Token y consulta DB.</li>
+                    </ul>
+                </div>
+                <div class="explanation">
+                    <strong>Stateless Auth:</strong> Al usar JWT, el servidor no guarda sesiones. Cada petición es
+                    independiente y trae su propia llave de acceso (el Token). Esto permite escalar el servidor
+                    horizontalmente sin problemas.
+                </div>
+            </div>
+
+            <!-- Slide 8: Trip Lifecycle -->
+            <div class="slide-block" data-code="">
+                <h2>Ciclo de Vida</h2>
+                <div class="diagram-container">
+                    <div class="diagram-row">
+                        <div class="diagram-node blue">Solicitado</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node blue">Aceptado</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node blue">En Curso</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node green">Completado</div>
+                    </div>
+                    <div style="margin-top:15px; border-top:1px dashed #666; width:100%; padding-top:10px">
+                        <div class="diagram-node red">Cancelado</div>
+                        <small>(Desde Solicitado o Aceptado)</small>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Máquina de Estados:</strong> El viaje solo puede transitar hacia adelante (Solicitado ->
+                    Aceptado...). La cancelación es el único estado que puede ocurrir desde varios puntos, finalizando
+                    el flujo prematuramente.
+                </div>
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="controls">
+                <button id="prevBtn" onclick="plusSlides(-1)">❮</button>
+                <span class="slide-number" id="slideNum">1 / 8</span>
+                <button id="nextBtn" onclick="plusSlides(1)">❯</button>
+                <button onclick="toggleCode()" id="codeToggleBtn" style="background:#2196F3; font-size:0.9em">👁️
+                    Código</button>
+            </div>
+
+        </div>
+
+        <!-- Right Panel: Code -->
+        <div class="code-panel" id="codePanel">
+            <div class="code-header">
+                <span id="fileName">Código</span>
+            </div>
+            <div class="code-content">
+                <pre><code id="codeBlock" class="language-php">// Selecciona una diapositiva para ver el código relevante</code></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Hidden Code Stores -->
+    <script type="text/plain" id="code-structure">
+backend/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/ 
+│   │   │   └── Viajes/ViajeController.php
+│   │   │
+│   │   └── Middleware/ (JWTAuth)
+│   │
+│   ├── Models/ (User, Viaje)
+│   │
+│   └── Services/ (ViajeService rules)
+│
+└── routes/
+    └── api/
+        └── viajes.php
+    </script>
+
+    <script type="text/plain" id="code-routes">
+// 📂 routes/api/viajes.php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Viajes\ViajeController;
+
+// Todas estas rutas requieren Token JWT válido middleware('jwt.auth')
+Route::middleware('jwt.auth')->group(function () {
+    
+    // Gestión del Viaje
+    Route::post('/solicitar', [ViajeController::class, 'solicitarViaje']);
+    
+    // Para el Motorista: Ver quién necesita viaje
+    Route::get('/pendientes', [ViajeController::class, 'getSolicitedTrips']);
+    
+    // Polling del estado actual
+    Route::get('/actual', [ViajeController::class, 'getCurrentTrip']);
+    
+    // Acciones del Motorista
+    Route::post('/{viaje}/aceptar', [ViajeController::class, 'acceptTrip']);
+    Route::put('/{viaje}/estado', [ViajeController::class, 'updateTripStatus']);
+});
+    </script>
+
+    <script type="text/plain" id="code-controller">
+// 📂 App/Http/Controllers/Viajes/ViajeController.php
+
+class ViajeController extends Controller
+{
+    protected $viajeService;
+
+    // Inyección de Dependencia: El "Jefe" contrata al "Trabajador" (Service)
+    public function __construct(ViajeService $viajeService)
+    {
+        $this->viajeService = $viajeService;
+    }
+
+    // Endpoint: POST /api/viajes/solicitar
+    public function solicitarViaje(SolicitarViajeRequest $request)
+    {
+        $user = auth()->user(); // Obtenemos usuario del Token JWT
+
+        try {
+            // Delegamos el trabajo sucio al Servicio
+            $viaje = $this->viajeService->solicitarViaje(
+                $user,
+                $request->origen_lat,
+                $request->origen_lng,
+                $request->destino_lat,
+                $request->destino_lng
+            );
+
+            // Notificamos websockets (Opcional)
+            // ViajeSolicitado::dispatch($viaje);
+
+            return response()->json($viaje, 201);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+}
+    </script>
+
+    <script type="text/plain" id="code-service">
+// 📂 App/Services/ViajeService.php
+
+class ViajeService
+{
+    public function solicitarViaje(User $user, float $lat, float $lng, ...): Viaje
+    {
+        // 1. Regla de Negocio: Verificar si el cliente tiene saldo (Forfait)
+        $clienteForfait = ClienteForfait::where('cliente_id', $user->id)
+            ->where('viajes_restantes', '>', 0)
+            ->first();
+
+        if (!$clienteForfait) {
+             throw new \Exception('No tienes viajes disponibles. Compra un forfait.');
+        }
+
+        // 2. Crear el Viaje en DB
+        $viaje = Viaje::create([
+            'cliente_id' => $user->id,
+            'origen_lat' => $lat,
+            'origen_lng' => $lng,
+            'estado' => 'solicitado', // Estado Inicial
+        ]);
+
+        // 3. Consumir Saldo
+        $clienteForfait->decrement('viajes_restantes');
+
+        return $viaje;
+    }
+}
+    </script>
+
+    <script type="text/plain" id="code-model">
+// 📂 App/Models/Viaje.php
+
+class Viaje extends Model
+{
+    protected $fillable = [
+        'cliente_id', 'motorista_id', 
+        'origen_lat', 'origen_lng', 
+        'estado', 'costo'
+    ];
+
+    // Relación: Un viaje pertenece a un Cliente (User)
+    public function cliente()
+    {
+        return $this->belongsTo(User::class, 'cliente_id');
+    }
+
+    // Relación: Un viaje puede tener un Motorista asignado (User)
+    public function motorista()
+    {
+        return $this->belongsTo(User::class, 'motorista_id');
+    }
+}
+    </script>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides;
+
+            slides = document.querySelectorAll(".slide-block");
+
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+
+            for (i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+
+            slides[slideIndex - 1].classList.add("active");
+            document.getElementById("slideNum").innerText = slideIndex + " / " + slides.length;
+
+            // Load Code if available
+            const codeId = slides[slideIndex - 1].getAttribute('data-code');
+            loadCode(codeId);
+        }
+
+        function toggleCode() {
+            const panel = document.getElementById('codePanel');
+            const btn = document.getElementById('codeToggleBtn');
+            const container = document.getElementById('mainContainer');
+
+            if (panel.classList.contains('active')) {
+                panel.classList.remove('active');
+                container.classList.remove('has-code');
+                btn.innerText = "👁️ Código";
+            } else {
+                panel.classList.add('active');
+                container.classList.add('has-code');
+                btn.innerText = "❌ Cerrar";
+            }
+        }
+
+        function loadCode(elementId) {
+            const block = document.getElementById('codeBlock');
+            const fileName = document.getElementById('fileName');
+            const panel = document.getElementById('codePanel');
+            const container = document.getElementById('mainContainer');
+
+            if (!elementId) {
+                block.textContent = "// No hay código específico para esta vista.";
+                fileName.innerText = "Info";
+                Prism.highlightElement(block);
+                return;
+            }
+
+            const codeSource = document.getElementById(elementId);
+            if (codeSource) {
+                block.textContent = codeSource.textContent.trim();
+                fileName.innerText = elementId.replace('code-', '').toUpperCase() + ".PHP";
+                Prism.highlightElement(block);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

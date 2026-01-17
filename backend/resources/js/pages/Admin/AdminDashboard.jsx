@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DashboardCharts from '../../components/Admin/DashboardCharts';
+import { useTranslation } from 'react-i18next';
 
 /**
  * AdminDashboard Component
@@ -19,6 +20,7 @@ import DashboardCharts from '../../components/Admin/DashboardCharts';
  */
 const AdminDashboard = () => {
     const { logout, user } = useAuth();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [stats, setStats] = useState(null);
     const [chartData, setChartData] = useState([]);
@@ -74,14 +76,14 @@ const AdminDashboard = () => {
      * @returns {JSX.Element} The rendered activity list.
      */
     const renderActivity = () => {
-        if (!stats?.recentActivity) return <div style={{ color: '#6b7280', padding: '1rem' }}>No hay actividad reciente.</div>;
+        if (!stats?.recentActivity) return <div style={{ color: '#6b7280', padding: '1rem' }}>{t('admin_dashboard.activity.empty')}</div>;
 
         // Ensure we have an array, even if backend returns object/map
         const activityList = Array.isArray(stats.recentActivity)
             ? stats.recentActivity
             : Object.values(stats.recentActivity);
 
-        if (activityList.length === 0) return <div style={{ color: '#6b7280', padding: '1rem' }}>No hay actividad reciente.</div>;
+        if (activityList.length === 0) return <div style={{ color: '#6b7280', padding: '1rem' }}>{t('admin_dashboard.activity.empty')}</div>;
 
         return activityList.map((activity, index) => (
             <div
@@ -111,29 +113,29 @@ const AdminDashboard = () => {
     // Stats cards configuration
     const statsConfig = stats ? [
         {
-            title: 'Total Motoristas',
+            title: t('admin_dashboard.stats.drivers'),
             value: stats.totalMotoristas,
             icon: '🏍️',
             color: colors.secondary,
-            badge: stats.motoristasPendientes > 0 ? `${stats.motoristasPendientes} pendientes` : null
+            badge: stats.motoristasPendientes > 0 ? t('admin_dashboard.stats.drivers_pending', { count: stats.motoristasPendientes }) : null
         },
         {
-            title: 'Viajes Hoy',
+            title: t('admin_dashboard.stats.trips_today'),
             value: stats.viajesHoy,
             icon: '🚀',
             color: colors.primary,
-            subtitle: `${stats.viajesTotales} totales`,
+            subtitle: t('admin_dashboard.stats.trips_total', { count: stats.viajesTotales }),
             onClick: () => navigate('/admin/viajes')
         },
         {
-            title: 'Ingresos del Mes',
+            title: t('admin_dashboard.stats.income'),
             value: `${Math.round(stats.ingresosMes).toLocaleString()} CFA`,
             icon: '💰',
             color: colors.accent,
-            subtitle: 'Forfaits vendidos'
+            subtitle: t('admin_dashboard.stats.forfaits_sold')
         },
         {
-            title: 'Usuarios Activos',
+            title: t('admin_dashboard.stats.active_users'),
             value: stats.usuariosActivos,
             icon: '👥',
             color: colors.purple,
@@ -143,29 +145,29 @@ const AdminDashboard = () => {
 
     const quickActions = [
         {
-            title: 'Gestionar Motoristas',
-            description: 'Aprobar, rechazar y gestionar motoristas',
+            title: t('admin_dashboard.actions.manage_drivers'),
+            description: t('admin_dashboard.actions.manage_drivers_desc'),
             icon: '🏍️',
             color: colors.secondary,
             action: () => navigate('/admin/motoristas')
         },
         {
-            title: 'Gestionar Clientes',
-            description: 'Ver lista de usuarios registrados',
+            title: t('admin_dashboard.actions.manage_clients'),
+            description: t('admin_dashboard.actions.manage_clients_desc'),
             icon: '👥',
             color: '#06b6d4', // Cyan
             action: () => navigate('/admin/clientes')
         },
         {
-            title: 'Ver Forfaits',
-            description: 'Administrar paquetes y precios',
+            title: t('admin_dashboard.actions.manage_forfaits'),
+            description: t('admin_dashboard.actions.manage_forfaits_desc'),
             icon: '💳',
             color: colors.primary,
             action: () => navigate('/admin/forfaits')
         },
         {
-            title: 'Reportes',
-            description: 'Estadísticas y análisis',
+            title: t('admin_dashboard.actions.reports'),
+            description: t('admin_dashboard.actions.reports_desc'),
             icon: '📊',
             color: colors.accent,
             action: () => navigate('/admin/reportes')
@@ -189,10 +191,10 @@ const AdminDashboard = () => {
                 {/* Welcome Section */}
                 <div style={{ marginBottom: '2rem' }}>
                     <h2 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>
-                        Bienvenido, {user?.name || 'Admin'} 👋
+                        {t('admin_dashboard.welcome', { name: user?.name || 'Admin' })}
                     </h2>
                     <p style={{ color: '#6b7280', fontSize: '1.05rem' }}>
-                        Aquí está un resumen de la actividad de la plataforma
+                        {t('admin_dashboard.summary')}
                     </p>
                 </div>
 
@@ -207,7 +209,7 @@ const AdminDashboard = () => {
                         borderRadius: '1rem',
                         marginBottom: '2.5rem'
                     }}>
-                        Cargando estadísticas...
+                        {t('admin_dashboard.loading')}
                     </div>
                 ) : (
                     <div style={{
@@ -280,7 +282,7 @@ const AdminDashboard = () => {
                 {/* Quick Actions */}
                 <div style={{ marginBottom: '2rem' }}>
                     <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
-                        Acciones Rápidas
+                        {t('admin_dashboard.actions.title')}
                     </h3>
                     <div style={{
                         display: 'grid',
@@ -346,7 +348,7 @@ const AdminDashboard = () => {
                     border: '1px solid #e5e7eb'
                 }}>
                     <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
-                        Actividad Reciente
+                        {t('admin_dashboard.activity.title')}
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         {renderActivity()}

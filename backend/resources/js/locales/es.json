@@ -97,5 +97,34 @@
         "trips_count": "{{count}} viajes",
         "default_desc": "La mejor opción",
         "selected": "Seleccionado"
+    },
+    "admin_dashboard": {
+        "welcome": "Bienvenido, {{name}} 👋",
+        "summary": "Aquí está un resumen de la actividad de la plataforma",
+        "loading": "Cargando estadísticas...",
+        "stats": {
+            "drivers": "Total Motoristas",
+            "drivers_pending": "{{count}} pendientes",
+            "trips_today": "Viajes Hoy",
+            "trips_total": "{{count}} totales",
+            "income": "Ingresos del Mes",
+            "forfaits_sold": "Forfaits vendidos",
+            "active_users": "Usuarios Activos"
+        },
+        "actions": {
+            "title": "Acciones Rápidas",
+            "manage_drivers": "Gestionar Motoristas",
+            "manage_drivers_desc": "Aprobar, rechazar y gestionar motoristas",
+            "manage_clients": "Gestionar Clientes",
+            "manage_clients_desc": "Ver lista de usuarios registrados",
+            "manage_forfaits": "Ver Forfaits",
+            "manage_forfaits_desc": "Administrar paquetes y precios",
+            "reports": "Reportes",
+            "reports_desc": "Estadísticas y análisis"
+        },
+        "activity": {
+            "title": "Actividad Reciente",
+            "empty": "No hay actividad reciente."
+        }
     }
 }

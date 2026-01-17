@@ -235,6 +235,129 @@
             transition: 0.3s;
             cursor: pointer;
         }
+        }
+
+        /* CUSTOM DIAGRAM STYLES (FROM BACKEND PRES) */
+        .diagram-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: #333;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .diagram-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .diagram-node {
+            background-color: #424242;
+            border: 2px solid #FF9800;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .diagram-node.blue {
+            border-color: #2196F3;
+        }
+
+        .diagram-node.green {
+            border-color: #4CAF50;
+        }
+
+        .diagram-node.red {
+            border-color: #F44336;
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: #aaa;
+            font-weight: bold;
+        }
+
+        .arrow-vertical {
+            font-size: 1.5em;
+            color: #aaa;
+            font-weight: bold;
+            transform: rotate(90deg);
+            margin: 5px 0;
+        }
+
+        /* Tree Styles */
+        .tree ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .tree li {
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .tree li::before {
+            content: "📂";
+            margin-right: 5px;
+        }
+
+        .tree li.file::before {
+            content: "📄";
+            margin-right: 5px;
+        }
+
+        /* Grid for Tables/Classes */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .card {
+            background: #444;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .card h4 {
+            margin-top: 0;
+            color: #FFB74D;
+            border-bottom: 1px solid #666;
+            padding-bottom: 5px;
+        }
+
+        .card ul {
+            padding-left: 20px;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .explanation {
+            background: #333;
+            padding: 15px;
+            border-left: 4px solid #FF9800;
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #ddd;
+            width: 90%;
+            max-width: 800px;
+            text-align: left;
+        }
     </style>
 </head>
 
@@ -250,6 +373,35 @@
                 <h1>Presentación de la Plataforma MotoTX</h1>
                 <p>Bienvenido a la documentación visual y <strong>TÉCNICA</strong> de <strong>MotoTX</strong>.</p>
                 <p>Esta presentación incluye el código fuente real que impulsa cada vista.</p>
+            </div>
+
+            <!-- Slide: Deployment (Global Access) -->
+            <div class="slide-block" data-code="code-deploy">
+                <h2>🚀 Lanzamiento / Lancement</h2>
+                <div class="diagram-container">
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>🇪🇸 Español</h4>
+                            <ul>
+                                <li>1. Abrir Terminal en <code>backend/</code></li>
+                                <li>2. Ejecutar Comando de Túnel</li>
+                                <li>3. Copiar enlace <code>trycloudflare.com</code></li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>🇫🇷 Français</h4>
+                            <ul>
+                                <li>1. Ouvrir Terminal dans <code>backend/</code></li>
+                                <li>2. Exécuter Commande Tunnel</li>
+                                <li>3. Copier lien <code>trycloudflare.com</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Cloudflare Tunnel:</strong> Exponemos el servidor local (localhost:8000) a internet de forma
+                    segura y temporal. / Nous exposons le serveur local à Internet de manière sécurisée et temporaire.
+                </div>
             </div>
 
             <!-- Slide: Architecture Section -->
@@ -270,17 +422,7 @@
                 </ul>
             </div>
 
-            <!-- Slide: Backend Structure -->
-            <div class="slide-block" data-code="code-arch-backend">
-                <h3>Estructura Backend (Laravel)</h3>
-                <p>Organización modular estándar de Laravel:</p>
-                <ul>
-                    <li><strong>Controllers:</strong> Punto de entrada de las peticiones API.</li>
-                    <li><strong>Services:</strong> Lógica de negocio compleja.</li>
-                    <li><strong>Models:</strong> Representación de datos (DB).</li>
-                    <li><strong>Routes:</strong> Definición de endpoints API.</li>
-                </ul>
-            </div>
+
 
             <!-- Slide: Frontend Structure -->
             <div class="slide-block" data-code="code-arch-frontend">
@@ -393,6 +535,172 @@
                 <img src="admin_clientes.png" alt="Admin Clientes" onclick="openModal(this)">
             </div>
 
+
+            <!-- Slide 17 -->
+            <div class="slide-block">
+                <h2>5. Arquitectura Interna (Backend)</h2>
+                <p>¿Cómo funciona todo esto por detrás?</p>
+            </div>
+
+            <!-- Slide: Directory Structure -->
+            <div class="slide-block" data-code="code-structure">
+                <h3>Estructura Organizada</h3>
+                <div class="diagram-container tree" style="align-items: flex-start; padding-left: 40px;">
+                    <ul>
+                        <li>backend/
+                            <ul>
+                                <li>app/
+                                    <ul>
+                                        <li>Http/Controllers/ <span style="color:#FFB74D"> (Lógica entrada)</span></li>
+                                        <li>Services/ <span style="color:#4CAF50"> (Reglas de negocio)</span></li>
+                                        <li>Models/ <span style="color:#2196F3"> (Base de datos)</span></li>
+                                    </ul>
+                                </li>
+                                <li>routes/api/ <span style="color:#f44"> (Endpoints)</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="explanation">
+                    <strong>Estructura:</strong> Separamos claramente "qué entra" (Controllers), "qué sucede" (Services)
+                    y "qué se guarda" (Models). Esto facilita el mantenimiento masivo.
+                </div>
+                <p><em>(Haz clic en 👁️ Código para ver el árbol de directorios)</em></p>
+            </div>
+
+            <!-- Slide: Routes -->
+            <div class="slide-block" data-code="code-routes">
+                <h3>Rutas Modulares</h3>
+                <p><code>routes/api/viajes.php</code> define los puntos de entrada.</p>
+                <div class="diagram-container">
+                    <div class="diagram-row">
+                        <div class="diagram-node">POST /solicitar</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node">🔒 JWT Middleware</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node green">ViajeController@solicitar</div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Seguridad:</strong> Todas las rutas críticas están agrupadas bajo el middleware
+                    <code>jwt.auth</code>.
+                </div>
+            </div>
+
+            <!-- Slide: Controller -->
+            <div class="slide-block" data-code="code-controller">
+                <h3>Controlador "Delgado"</h3>
+                <p>El controlador solo recibe y delega.</p>
+                <div class="diagram-container">
+                    <div class="diagram-node green" style="width:100%">ViajeController</div>
+                    <div class="arrow-vertical">↓</div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Responsabilidades</h4>
+                            <ul>
+                                <li>Recibir Request</li>
+                                <li>Validar Formato</li>
+                                <li><strong>Llamar al Servicio</strong></li>
+                                <li>Retornar JSON</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>Métodos</h4>
+                            <ul>
+                                <li>solicitarViaje()</li>
+                                <li>acceptTrip()</li>
+                                <li>updateStatus()</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide: Service -->
+            <div class="slide-block" data-code="code-service">
+                <h3>Servicio (Lógica)</h3>
+                <p><code>ViajeService.php</code></p>
+                <div class="diagram-container">
+                    <div class="diagram-node">1. Inicio</div>
+                    <div class="arrow-vertical">↓</div>
+                    <div class="diagram-node blue">¿Tiene Forfait?</div>
+                    <div class="diagram-row">
+                        <div class="arrow">↙️ No</div>
+                        <div class="arrow">↘️ Si</div>
+                    </div>
+                    <div class="diagram-row">
+                        <div class="diagram-node red">Error</div>
+                        <div class="diagram-node green">Crear Viaje DB<br>Restar Saldo</div>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Logica de Negocio:</strong> El Servicio es el corazón de la aplicación.
+                </div>
+            </div>
+
+            <!-- Slide: Model -->
+            <div class="slide-block" data-code="code-model">
+                <h3>Modelo (Datos)</h3>
+                <p>Relaciones entre tablas.</p>
+                <div class="diagram-container">
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>User (Tabla)</h4>
+                            <ul>
+                                <li>id</li>
+                                <li>rol (client/moto)</li>
+                                <li>email</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>Viaje (Tabla)</h4>
+                            <ul>
+                                <li>id</li>
+                                <li>cliente_id <strong>(FK)</strong></li>
+                                <li>motorista_id <strong>(FK)</strong></li>
+                                <li>estado</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide: Auth Flow -->
+            <div class="slide-block" data-code="">
+                <h3>Flujo Completo</h3>
+                <div class="diagram-container">
+                    <div class="diagram-row">
+                        <div class="diagram-node">app</div>
+                        <div class="arrow">TOKEN</div>
+                        <div class="diagram-node">backend</div>
+                        <div class="arrow">DATA</div>
+                        <div class="diagram-node">db</div>
+                    </div>
+                    <ul style="margin-top:20px; text-align:left; width:100%">
+                        <li>1. App envía Credenciales -> Backend responde Token.</li>
+                        <li>2. App guarda Token.</li>
+                        <li>3. App envía Petición + <strong>Token</strong>.</li>
+                        <li>4. Backend verifica Token y consulta DB.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide: Trip Lifecycle -->
+            <div class="slide-block" data-code="">
+                <h3>Ciclo de Vida del Viaje</h3>
+                <div class="diagram-container">
+                    <div class="diagram-row">
+                        <div class="diagram-node blue">Solicitado</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node blue">Aceptado</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node blue">En Curso</div>
+                        <div class="arrow">→</div>
+                        <div class="diagram-node green">Completado</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- CONTROLS -->
             <div class="controls">
                 <button id="prevBtn" onclick="plusSlides(-1)">❮</button>
@@ -473,6 +781,143 @@
 ├── /context            # 🌐 Estado Global
 │   └── AuthContext.jsx
 └── app_entry.jsx       # 🚪 Punto de Entrada
+    </script>
+
+    <!-- BACKEND CODES -->
+    <script type="text/plain" id="code-structure">
+backend/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/ 
+│   │   │   └── Viajes/ViajeController.php
+│   │   │
+│   │   └── Middleware/ (JWTAuth)
+│   │
+│   ├── Models/ (User, Viaje)
+│   │
+│   └── Services/ (ViajeService rules)
+│
+└── routes/
+    └── api/
+        └── viajes.php
+    </script>
+
+    <script type="text/plain" id="code-routes">
+// 📂 routes/api/viajes.php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Viajes\ViajeController;
+
+// Todas estas rutas requieren Token JWT válido middleware('jwt.auth')
+Route::middleware('jwt.auth')->group(function () {
+    
+    // Gestión del Viaje
+    Route::post('/solicitar', [ViajeController::class, 'solicitarViaje']);
+    
+    // Para el Motorista: Ver quién necesita viaje
+    Route::get('/pendientes', [ViajeController::class, 'getSolicitedTrips']);
+    
+    // Polling del estado actual
+    Route::get('/actual', [ViajeController::class, 'getCurrentTrip']);
+    
+    // Acciones del Motorista
+    Route::post('/{viaje}/aceptar', [ViajeController::class, 'acceptTrip']);
+    Route::put('/{viaje}/estado', [ViajeController::class, 'updateTripStatus']);
+});
+    </script>
+
+    <script type="text/plain" id="code-controller">
+// 📂 App/Http/Controllers/Viajes/ViajeController.php
+
+class ViajeController extends Controller
+{
+    protected $viajeService;
+
+    // Inyección de Dependencia: El "Jefe" contrata al "Trabajador" (Service)
+    public function __construct(ViajeService $viajeService)
+    {
+        $this->viajeService = $viajeService;
+    }
+
+    // Endpoint: POST /api/viajes/solicitar
+    public function solicitarViaje(SolicitarViajeRequest $request)
+    {
+        $user = auth()->user(); // Obtenemos usuario del Token JWT
+
+        try {
+            // Delegamos el trabajo sucio al Servicio
+            $viaje = $this->viajeService->solicitarViaje(
+                $user,
+                $request->origen_lat,
+                $request->origen_lng,
+                $request->destino_lat,
+                $request->destino_lng
+            );
+
+            return response()->json($viaje, 201);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+}
+    </script>
+
+    <script type="text/plain" id="code-service">
+// 📂 App/Services/ViajeService.php
+
+class ViajeService
+{
+    public function solicitarViaje(User $user, float $lat, float $lng, ...): Viaje
+    {
+        // 1. Regla de Negocio: Verificar si el cliente tiene saldo (Forfait)
+        $clienteForfait = ClienteForfait::where('cliente_id', $user->id)
+            ->where('viajes_restantes', '>', 0)
+            ->first();
+
+        if (!$clienteForfait) {
+             throw new \Exception('No tienes viajes disponibles. Compra un forfait.');
+        }
+
+        // 2. Crear el Viaje en DB
+        $viaje = Viaje::create([
+            'cliente_id' => $user->id,
+            'origen_lat' => $lat,
+            'origen_lng' => $lng,
+            'estado' => 'solicitado', // Estado Inicial
+        ]);
+
+        // 3. Consumir Saldo
+        $clienteForfait->decrement('viajes_restantes');
+
+        return $viaje;
+    }
+}
+    </script>
+
+    <script type="text/plain" id="code-model">
+// 📂 App/Models/Viaje.php
+
+class Viaje extends Model
+{
+    protected $fillable = [
+        'cliente_id', 'motorista_id', 
+        'origen_lat', 'origen_lng', 
+        'estado', 'costo'
+    ];
+
+    // Relación: Un viaje pertenece a un Cliente (User)
+    public function cliente()
+    {
+        return $this->belongsTo(User::class, 'cliente_id');
+    }
+
+    // Relación: Un viaje puede tener un Motorista asignado (User)
+    public function motorista()
+    {
+        return $this->belongsTo(User::class, 'motorista_id');
+    }
+}
     </script>
     <script type="text/plain" id="code-landing">
 import React from 'react';
@@ -921,6 +1366,22 @@ const AdminClientes = () => {
         </table>
     );
 };
+    </script>
+    <script type="text/plain" id="code-deploy">
+# 💻 COMANDO DE DESPLIEGUE / COMMANDE DE DÉPLOIEMENT
+
+# 1. Asegúrate de que el servidor funciona / Assurez-vous que le serveur fonctionne:
+php artisan serve --host=0.0.0.0 --port=8000
+
+# 2. En otra terminal, lanza el túnel / Dans un autre terminal, lancez le tunnel:
+.\cloudflared.exe tunnel --url http://localhost:8000
+
+# -----------------------------------------------------
+# RESULTADO / RÉSULTAT:
+# +--------------------------------------------------------------------------------------------+
+# |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+# |  https://random-name.trycloudflare.com                                                   |
+# +--------------------------------------------------------------------------------------------+
     </script>
 
 
