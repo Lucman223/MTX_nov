@@ -16,9 +16,14 @@ i18n
             en: { translation: en },
             ar: { translation: ar }
         },
-        fallbackLng: "es", // Default fallback
+        fallbackLng: "es",
+        load: 'languageOnly', // Ignora variantes regionales como es-ES
+        detection: {
+            order: ['localStorage', 'navigator'],
+            caches: ['localStorage'], // Persistencia automática
+        },
         interpolation: {
-            escapeValue: false // React already escapes
+            escapeValue: false
         }
     });
 

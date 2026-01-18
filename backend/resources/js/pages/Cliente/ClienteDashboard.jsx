@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import useNotifications from '../../hooks/useNotifications';
 import { useTranslation } from 'react-i18next';
 import { Card, Button, Badge } from '../../components/Common/UIComponents';
+import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 import '../../../css/components.css';
 
 /**
@@ -216,6 +217,9 @@ const ClienteDashboard = () => {
                     <Button onClick={handleLogout} variant="error" className="nav-btn-logout">
                         {t('common.logout')}
                     </Button>
+
+                    <div className="nav-divider" style={{ width: '1px', height: '2rem', background: 'var(--border-color)', margin: '0 0.5rem' }}></div>
+                    <LanguageSwitcher />
                 </div>
 
                 {/* Mobile Balance Badge (Visible via CSS) */}

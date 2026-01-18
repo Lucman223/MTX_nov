@@ -8,6 +8,7 @@ import InstallPrompt from '../../components/Common/InstallPrompt';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/Common/SEO';
 import { Card, Button, Badge } from '../../components/Common/UIComponents';
+import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 import '../../../css/components.css';
 
 /**
@@ -218,6 +219,9 @@ const MotoristaDashboard = () => {
                     <Button variant="error" onClick={handleLogout} className="nav-btn-logout">
                         {t('common.logout')}
                     </Button>
+
+                    <div className="nav-divider" style={{ width: '1px', height: '2rem', background: 'var(--border-color)', margin: '0 0.5rem', opacity: 0.3 }}></div>
+                    <LanguageSwitcher />
                 </div>
 
                 {/* Mobile Status Badge */}
