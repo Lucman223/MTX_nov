@@ -14,6 +14,9 @@ use App\Http\Requests\Viajes\UpdateViajeStatusRequest;
 
 use App\Services\ViajeService;
 use App\Http\Controllers\Controller;
+use App\Events\ViajeSolicitado;
+use App\Events\ViajeAceptado;
+use App\Events\ViajeActualizado;
 
 
 

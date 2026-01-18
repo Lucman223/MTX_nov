@@ -253,9 +253,13 @@ const ClienteDashboard = () => {
                 {/* Left Panel: Controls & Info */}
                 <div className="side-panel">
                     <Card>
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span>📍</span> {t('client_dashboard.plan_trip')}
                         </h2>
+
+                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem', fontStyle: 'italic' }}>
+                            💡 {t('client_dashboard.tap_map_instruction', 'También puedes tocar directamente en el mapa para marcar los puntos.')}
+                        </p>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                             <div className={`point-input-group ${puntoActivo === 'origen' ? 'active-origen' : ''}`}>
