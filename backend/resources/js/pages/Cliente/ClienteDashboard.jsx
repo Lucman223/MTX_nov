@@ -106,6 +106,7 @@ const ClienteDashboard = () => {
         }
     };
 
+    const [addressOrigen, setAddressOrigen] = useState('');
     const [addressDestino, setAddressDestino] = useState('');
     const [searching, setSearching] = useState(false);
     const [tripMetrics, setTripMetrics] = useState({ distance: 0, time: 0 });
