@@ -116,7 +116,7 @@
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-muted);
-    marginBottom: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 /* Navigation */
@@ -257,6 +257,153 @@
 
 .mt-6 {
     margin-top: 1.5rem;
+}
+
+/* Point Selection & Search */
+.point-input-group {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 2px solid transparent;
+    background: #f3f4f6;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.point-input-group label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.point-input-group.active-origen {
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1);
+}
+
+.point-input-group.active-destino {
+    border-color: var(--accent-color);
+    background: white;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+}
+
+.coord-badge {
+    background: var(--text-main);
+    color: white;
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.point-value-mini {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.8;
+}
+
+.point-label-origen {
+    color: var(--primary-color);
+}
+
+.point-label-destino {
+    color: var(--accent-color);
+}
+
+.search-mini-btn {
+    padding: 0.5rem !important;
+    height: auto !important;
+    min-width: 40px !important;
+    background: white !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    flex-shrink: 0;
+}
+
+.search-mini-btn:hover {
+    border-color: var(--primary-color) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.estimated-fare-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fare-label {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.fare-info-mini {
+    font-size: 0.8rem;
+    color: white;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+
+.fare-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--accent-color);
+}
+
+.estimated-fare-card.limit-warning {
+    background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 100%);
+    border-color: var(--error-color);
+}
+
+.limit-alert-box {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 8px;
+    color: #991b1b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
 }
 
 .loading-state {

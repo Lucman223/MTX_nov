@@ -106,6 +106,75 @@ const ClienteDashboard = () => {
         }
     };
 
+    const [addressDestino, setAddressDestino] = useState('');
+    const [searching, setSearching] = useState(false);
+    const [tripMetrics, setTripMetrics] = useState({ distance: 0, time: 0 });
+    const [distanciaExcedida, setDistanciaExcedida] = useState(false);
+
+    // Get Active Forfait Limit
+    const forfaitsActivos = user?.cliente_forfaits?.filter(f => f.estado === 'activo') || [];
+    const forfaitPrincipal = forfaitsActivos[0]?.forfait;
+    const maxDistance = parseFloat(forfaitPrincipal?.distancia_maxima || 0);
+    // Haversine formula to calculate distance in km
+    const getMetrics = (p1, p2) => {
+        if (!p1 || !p2) return { distance: 0, time: 0 };
+        const R = 6371; // Earth radius in km
+        const dLat = (p2[0] - p1[0]) * Math.PI / 180;
+        const dLon = (p2[1] - p1[1]) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(p1[0] * Math.PI / 180) * Math.cos(p2[0] * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c;
+        // Velocidad promedio en Bamako (moto): 25 km/h
+        const time = Math.round((distance / 25) * 60);
+        return { distance: distance.toFixed(1), time: Math.max(2, time) };
+    };
+
+    useEffect(() => {
+        if (origen && destino) {
+            const metrics = getMetrics(origen, destino);
+            setTripMetrics(metrics);
+
+            if (maxDistance > 0 && parseFloat(metrics.distance) > maxDistance) {
+                setDistanciaExcedida(true);
+            } else {
+                setDistanciaExcedida(false);
+            }
+        }
+    }, [origen, destino, maxDistance]);
+
+    const handleAddressSearch = async (type) => {
+        const query = type === 'origen' ? addressOrigen : addressDestino;
+        if (!query) return;
+
+        setSearching(true);
+        try {
+            // Buscamos específicamente en Bamako, Mali para mayor precisión
+            const res = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}, Bamako, Mali&limit=1`);
+            if (res.data && res.data.length > 0) {
+                const { lat, lon, display_name } = res.data[0];
+                const coords = [parseFloat(lat), parseFloat(lon)];
+
+                if (type === 'origen') {
+                    setOrigen(coords);
+                    setAddressOrigen(display_name.split(',')[0]); // Nombre corto
+                } else {
+                    setDestino(coords);
+                    setAddressDestino(display_name.split(',')[0]);
+                }
+                toast.success(t('common.success'));
+            } else {
+                toast.error(t('client_dashboard.tap_map'));
+            }
+        } catch (err) {
+            console.error("Geocoding error", err);
+            toast.error("Error al buscar dirección");
+        } finally {
+            setSearching(false);
+        }
+    };
+
     const forfaits = user?.cliente_forfaits || [];
     const viajesDisponibles = forfaits.reduce((acc, curr) => acc + (parseInt(curr.viajes_restantes) || 0), 0);
 
@@ -183,33 +252,101 @@ const ClienteDashboard = () => {
                             <span>📍</span> {t('client_dashboard.plan_trip')}
                         </h2>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <button
-                                onClick={() => setPuntoActivo('origen')}
-                                className={`point-selector ${puntoActivo === 'origen' ? 'active-origen' : ''}`}
-                            >
-                                <div className="point-label-origen">{t('client_dashboard.origin')}</div>
-                                <div className="point-value">
-                                    {origen ? `${origen[0].toFixed(4)}, ${origen[1].toFixed(4)}` : t('client_dashboard.tap_map')}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                            <div className={`point-input-group ${puntoActivo === 'origen' ? 'active-origen' : ''}`}>
+                                <label className="point-label-origen">{t('client_dashboard.origin')}</label>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <input
+                                        type="text"
+                                        placeholder={t('client_dashboard.tap_map')}
+                                        value={addressOrigen}
+                                        onChange={(e) => setAddressOrigen(e.target.value)}
+                                        onFocus={() => setPuntoActivo('origen')}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('origen')}
+                                        className="mtx-input"
+                                        style={{ flex: 1 }}
+                                    />
+                                    <Button
+                                        onClick={() => handleAddressSearch('origen')}
+                                        variant="ghost"
+                                        className="search-mini-btn"
+                                        disabled={searching}
+                                    >
+                                        🔍
+                                    </Button>
+                                    {origen && <span className="coord-badge">FIXED</span>}
                                 </div>
-                            </button>
+                                {origen && (
+                                    <div className="point-value-mini">
+                                        {origen[0].toFixed(5)}, {origen[1].toFixed(5)}
+                                    </div>
+                                )}
+                            </div>
 
-                            <button
-                                onClick={() => setPuntoActivo('destino')}
-                                className={`point-selector ${puntoActivo === 'destino' ? 'active-destino' : ''}`}
-                            >
-                                <div className="point-label-destino">{t('client_dashboard.destination')}</div>
-                                <div className="point-value">
-                                    {destino ? `${destino[0].toFixed(4)}, ${destino[1].toFixed(4)}` : t('client_dashboard.tap_map')}
+                            <div className={`point-input-group ${puntoActivo === 'destino' ? 'active-destino' : ''}`}>
+                                <label className="point-label-destino">{t('client_dashboard.destination')}</label>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <input
+                                        type="text"
+                                        placeholder={t('client_dashboard.tap_map')}
+                                        value={addressDestino}
+                                        onChange={(e) => setAddressDestino(e.target.value)}
+                                        onFocus={() => setPuntoActivo('destino')}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('destino')}
+                                        className="mtx-input"
+                                        style={{ flex: 1 }}
+                                    />
+                                    <Button
+                                        onClick={() => handleAddressSearch('destino')}
+                                        variant="ghost"
+                                        className="search-mini-btn"
+                                        disabled={searching}
+                                    >
+                                        🔍
+                                    </Button>
+                                    {destino && <span className="coord-badge">FIXED</span>}
                                 </div>
-                            </button>
+                                {destino && (
+                                    <div className="point-value-mini">
+                                        {destino[0].toFixed(5)}, {destino[1].toFixed(5)}
+                                    </div>
+                                )}
+                            </div>
                         </div>
+
+                        {origen && destino && (
+                            <div className={`estimated-fare-card ${distanciaExcedida ? 'limit-warning' : ''}`}>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <span className="fare-label">
+                                        {distanciaExcedida ? '⚠️ ' + t('client_dashboard.limit_exceeded') : t('client_dashboard.trip_details')}
+                                    </span>
+                                    <span className="fare-info-mini">
+                                        ⏱️ {tripMetrics.time} min | 📏 {tripMetrics.distance} km
+                                    </span>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <span className="fare-value" style={{ fontSize: '1.1rem', color: distanciaExcedida ? 'var(--error-color)' : 'var(--secondary-color)' }}>
+                                        {distanciaExcedida ? t('client_dashboard.invalid_trip') : '🎟️ 1 ' + t('client_dashboard.trip_cost')}
+                                    </span>
+                                    <div style={{ fontSize: '0.65rem', opacity: 0.7, color: 'white' }}>
+                                        {maxDistance > 0 ? `${t('client_dashboard.limit')}: ${maxDistance}km` : t('client_dashboard.forfait_applied')}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {distanciaExcedida && (
+                            <div className="limit-alert-box">
+                                {t('client_dashboard.need_premium_pack')}
+                            </div>
+                        )}
 
                         <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
                             <Button
                                 onClick={handleSolicitarViaje}
-                                disabled={!origen || !destino}
-                                className="w-full btn-request"
+                                variant="primary"
+                                className="w-full"
+                                disabled={!origen || !destino || distanciaExcedida}
                             >
                                 {t('client_dashboard.request_now')}
                             </Button>

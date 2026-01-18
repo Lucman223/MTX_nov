@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import { Toaster } from 'sonner';
+import '../css/app.css';
+import '../css/components.css';
 
 import LandingPage from './pages/Public/LandingPage.jsx';
 import LoginPage from './pages/Public/LoginPage.jsx';
