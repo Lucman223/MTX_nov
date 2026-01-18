@@ -953,6 +953,29 @@
                 </div>
             </div>
 
+            <!-- SECCIÓN 10: INTERNACIONALIZACIÓN -->
+            <div class="slide" data-code="code-i18n">
+                <div class="badge-tech">GLOBAL READY</div>
+                <h2>Internacionalización (i18n)</h2>
+                <h3>Soporte Multi-idioma Modular</h3>
+                <p>La plataforma está diseñada para el mercado global, empezando por Bamako con soporte robusto de
+                    idiomas.</p>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>i18next Engine</h4>
+                        <p>Gestión reactiva de diccionarios JSON (Español, Francés, Bambara).</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Localización Dinámica</h4>
+                        <p>Cambio de idioma instantáneo sin recargar la aplicación.</p>
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    Utilizamos el hook <code>useTranslation</code> para asegurar que cada botón y alerta sea accesible y
+                    comprensible para todos los usuarios.
+                </div>
+            </div>
+
             <!-- SECCIÓN 11: CONCLUSIÓN -->
             <div class="slide" data-code="">
                 <h2>Conclusión y Futuro</h2>
@@ -1245,6 +1268,18 @@ const stats = useMemo(() => {
         return acc;
     }, { total: 0, count: 0 });
 }, [trips]); // Solo se recalcula si la lista de viajes cambia
+    </script>
+
+    <script type="text/plain" id="code-i18n">
+// 🌍 INTERNACIONALIZACIÓN (i18next)
+// Diccionarios modulares para una experiencia local.
+{
+  "client_dashboard": {
+    "trip_details": "Detalles del Trayecto",
+    "limit_exceeded": "Límite Excedido",
+    "need_premium_pack": "Este trayecto supera los KM de tu paquete..."
+  }
+}
     </script>
 
     <script type="text/plain" id="code-admin-dash">
@@ -1567,6 +1602,7 @@ test('El cliente no puede solicitar viaje sin saldo', async () => {
                 'code-register': 'Register.jsx',
                 'code-client-dash': 'ClienteDashboard.jsx',
                 'code-smart-mobility': 'RangeValidator.js',
+                'code-i18n': 'es.json',
                 'code-client-forfaits': 'ForfaitService.js',
                 'code-webhooks': 'OrangeMoneyController.php',
                 'code-moto-dash': 'MotoristaDashboard.jsx',
