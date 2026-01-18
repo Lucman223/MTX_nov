@@ -8,7 +8,7 @@ import InstallPrompt from '../../components/Common/InstallPrompt';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/Common/SEO';
 import { Card, Button, Badge } from '../../components/Common/UIComponents';
-import '../../css/components.css';
+import '../../../css/components.css';
 
 /**
  * MotoristaDashboard Component

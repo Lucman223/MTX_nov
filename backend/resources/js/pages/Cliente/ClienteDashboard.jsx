@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import useNotifications from '../../hooks/useNotifications';
 import { useTranslation } from 'react-i18next';
 import { Card, Button, Badge } from '../../components/Common/UIComponents';
-import '../../css/components.css';
+import '../../../css/components.css';
 
 /**
  * ClienteDashboard Component

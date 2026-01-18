@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/Common/SEO';
 import { Card, Button, Badge } from '../../components/Common/UIComponents';
-import '../../css/components.css';
+import '../../../css/components.css';
 
 /**
  * MotoristaHistory Component
