@@ -27,22 +27,22 @@ const LandingPage = () => {
     const features = [
         {
             icon: '🚀',
-            title: 'Rápido y Confiable',
-            description: 'Encuentra tu moto en minutos y llega a tu destino sin demoras',
+            title: t('landing.feature_fast_title'),
+            description: t('landing.feature_fast_desc'),
             color: colors.primary,
             gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
         },
         {
             icon: '💰',
-            title: 'Forfaits Económicos',
-            description: 'Paquetes prepagados que se ajustan a tu presupuesto',
+            title: t('landing.feature_forfait_title'),
+            description: t('landing.feature_forfait_desc'),
             color: colors.secondary,
             gradient: 'linear-gradient(135deg, #34d399 0%, #059669 100%)'
         },
         {
             icon: '📍',
-            title: 'Tracking en Tiempo Real',
-            description: 'Sigue la ubicación de tu motorista en el mapa',
+            title: t('landing.feature_tracking_title'),
+            description: t('landing.feature_tracking_desc'),
             color: colors.accent,
             gradient: 'linear-gradient(135deg, #fbbf24 0%, #b45309 100%)'
         }
@@ -50,28 +50,28 @@ const LandingPage = () => {
 
     const roles = [
         {
-            title: 'Cliente',
-            subtitle: 'Solicita Viajes',
+            title: t('landing.role_client_title'),
+            subtitle: t('landing.role_client_subtitle'),
             icon: '👤',
             color: colors.primary,
             hoverColor: '#1d4ed8',
             steps: [
-                'Compra un forfait',
-                'Solicita tu viaje en el mapa',
-                'Sigue tu moto en tiempo real'
+                t('landing.role_client_step1'),
+                t('landing.role_client_step2'),
+                t('landing.role_client_step3')
             ],
             action: () => navigate('/register?rol=cliente')
         },
         {
-            title: 'Motorista',
-            subtitle: 'Gana Dinero',
+            title: t('landing.role_driver_title'),
+            subtitle: t('landing.role_driver_subtitle'),
             icon: '🏍️',
             color: colors.secondary,
             hoverColor: '#047857', // Emerald-700
             steps: [
-                'Regístrate y obtén aprobación',
-                'Recibe solicitudes de viaje',
-                'Gana dinero transportando'
+                t('landing.role_driver_step1'),
+                t('landing.role_driver_step2'),
+                t('landing.role_driver_step3')
             ],
             action: () => navigate('/register?rol=motorista')
         }
@@ -79,7 +79,7 @@ const LandingPage = () => {
 
     return (
         <div style={{ minHeight: '100vh', background: '#ffffff' }}>
-            <SEO title={t('seo.landing_title', 'Bienvenido')} />
+            <SEO title={t('landing.hero_title')} />
             {/* Header */}
             <header style={{
                 padding: '1.5rem 2rem',
@@ -123,7 +123,7 @@ const LandingPage = () => {
                             e.target.style.boxShadow = '0 2px 4px rgba(37, 99, 235, 0.2)';
                         }}
                     >
-                        {t('login', 'Iniciar Sesión')}
+                        {t('common.login')}
                     </button>
                 </div>
             </header>
@@ -145,7 +145,7 @@ const LandingPage = () => {
                         textShadow: '0 2px 10px rgba(0,0,0,0.3)',
                         lineHeight: 1.2
                     }}>
-                        Tu Solución de Transporte<br />en Bamako
+                        {t('landing.hero_title')}
                     </h2>
                     <p style={{
                         fontSize: '1.25rem',
@@ -155,8 +155,7 @@ const LandingPage = () => {
                         margin: '0 auto 2.5rem',
                         textShadow: '0 1px 3px rgba(0,0,0,0.2)'
                     }}>
-                        Conectamos clientes con motoristas de confianza.<br />
-                        Viajes rápidos, seguros y económicos.
+                        {t('landing.hero_subtitle')}
                     </p>
                     <button
                         onClick={() => navigate('/register')}
@@ -181,7 +180,7 @@ const LandingPage = () => {
                             e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.3)';
                         }}
                     >
-                        Comenzar Ahora →
+                        {t('landing.get_started')}
                     </button>
                 </div>
             </section>
@@ -199,10 +198,10 @@ const LandingPage = () => {
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text'
                 }}>
-                    ¿Por qué elegir MotoTX?
+                    {t('landing.why_title')}
                 </h3>
                 <p style={{ textAlign: 'center', color: '#6b7280', marginBottom: '3rem', fontSize: '1.125rem' }}>
-                    La mejor experiencia de transporte en Bamako
+                    {t('landing.why_subtitle')}
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
                     {features.map((feature, index) => (
@@ -267,10 +266,10 @@ const LandingPage = () => {
             {/* How It Works - Roles Section */}
             <section style={{ padding: '5rem 2rem', background: 'white' }}>
                 <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '1rem', color: '#1f2937' }}>
-                    Únete a MotoTX
+                    {t('landing.join_title')}
                 </h3>
                 <p style={{ textAlign: 'center', color: '#6b7280', marginBottom: '3rem', fontSize: '1.125rem' }}>
-                    Elige tu rol y comienza hoy mismo
+                    {t('landing.join_subtitle')}
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem', maxWidth: '900px', margin: '0 auto' }}>
                     {roles.map((role, index) => (
@@ -344,7 +343,7 @@ const LandingPage = () => {
                                         e.target.style.boxShadow = `0 4px 12px ${role.color}40`;
                                     }}
                                 >
-                                    Registrarse como {role.title}
+                                    {t('landing.register_as', { role: role.title })}
                                 </button>
                             </div>
                         </div>
@@ -361,7 +360,7 @@ const LandingPage = () => {
                             <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', margin: 0 }}>MotoTX</h2>
                         </div>
                         <p style={{ opacity: 0.8, maxWidth: '600px', margin: '0 auto' }}>
-                            Plataforma de Gestión de Forfaits para Mototaxi en Bamako
+                            {t('landing.footer_desc')}
                         </p>
                     </div>
                     <div style={{
@@ -371,15 +370,16 @@ const LandingPage = () => {
                         fontSize: '0.9rem'
                     }}>
                         <p style={{ margin: 0 }}>
-                            © 2025 MotoTX - Desarrollado con ❤️ para mejorar el transporte en Mali
+                            {t('landing.footer_copyright')}
                             <br />
-                            <a href="/privacy" style={{ color: 'white', opacity: 0.7, fontSize: '0.8rem', textDecoration: 'none' }}>Politique de Confidentialité</a>
+                            <a href="/privacy" style={{ color: 'white', opacity: 0.7, fontSize: '0.8rem', textDecoration: 'none' }}>{t('landing.privacy_policy')}</a>
                         </p>
                     </div>
                 </div>
             </footer>
         </div>
     );
+
 };
 
 export default LandingPage;

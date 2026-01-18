@@ -123,5 +123,34 @@
             "title": "Activité Récente",
             "empty": "Aucune activité récente."
         }
+    },
+    "landing": {
+        "hero_title": "Votre Solution de Transport à Bamako",
+        "hero_subtitle": "Nous connectons clients et chauffeurs de confiance. Trajets rapides, sûrs et économiques.",
+        "get_started": "Commencer Maintenant →",
+        "why_title": "Pourquoi choisir MotoTX ?",
+        "why_subtitle": "La meilleure expérience de transport à Bamako",
+        "feature_fast_title": "Rapide et Fiable",
+        "feature_fast_desc": "Trouvez votre moto en quelques minutes et arrivez à destination sans délai",
+        "feature_forfait_title": "Forfaits Économiques",
+        "feature_forfait_desc": "Des packs prépayés qui s'adaptent à votre budget",
+        "feature_tracking_title": "Suivi en Temps Réel",
+        "feature_tracking_desc": "Suivez l'emplacement de votre chauffeur sur la carte",
+        "join_title": "Rejoignez MotoTX",
+        "join_subtitle": "Choisissez votre rôle et commencez dès aujourd'hui",
+        "role_client_title": "Client",
+        "role_client_subtitle": "Demandez des Trajets",
+        "role_client_step1": "Achetez un forfait",
+        "role_client_step2": "Demandez votre trajet sur la carte",
+        "role_client_step3": "Suivez votre moto en temps réel",
+        "role_driver_title": "Conducteur",
+        "role_driver_subtitle": "Gagnez de l'Argent",
+        "role_driver_step1": "Inscrivez-vous et obtenez l'approbation",
+        "role_driver_step2": "Recevez des demandes de trajet",
+        "role_driver_step3": "Gagnez de l'argent en transportant",
+        "register_as": "S'inscrire en tant que {{role}}",
+        "footer_desc": "Plateforme de gestion de forfaits pour Mototaxi à Bamako",
+        "footer_copyright": "© 2025 MotoTX - Développé avec ❤️ pour améliorer le transport au Mali",
+        "privacy_policy": "Politique de Confidentialité"
     }
 }
