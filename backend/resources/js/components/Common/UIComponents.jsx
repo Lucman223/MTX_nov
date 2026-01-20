@@ -45,3 +45,23 @@ export const Badge = ({ children, variant = 'premium', className = '', ...props 
         {children}
     </div>
 );
+
+/**
+ * [ES] Modal emergente básico.
+ * [FR] Modale contextuelle de base.
+ */
+export const Modal = ({ children, isOpen, onClose, title }) => {
+    if (!isOpen) return null;
+    return (
+        <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+        }}>
+            <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '0.5rem', width: '90%', maxWidth: '400px', position: 'relative' }}>
+                <button onClick={onClose} style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
+                {title && <h3 className="text-lg font-bold mb-4">{title}</h3>}
+                {children}
+            </div>
+        </div>
+    );
+};

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 /**
  * AdminClientes Component
@@ -13,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
  *      Affiche une liste de tous les clients inscrits, leurs coordonnées et permet la suppression de comptes.
  */
 const AdminClientes = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -38,22 +40,22 @@ const AdminClientes = () => {
             setClientes(data);
         } catch (error) {
             console.error('Error loading clientes:', error);
-            toast.error('Error al cargar la lista de clientes');
+            toast.error(t('common.error'));
         } finally {
             setLoading(false);
         }
     };
 
     const handleDelete = async (id, name) => {
-        if (!window.confirm(`¿Estás seguro de eliminar al cliente ${name}? Esta acción es irreversible.`)) return;
+        if (!window.confirm(t('admin_dashboard.clients.delete_confirm', { name }))) return;
 
         try {
             await axios.delete(`/api/admin/users/${id}`);
-            toast.success('Cliente eliminado correctamente');
+            toast.success(t('admin_dashboard.clients.delete_success'));
             fetchClientes();
         } catch (error) {
             console.error('Error deleting client:', error);
-            toast.error('Error al eliminar el cliente');
+            toast.error(t('common.error'));
         }
     };
 
@@ -74,7 +76,7 @@ const AdminClientes = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <span style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>👥</span>
                         <h1 style={{ fontSize: isMobile ? '1.25rem' : '1.875rem', fontWeight: 'bold', color: colors.text }}>
-                            {isMobile ? 'Clientes' : `Gestión de Clientes (${clientes.length})`}
+                            {isMobile ? t('nav.clients') : `${t('admin_dashboard.clients.title')} (${clientes.length})`}
                         </h1>
                     </div>
                     {!isMobile && (
@@ -90,7 +92,7 @@ const AdminClientes = () => {
                                 cursor: 'pointer'
                             }}
                         >
-                            Volver al Panel
+                            {t('common.back')}
                         </button>
                     )}
                 </div>
@@ -100,21 +102,21 @@ const AdminClientes = () => {
                     <div style={{ backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
                         {loading ? (
                             <div style={{ padding: '3rem', textAlign: 'center', color: colors.subtext }}>
-                                Cargando clientes...
+                                {t('common.loading')}
                             </div>
                         ) : clientes.length === 0 ? (
                             <div style={{ padding: '3rem', textAlign: 'center', color: colors.subtext }}>
-                                No hay clientes registrados en la plataforma.
+                                {t('admin_dashboard.clients.empty')}
                             </div>
                         ) : (
                             <div style={{ overflowX: 'auto' }}>
                                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                     <thead>
                                         <tr style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
-                                            <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: colors.subtext, fontWeight: '600' }}>Nombre</th>
-                                            <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: colors.subtext, fontWeight: '600' }}>Email / Contacto</th>
-                                            <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: colors.subtext, fontWeight: '600' }}>Registrado</th>
-                                            <th style={{ padding: '1rem', textAlign: 'right', fontSize: '0.875rem', color: colors.subtext, fontWeight: '600' }}>Acciones</th>
+                                            <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: colors.subtext, fontWeight: '600' }}>{t('admin_dashboard.clients.table.name')}</th>
+                                            <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: colors.subtext, fontWeight: '600' }}>{t('admin_dashboard.clients.table.contact')}</th>
+                                            <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: colors.subtext, fontWeight: '600' }}>{t('admin_dashboard.clients.table.registration')}</th>
+                                            <th style={{ padding: '1rem', textAlign: 'right', fontSize: '0.875rem', color: colors.subtext, fontWeight: '600' }}>{t('admin_dashboard.clients.table.actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -156,7 +158,7 @@ const AdminClientes = () => {
                                                             fontSize: '0.875rem'
                                                         }}
                                                     >
-                                                        Eliminar
+                                                        {t('admin_dashboard.clients.actions.delete')}
                                                     </button>
                                                 </td>
                                             </tr>
@@ -171,8 +173,8 @@ const AdminClientes = () => {
                 {/* Mobile Card View */}
                 {isMobile && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {loading && <div className="text-center p-4">Cargando...</div>}
-                        {!loading && clientes.length === 0 && <div className="text-center p-4">No hay clientes.</div>}
+                        {loading && <div className="text-center p-4">{t('common.loading')}</div>}
+                        {!loading && clientes.length === 0 && <div className="text-center p-4">{t('admin_dashboard.clients.empty')}</div>}
 
                         {clientes.map((cliente) => (
                             <div key={cliente.id} style={{
@@ -216,7 +218,7 @@ const AdminClientes = () => {
                                         fontWeight: '600'
                                     }}
                                 >
-                                    🗑️ Eliminar Cliente
+                                    🗑️ {t('admin_dashboard.clients.actions.delete')}
                                 </button>
                             </div>
                         ))}

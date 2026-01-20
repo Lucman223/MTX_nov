@@ -13,4 +13,6 @@ Route::group(['middleware' => ['jwt.auth', 'motorista']], function () {
     Route::get('/motorista/stats', [ViajeController::class, 'getDriverStats']);
     Route::get('/motorista/perfil', [MotoristaController::class, 'getProfile']);
     Route::post('/motorista/retirar', [MotoristaController::class, 'withdraw']);
+    Route::get('/motorista/transacciones', [MotoristaController::class, 'getTransactions']);
+    Route::put('/motorista/perfil', [MotoristaController::class, 'updateMotoristaProfile']);
 });

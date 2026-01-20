@@ -14,6 +14,7 @@ class UserService
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'rol' => $data['rol'],
+            'telefono' => $data['telefono'] ?? null,
         ]);
     }
 
@@ -22,6 +23,8 @@ class UserService
         $user->name = $data['name'] ?? $user->name;
         $user->email = $data['email'] ?? $user->email;
         $user->rol = $data['rol'] ?? $user->rol;
+        $user->telefono = $data['telefono'] ?? $user->telefono;
+        $user->foto_perfil = $data['foto_perfil'] ?? $user->foto_perfil;
 
         if (isset($data['password'])) {
             $user->password = Hash::make($data['password']);

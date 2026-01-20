@@ -26,6 +26,7 @@ import ClientActiveTrip from './pages/Cliente/ClientActiveTrip.jsx';
 import MotoristaDashboard from './pages/Motorista/MotoristaDashboard.jsx';
 import MotoristaHistory from './pages/Motorista/MotoristaHistory.jsx';
 import MotoristaProfile from './pages/Motorista/MotoristaProfile.jsx';
+import MotoristaTransactions from './pages/Motorista/MotoristaTransactions.jsx';
 import DriverActiveTrip from './pages/Motorista/DriverActiveTrip.jsx';
 import SuscripcionesMotorista from './pages/Motorista/SuscripcionesMotorista.jsx';
 
@@ -97,6 +98,7 @@ function AppContent() {
             <Route element={<ProtectedRoute allowedRoles={['motorista']} />}>
                 <Route path="/motorista" element={<MotoristaDashboard />} />
                 <Route path="/motorista/historial" element={<MotoristaHistory />} />
+                <Route path="/motorista/finanzas" element={<MotoristaTransactions />} />
                 <Route path="/motorista/perfil" element={<MotoristaProfile />} />
                 <Route path="/motorista/viaje-actual" element={<DriverActiveTrip />} />
                 <Route path="/motorista/suscripciones" element={<SuscripcionesMotorista />} />

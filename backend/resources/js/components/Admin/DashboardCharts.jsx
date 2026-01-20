@@ -11,10 +11,13 @@ import {
     Legend,
     ResponsiveContainer
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 const DashboardCharts = ({ data }) => {
+    const { t } = useTranslation();
+
     if (!data || data.length === 0) {
-        return <div className="p-4 text-center text-gray-500">No hay datos históricos disponibles</div>;
+        return <div className="p-4 text-center text-gray-500">{t('admin_dashboard.charts.no_data')}</div>;
     }
 
     return (
@@ -29,9 +32,9 @@ const DashboardCharts = ({ data }) => {
                 border: '1px solid #e5e7eb'
             }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
-                    📈 Ingresos (Últimos 30 días)
+                    {t('admin_dashboard.charts.income_title')}
                 </h3>
-                <div style={{ height: '300px' }}>
+                <div style={{ height: '300px', minHeight: '300px' }}>
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={data}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
@@ -49,7 +52,7 @@ const DashboardCharts = ({ data }) => {
                             />
                             <Tooltip
                                 contentStyle={{ borderRadius: '0.5rem', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
-                                formatter={(value) => [`${value} CFA`, 'Ingresos']}
+                                formatter={(value) => [`${value} CFA`, t('admin_dashboard.charts.income_legend')]}
                             />
                             <Line
                                 type="monotone"
@@ -73,9 +76,9 @@ const DashboardCharts = ({ data }) => {
                 border: '1px solid #e5e7eb'
             }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
-                    🚀 Viajes (Últimos 30 días)
+                    {t('admin_dashboard.charts.trips_title')}
                 </h3>
-                <div style={{ height: '300px' }}>
+                <div style={{ height: '300px', minHeight: '300px' }}>
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={data}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />

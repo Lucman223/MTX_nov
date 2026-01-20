@@ -136,7 +136,7 @@ const ClienteHistory = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.5rem' }}>
                                     <div>
                                         <div className="history-date" style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-                                            {new Date(viaje.updated_at).toLocaleDateString('es-ES', {
+                                            {new Date(viaje.updated_at).toLocaleDateString(t('common.date_locale', 'es-ES'), {
                                                 year: 'numeric',
                                                 month: 'long',
                                                 day: 'numeric',
@@ -148,18 +148,18 @@ const ClienteHistory = () => {
                                             {t('client_dashboard.driver')}: {viaje.motorista?.name || 'N/A'}
                                         </div>
                                     </div>
-                                    <Badge variant="secondary">Completado</Badge>
+                                    <Badge variant="secondary">{t('status.completado')}</Badge>
                                 </div>
 
                                 <div className="trip-details-grid" style={{ background: 'var(--bg-light)', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
                                     <div className="detail-item">
-                                        <div className="detail-label">ORIGEN</div>
+                                        <div className="detail-label">{t('client_dashboard.origin')}</div>
                                         <div className="detail-value" style={{ fontSize: '0.9rem' }}>
                                             {viaje.origen_lat?.toFixed(4)}, {viaje.origen_lng?.toFixed(4)}
                                         </div>
                                     </div>
                                     <div className="detail-item">
-                                        <div className="detail-label">DESTINO</div>
+                                        <div className="detail-label">{t('client_dashboard.destination')}</div>
                                         <div className="detail-value" style={{ fontSize: '0.9rem' }}>
                                             {viaje.destino_lat?.toFixed(4)}, {viaje.destino_lng?.toFixed(4)}
                                         </div>

@@ -29,27 +29,44 @@ class RatingController extends Controller
             return response()->json(['error' => 'Viaje no encontrado'], 404);
         }
 
-        // Verify user is the client of this trip
-        if ($viaje->cliente_id !== $user->id) {
-            return response()->json(['error' => 'Solo el cliente puede calificar el viaje'], 403);
+        // Determine type of rating
+        $type = $request->input('tipo', 'cliente_a_motorista'); // 'cliente_a_motorista' or 'motorista_a_cliente'
+
+        $calificadorId = $user->id;
+        $calificadoId = null;
+
+        if ($type === 'cliente_a_motorista') {
+            // Verify user is the client
+            if ($viaje->cliente_id !== $user->id) {
+                return response()->json(['error' => 'Solo el cliente puede calificar al motorista'], 403);
+            }
+            $calificadoId = $viaje->motorista_id;
+        } else if ($type === 'motorista_a_cliente') {
+            // Verify user is the motorista
+            if ($viaje->motorista_id !== $user->id) {
+                return response()->json(['error' => 'Solo el motorista puede calificar al cliente'], 403);
+            }
+            $calificadoId = $viaje->cliente_id;
+        } else {
+            return response()->json(['error' => 'Tipo de calificación inválido'], 400);
         }
 
-        // Verify trip is completed
-        if ($viaje->estado !== 'completado') {
-            return response()->json(['error' => 'Solo se pueden calificar viajes completados'], 400);
-        }
+        // Check if THIS specific rating already exists (A rated B)
+        $existingRating = Calificacion::where('viaje_id', $tripId)
+            ->where('calificador_id', $calificadorId)
+            ->first();
 
-        // Check if already rated
-        $existingRating = Calificacion::where('viaje_id', $tripId)->first();
         if ($existingRating) {
-            return response()->json(['error' => 'Este viaje ya ha sido calificado'], 400);
+            return response()->json(['error' => 'Ya has calificado este viaje'], 400);
         }
 
         // Create rating
         $calificacion = Calificacion::create([
             'viaje_id' => $tripId,
             'motorista_id' => $viaje->motorista_id,
-            'cliente_id' => $user->id,
+            'cliente_id' => $viaje->cliente_id,
+            'calificador_id' => $calificadorId, // Who is rating
+            'calificado_id' => $calificadoId,   // Who is being rated
             'puntuacion' => $validated['puntuacion'],
             'comentario' => $validated['comentario'] ?? null
         ]);

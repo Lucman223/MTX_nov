@@ -22,8 +22,42 @@
         "wallet_title": "💰 Solde Disponible",
         "withdraw_btn": "Retirer les Gains",
         "withdraw_success": "Retrait traité avec succès",
-        "insufficient_funds": "Solde insuffisant",
-        "payout_daily_desc": "Gains prêts à être retirés (Aujourd’hui)"
+        "insufficient_funds": "Fonds insuffisants",
+        "payout_daily_desc": "Revenus prêts à être retirés (Aujourd'hui)",
+        "trips_today": "Trajets (Aujourd'hui)",
+        "savings": "Économies",
+        "subscriptions": "Abonnements",
+        "current_status": "État Actuel",
+        "account_status": "État du Compte",
+        "enabled": "✅ Activé",
+        "blocked": "❌ Bloqué",
+        "trial_remaining": "Essai Restant",
+        "none": "Aucun",
+        "expires_on": "Expire le",
+        "available_plans": "Plans Disponibles",
+        "validity": "Validité",
+        "days": "jours",
+        "feature_24h": "Accès plateforme 24h",
+        "feature_unlimited": "Demandes illimitées",
+        "feature_priority": "Priorité d'assignation",
+        "processing": "Traitement...",
+        "current_plan": "Plan Actuel",
+        "activate_plan": "Activer le Plan",
+        "finance_title": "Historique Financier",
+        "balance_available": "Solde Disponible",
+        "recent_transactions": "Transactions Récentes",
+        "withdrawal": "Retrait d'Espèces",
+        "income": "Revenu de Trajet",
+        "no_transactions": "Aucune transaction enregistrée.",
+        "view_finances": "Voir Finances",
+        "rating_modal": {
+            "title": "Noter le Client",
+            "placeholder": "Commentaire facultatif...",
+            "cancel": "Annuler",
+            "submit": "Envoyer et Terminer",
+            "success": "Trajet terminé et client noté",
+            "error": "Erreur lors de la clôture du trajet"
+        }
     },
     "common": {
         "login": "Connexion",
@@ -33,7 +67,13 @@
         "password": "Mot de passe",
         "submit": "Envoyer",
         "back_home": "← Retour à l'accueil",
-        "loading": "Chargement..."
+        "loading": "Chargement...",
+        "back": "Retour",
+        "success": "Succès",
+        "error": "Erreur",
+        "edit": "Modifier",
+        "refresh": "Actualiser",
+        "date_locale": "fr-FR"
     },
     "auth": {
         "welcome_title": "Bienvenue sur MotoTX",
@@ -77,23 +117,35 @@
         "driver": "Chauffeur",
         "history": "📋 Historique",
         "profile": "👤 Profil",
-        "trips_badge": "{{count}} trajets"
+        "trips_badge": "{{count}} trajets",
+        "trip_details": "Détails du Trajet",
+        "trip_cost": "Crédit",
+        "forfait_applied": "Tarif Forfait Appliqué",
+        "limit_exceeded": "Limite Dépassée",
+        "invalid_trip": "Trajet non autorisé",
+        "limit": "Limite",
+        "need_premium_pack": "Ce trajet dépasse les KM de votre pack Urbain. Essayez le Pack Transversale !",
+        "tap_map_instruction": "Vous pouvez également toucher directement la carte pour marquer les points.",
+        "request_trip": "Demander un Trajet",
+        "your_rating": "Votre Note",
+        "rate_trip": "Noter le Trajet"
     },
     "client_forfaits": {
         "title": "Acheter des Forfaits",
-        "payment_title": "Paiement avec Orange Money",
-        "phone_label": "Numéro de téléphone",
-        "phone_hint": "Entrez un numéro valide (min 8 chiffres)",
-        "debit_warning": "<strong>{{amount}} CFA</strong> seront débités de votre compte.",
-        "waiting": "En attente de confirmation...",
-        "processing": "Traitement du paiement...",
-        "pay_btn": "Payer {{amount}} CFA",
-        "payment_error": "Erreur lors de l'initiation du paiement",
-        "timeout_error": "Délai dépassé. Vérifiez vos SMS.",
-        "purchase_success": "Achat réussi !",
+        "subtitle": "Choisissez le pack qui vous convient le mieux",
         "trips_count": "{{count}} trajets",
-        "default_desc": "Meilleure offre",
-        "selected": "Sélectionné"
+        "default_desc": "Trajets illimités dans le rayon urbain",
+        "payment_title": "Paiement Sécurisé avec OM",
+        "phone_label": "Numéro Orange Money",
+        "phone_placeholder": "Ex: 771234567",
+        "debit_warning": "<strong>{{amount}} CFA</strong> seront débités de votre compte.",
+        "pay_btn": "Payer {{amount}} CFA",
+        "processing": "Traitement du paiement...",
+        "waiting": "Veuillez patienter pour la confirmation sur votre mobile...",
+        "purchase_success": "Achat réussi !",
+        "payment_error": "Erreur lors du traitement du paiement",
+        "timeout_error": "Délai expiré. Veuillez vérifier votre solde.",
+        "selected": "SÉLECTIONNÉ"
     },
     "admin_dashboard": {
         "welcome": "Bienvenue, {{name}} 👋",
@@ -103,10 +155,13 @@
             "drivers": "Total Conducteurs",
             "drivers_pending": "{{count}} en attente",
             "trips_today": "Trajets d'Aujourd'hui",
-            "trips_total": "{{count}} au total",
+            "trips_total": "Total des Trajets",
             "income": "Revenus du Mois",
             "forfaits_sold": "Forfaits vendus",
-            "active_users": "Utilisateurs Actifs"
+            "active_users": "Utilisateurs Actifs",
+            "vs_last_month": "vs mois dernier",
+            "average_rating": "Note Moyenne",
+            "distribution": "Distribution par États"
         },
         "actions": {
             "title": "Actions Rapides",
@@ -117,12 +172,104 @@
             "manage_forfaits": "Gérer les Forfaits",
             "manage_forfaits_desc": "Administrer les forfaits et les prix",
             "reports": "Rapports",
-            "reports_desc": "Statistiques et analyses"
+            "reports_desc": "Statistiques et analyses",
+            "export_pdf": "Exporter PDF",
+            "coming_soon": "(À venir)"
         },
         "activity": {
             "title": "Activité Récente",
-            "empty": "Aucune activité récente."
+            "empty": "Aucune activité récente.",
+            "new_user": "Nouvel utilisateur : {{name}} ({{role}})",
+            "new_trip": "Nouveau trajet : {{origin}} -> {{destination}}",
+            "sale": "Vente : {{name}}"
+        },
+        "viajes": {
+            "title": "Historique Global des Trajets",
+            "title_mobile": "Historique Trajets",
+            "filter_all": "Tous les états",
+            "empty": "Aucun trajet dans cette catégorie",
+            "table": {
+                "id": "ID",
+                "date": "Date",
+                "client": "Client",
+                "driver": "Chauffeur",
+                "routes": "Origine / Destination",
+                "status": "État",
+                "fare": "Tarif"
+            }
+        },
+        "charts": {
+            "income_title": "📈 Revenus (30 derniers jours)",
+            "trips_title": "🚀 Trajets (30 derniers jours)",
+            "no_data": "Aucune donnée historique disponible",
+            "income_legend": "Revenus"
+        },
+        "motoristas": {
+            "title": "Gestion des Chauffeurs",
+            "table": {
+                "name": "Nom",
+                "vehicle": "Véhicule",
+                "registration": "Enregistrement",
+                "status": "État",
+                "actions": "Actions"
+            },
+            "actions": {
+                "approve": "Approuver",
+                "reject": "Rejeter"
+            },
+            "info": {
+                "vehicle": "Véhicule",
+                "plate": "Immatriculation"
+            }
+        },
+        "forfaits": {
+            "title": "Gestion des Forfaits",
+            "subtitle": "Gérez les forfaits de voyage disponibles pour les clients.",
+            "new_btn": "+ Nouveau Forfait",
+            "delete_confirm": "Êtes-vous sûr de vouloir supprimer le forfait {{name}} ?",
+            "save_success": "Forfait enregistré avec succès",
+            "table": {
+                "name": "Nom",
+                "price": "Prix",
+                "trips": "Trajets",
+                "distance": "Dist. Max",
+                "actions": "Actions"
+            },
+            "modal": {
+                "title_create": "Créer Nouveau Forfait",
+                "title_edit": "Modifier Forfait",
+                "label_name": "Nom du Pack",
+                "label_price": "Prix (CFA)",
+                "label_trips": "Nombre de Trajets",
+                "cancel": "Annuler"
+            }
         }
+    },
+    "rating_modal": {
+        "title": "Noter le Trajet",
+        "question": "Comment s'est passée votre expérience avec {{name}} ?",
+        "comment_label": "Commentaire (optionnel)",
+        "comment_placeholder": "Dites-nous en plus sur votre expérience...",
+        "select_rating": "Sélectionnez une note",
+        "bad_1": "Très mauvais",
+        "bad_2": "Mauvais",
+        "regular": "Moyen",
+        "good": "Bien",
+        "excellent": "Excellent",
+        "submit": "Envoyer la Note",
+        "submitting": "Envoi...",
+        "success": "Note envoyée avec succès !",
+        "error": "Erreur lors de l'envoi de la note"
+    },
+    "status": {
+        "solicitado": "Demandé",
+        "aceptado": "Accepté",
+        "en_curso": "En cours",
+        "completado": "Terminé",
+        "cancelado": "Annulé",
+        "pendiente": "En attente",
+        "aprobado": "Approuvé",
+        "rechazado": "Rejeté"
     },
     "landing": {
         "hero_title": "Votre Solution de Transport à Bamako",
@@ -152,5 +299,36 @@
         "footer_desc": "Plateforme de gestion de forfaits pour Mototaxi à Bamako",
         "footer_copyright": "© 2025 MotoTX - Développé avec ❤️ pour améliorer le transport au Mali",
         "privacy_policy": "Politique de Confidentialité"
+    },
+    "plans": {
+        "Diario": "Journalier",
+        "Semanal": "Hebdomadaire",
+        "Mensual VIP": "Mensuel VIP",
+        "desc_diario": "Accès complet pendant 24 heures",
+        "desc_semanal": "Économisez avec le plan hebdomadaire",
+        "desc_mensual": "Accès premium et priorité d'affectation"
+    },
+    "client_profile": {
+        "personal_info": "Informations Personnelles",
+        "manage_desc": "Gérez votre compte et vos forfaits",
+        "saving": "Enregistrement...",
+        "save_changes": "Enregistrer les modifications",
+        "danger_zone": "Zone de Danger",
+        "delete_account": "Supprimer le compte",
+        "delete_confirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+        "delete_contact": "Veuillez contacter support@mototx.ml pour supprimer définitivement votre compte pour des raisons de sécurité.",
+        "my_forfaits": "Mes Forfaits",
+        "buy_more": "Acheter Plus",
+        "no_forfaits": "Vous n'avez pas de forfaits actifs.",
+        "trips_remaining": "Trajets restants",
+        "active_forfait": "Forfait Actif",
+        "purchase_history": "Historique des Achats",
+        "date": "Date",
+        "plan": "Plan",
+        "price": "Prix",
+        "no_history": "Aucun historique disponible.",
+        "update_success": "Profil mis à jour",
+        "update_error": "Erreur de mise à jour",
+        "loading_error": "Erreur de chargement des données"
     }
 }

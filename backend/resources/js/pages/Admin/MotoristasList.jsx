@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 /**
  * MotoristasList Component
@@ -11,6 +12,7 @@ import axios from 'axios';
  *      Permet à l'administrateur d'approuver ou de rejeter l'inscription des chauffeurs en fonction de leurs données et de leur véhicule.
  */
 const MotoristasList = () => {
+    const { t } = useTranslation();
     const [motoristas, setMotoristas] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -20,14 +22,7 @@ const MotoristasList = () => {
 
     const fetchMotoristas = async () => {
         try {
-            const response = await axios.get('/api/users?rol=motorista'); // Assuming endpoint filter or getting all users and filtering
-            // Note: In real implementation, better to have a dedicated endpoint /api/admin/motoristas
-            // For now attempting to use the users resource if available or stubbing
-
-            // If the standard user endpoint doesn't support easy filtering, we might need to adjust.
-            // Let's assume the admin users endpoint returns all users.
-
-            // Temporary mock data if API call fails or is not yet implemented fully for filtering
+            const response = await axios.get('/api/admin/users?rol=motorista');
             if (response.data && Array.isArray(response.data)) {
                 setMotoristas(response.data.filter(u => u.rol === 'motorista'));
             } else if (response.data && response.data.data) {
@@ -48,13 +43,12 @@ const MotoristasList = () => {
     const handleStatusChange = async (id, newStatus) => {
         try {
             await axios.put(`/api/admin/motoristas/${id}/status`, { estado_validacion: newStatus });
-            // Update local state
             setMotoristas(motoristas.map(m =>
                 m.id === id ? { ...m, motorista_perfil: { ...m.motorista_perfil, estado_validacion: newStatus } } : m
             ));
         } catch (error) {
             console.error("Error updating status", error);
-            alert("Error al actualizar estado");
+            alert(t('common.error'));
         }
     };
 
@@ -66,23 +60,22 @@ const MotoristasList = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    if (loading) return <div className="text-center p-10">Cargando...</div>;
+    if (loading) return <div className="text-center p-10">{t('common.loading')}</div>;
 
     return (
         <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Gestión de Motoristas</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('admin_dashboard.motoristas.title')}</h2>
 
-            {/* Desktop Table View */}
             {!isMobile && (
                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehículo</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registro</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin_dashboard.motoristas.table.name')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin_dashboard.motoristas.table.vehicle')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin_dashboard.motoristas.table.registration')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin_dashboard.motoristas.table.status')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin_dashboard.motoristas.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -93,10 +86,17 @@ const MotoristasList = () => {
                                             <div className="text-sm font-medium text-gray-900">{motorista.name}</div>
                                         </div>
                                         <div className="text-sm text-gray-500">{motorista.email}</div>
+                                        {motorista.telefono && <div className="text-xs text-gray-400">📞 {motorista.telefono}</div>}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{motorista.motorista_perfil?.marca_vehiculo || 'N/A'}</div>
-                                        <div className="text-sm text-gray-500">{motorista.motorista_perfil?.matricula || '-'}</div>
+                                        <div className="text-sm text-gray-900">
+                                            {motorista.motorista_perfil?.marca_vehiculo} {motorista.motorista_perfil?.modelo_moto}
+                                            ({motorista.motorista_perfil?.anio_moto || 'N/A'})
+                                        </div>
+                                        <div className="text-sm text-gray-500">
+                                            Matrícula: {motorista.motorista_perfil?.matricula || '-'}
+                                            {motorista.motorista_perfil?.color_moto && ` | Color: ${motorista.motorista_perfil?.color_moto}`}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className="text-sm text-gray-500">{new Date(motorista.created_at).toLocaleDateString()}</span>
@@ -106,7 +106,7 @@ const MotoristasList = () => {
                                             ${motorista.motorista_perfil?.estado_validacion === 'aprobado' ? 'bg-green-100 text-green-800' :
                                                 motorista.motorista_perfil?.estado_validacion === 'rechazado' ? 'bg-red-100 text-red-800' :
                                                     'bg-yellow-100 text-yellow-800'}`}>
-                                            {motorista.motorista_perfil?.estado_validacion || 'pendiente'}
+                                            {t(`status.${motorista.motorista_perfil?.estado_validacion || 'pendiente'}`)}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -115,7 +115,7 @@ const MotoristasList = () => {
                                                 onClick={() => handleStatusChange(motorista.id, 'aprobado')}
                                                 className="text-green-600 hover:text-green-900 mr-4"
                                             >
-                                                Aprobar
+                                                {t('admin_dashboard.motoristas.actions.approve')}
                                             </button>
                                         )}
                                         {motorista.motorista_perfil?.estado_validacion !== 'rechazado' && (
@@ -123,7 +123,7 @@ const MotoristasList = () => {
                                                 onClick={() => handleStatusChange(motorista.id, 'rechazado')}
                                                 className="text-red-600 hover:text-red-900"
                                             >
-                                                Rechazar
+                                                {t('admin_dashboard.motoristas.actions.reject')}
                                             </button>
                                         )}
                                     </td>
@@ -134,7 +134,6 @@ const MotoristasList = () => {
                 </div>
             )}
 
-            {/* Mobile Card View */}
             {isMobile && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {motoristas.map((motorista) => (
@@ -149,6 +148,7 @@ const MotoristasList = () => {
                                 <div>
                                     <div style={{ fontWeight: 'bold', color: '#1f2937' }}>{motorista.name}</div>
                                     <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>{motorista.email}</div>
+                                    {motorista.telefono && <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>📞 {motorista.telefono}</div>}
                                 </div>
                                 <span style={{
                                     fontSize: '0.75rem',
@@ -158,18 +158,18 @@ const MotoristasList = () => {
                                     backgroundColor: motorista.motorista_perfil?.estado_validacion === 'aprobado' ? '#d1fae5' : '#fef3c7',
                                     color: motorista.motorista_perfil?.estado_validacion === 'aprobado' ? '#065f46' : '#92400e'
                                 }}>
-                                    {motorista.motorista_perfil?.estado_validacion || 'pendiente'}
+                                    {t(`status.${motorista.motorista_perfil?.estado_validacion || 'pendiente'}`)}
                                 </span>
                             </div>
 
                             <div style={{ fontSize: '0.875rem', color: '#4b5563', marginBottom: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                                 <div>
-                                    <span style={{ fontWeight: '600' }}>Vehículo:</span><br />
-                                    {motorista.motorista_perfil?.marca_vehiculo || 'N/A'}
+                                    <span style={{ fontWeight: '600' }}>{t('admin_dashboard.motoristas.info.vehicle')}:</span><br />
+                                    {motorista.motorista_perfil?.marca_vehiculo} {motorista.motorista_perfil?.modelo_moto} ({motorista.motorista_perfil?.anio_moto})
                                 </div>
                                 <div>
-                                    <span style={{ fontWeight: '600' }}>Matrícula:</span><br />
-                                    {motorista.motorista_perfil?.matricula || '-'}
+                                    <span style={{ fontWeight: '600' }}>{t('admin_dashboard.motoristas.info.plate')}:</span><br />
+                                    {motorista.motorista_perfil?.matricula || '-'} / {motorista.motorista_perfil?.color_moto || 'N/A'}
                                 </div>
                             </div>
 
@@ -179,7 +179,7 @@ const MotoristasList = () => {
                                         onClick={() => handleStatusChange(motorista.id, 'aprobado')}
                                         style={{ flex: 1, padding: '0.5rem', backgroundColor: '#dcfce7', color: '#166534', border: '1px solid #bbf7d0', borderRadius: '0.375rem', fontWeight: '600' }}
                                     >
-                                        ✓ Aprobar
+                                        ✓ {t('admin_dashboard.motoristas.actions.approve')}
                                     </button>
                                 )}
                                 {motorista.motorista_perfil?.estado_validacion !== 'rechazado' && (
@@ -187,7 +187,7 @@ const MotoristasList = () => {
                                         onClick={() => handleStatusChange(motorista.id, 'rechazado')}
                                         style={{ flex: 1, padding: '0.5rem', backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca', borderRadius: '0.375rem', fontWeight: '600' }}
                                     >
-                                        ✕ Rechazar
+                                        ✕ {t('admin_dashboard.motoristas.actions.reject')}
                                     </button>
                                 )}
                             </div>

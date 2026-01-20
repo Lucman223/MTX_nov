@@ -78,7 +78,6 @@ const AdminDashboard = () => {
     const renderActivity = () => {
         if (!stats?.recentActivity) return <div style={{ color: '#6b7280', padding: '1rem' }}>{t('admin_dashboard.activity.empty')}</div>;
 
-        // Ensure we have an array, even if backend returns object/map
         const activityList = Array.isArray(stats.recentActivity)
             ? stats.recentActivity
             : Object.values(stats.recentActivity);
@@ -99,8 +98,12 @@ const AdminDashboard = () => {
                     boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
                 }}
             >
-                <span style={{ color: '#374151', fontWeight: '500' }}>{activity.text}</span>
-                <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>{activity.time}</span>
+                <span style={{ color: '#374151', fontWeight: '500' }}>
+                    {activity.key ? t(activity.key, activity.params) : activity.text}
+                </span>
+                <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+                    {new Date(activity.time).toLocaleString()}
+                </span>
             </div>
         ));
     };
@@ -139,7 +142,7 @@ const AdminDashboard = () => {
             value: stats.usuariosActivos,
             icon: '👥',
             color: colors.purple,
-            subtitle: `Rating: ${stats.ratingPromedio}⭐`
+            subtitle: `${t('admin_dashboard.stats.average_rating')}: ${stats.ratingPromedio}⭐`
         }
     ] : [];
 

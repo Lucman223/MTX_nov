@@ -30,6 +30,7 @@ class UpdateProfileRequest extends FormRequest
             'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'sometimes|string|min:8|confirmed',
             'rol' => ['sometimes', Rule::in(['cliente', 'motorista', 'admin'])],
+            'telefono' => 'nullable|string|max:20',
         ];
     }
 }

@@ -7,9 +7,10 @@ import useNotifications from '../../hooks/useNotifications';
 import InstallPrompt from '../../components/Common/InstallPrompt';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/Common/SEO';
-import { Card, Button, Badge } from '../../components/Common/UIComponents';
+import { Card, Button, Badge, Modal } from '../../components/Common/UIComponents';
 import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 import '../../../css/components.css';
+import { Star } from 'lucide-react';
 
 /**
  * MotoristaDashboard Component
@@ -42,6 +43,9 @@ const MotoristaDashboard = () => {
     const [loading, setLoading] = useState(false);
     const [isOnline, setIsOnline] = useState(false);
     const [profile, setProfile] = useState(null);
+    const [ratingModalOpen, setRatingModalOpen] = useState(false);
+    const [rating, setRating] = useState(5);
+    const [comment, setComment] = useState('');
 
     const fetchData = async () => {
         setLoading(true);
@@ -59,7 +63,7 @@ const MotoristaDashboard = () => {
                 setIsOnline(profileRes.data.estado_actual === 'activo');
             } catch (e) { console.error('Error fetching profile', e); }
 
-            const activeRes = await axios.get('/api/motorista/viajes/actual'); // Corrected endpoint if needed
+            const activeRes = await axios.get('/api/viajes/actual');
             if (activeRes.data && activeRes.data.id) {
                 setCurrentTrip(activeRes.data);
                 setViajes([]);
@@ -71,6 +75,7 @@ const MotoristaDashboard = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
+            console.log('Driver Dashboard Data Refreshed:', { currentTrip, pendingTrips: viajes.length });
             setLoading(false);
         }
     };
@@ -150,6 +155,12 @@ const MotoristaDashboard = () => {
 
     const handleUpdateStatus = async (newStatus) => {
         if (!currentTrip) return;
+
+        if (newStatus === 'completado') {
+            setRatingModalOpen(true);
+            return;
+        }
+
         try {
             await axios.put(`/api/motorista/viajes/${currentTrip.id}/status`, { estado: newStatus });
             toast.success(t('driver_dashboard.status_updated', { status: newStatus }));
@@ -158,6 +169,38 @@ const MotoristaDashboard = () => {
             console.error('Error updating status:', error);
             toast.error(t('driver_dashboard.update_error'));
         }
+    };
+
+    const submitRatingAndComplete = async () => {
+        try {
+            await axios.put(`/api/motorista/viajes/${currentTrip.id}/status`, { estado: 'completado' });
+            // Submit Rating
+            // Note: We need a new endpoint for Driver -> Client rating, OR reuse existing one if adaptable.
+            // For now, let's assume `api/viajes/{id}/calificar` works for both, OR implement endpoint later.
+            // Based on migration, Calificacion table supports it.
+            // Let's hitting /api/viajes/:id/calificar assuming backend handles it or we'll add it.
+            // Currently backend `ViajeController` doesn't seem to have `rateClient`...
+            // Wait, we need to create `rateClient` endpoint in backend?
+            // Yes, user asked for full flow.
+            // Let's implement the UI first, and then I'll add the endpoint.
+
+            await axios.post(`/api/viajes/${currentTrip.id}/calificar`, { puntuacion: rating, comentario: comment, tipo: 'motorista_a_cliente' });
+
+            toast.success(t('driver_dashboard.rating_modal.success'));
+            setRatingModalOpen(false);
+            setRating(5);
+            setComment('');
+            fetchData();
+        } catch (error) {
+            console.error('Error completing trip:', error);
+            toast.error(t('driver_dashboard.rating_modal.error'));
+        }
+    };
+
+    const openGoogleMaps = () => {
+        if (!currentTrip) return;
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${currentTrip.origen_lat},${currentTrip.origen_lng}&destination=${currentTrip.destino_lat},${currentTrip.destino_lng}&travelmode=driving`;
+        window.open(url, '_blank');
     };
 
     const handleWithdraw = async () => {
@@ -175,6 +218,8 @@ const MotoristaDashboard = () => {
         }
     };
 
+    // No longer needed: fetchTransactions
+
     // Simplified: No longer need isMobile state as we use CSS Media Queries
 
     return (
@@ -190,7 +235,7 @@ const MotoristaDashboard = () => {
                             MotoTX Motorista
                         </h1>
                         <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                            {user?.name || t('driver_dashboard.driver_role')}
+                            {user?.email === 'motorista@test.com' ? t('auth.role_driver') + ' (Demo)' : user?.name || t('driver_dashboard.driver_role')}
                         </span>
                     </div>
                 </div>
@@ -276,13 +321,20 @@ const MotoristaDashboard = () => {
                                 💸 {t('driver_dashboard.withdraw_btn')}
                             </Button>
 
-                            <div className="stats-row">
+                            <div className="stats-row" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                <Button
+                                    onClick={() => navigate('/motorista/finanzas')}
+                                    variant="outline"
+                                    style={{ fontSize: '0.75rem', padding: '0.4rem', border: '1px solid white', color: 'white' }}
+                                >
+                                    💰 {t('driver_dashboard.view_finances')}
+                                </Button>
                                 <div className="stat-item">
-                                    <div className="stat-label">{t('nav.trips')} (Hoy)</div>
+                                    <div className="stat-label">{t('driver_dashboard.trips_today')}</div>
                                     <div className="stat-value">{stats?.today_trips || 0}</div>
                                 </div>
                                 <div className="stat-item highlight">
-                                    <div className="stat-label">⚡ Ahorro</div>
+                                    <div className="stat-label">⚡ {t('driver_dashboard.savings')}</div>
                                     <div className="stat-value">{stats?.commission_saved || 0} CFA</div>
                                 </div>
                             </div>
@@ -301,11 +353,23 @@ const MotoristaDashboard = () => {
                             </div>
                             <div className="detail-item">
                                 <div className="detail-label">{t('client_dashboard.state')}</div>
-                                <div className="detail-value status-active">{currentTrip.estado}</div>
+                                <div className="detail-value status-active">{t(`status.${currentTrip.estado}`)}</div>
+                            </div>
+                            <div className="detail-item col-span-2">
+                                <div className="detail-label">📍 {t('client_dashboard.origin')}</div>
+                                <div className="detail-value">{currentTrip.origen || `${currentTrip.origen_lat}, ${currentTrip.origen_lng}`}</div>
+                            </div>
+                            <div className="detail-item col-span-2">
+                                <div className="detail-label">🏁 {t('client_dashboard.destination')}</div>
+                                <div className="detail-value">{currentTrip.destino || `${currentTrip.destino_lat}, ${currentTrip.destino_lng}`}</div>
                             </div>
                         </div>
 
                         <div className="trip-actions">
+                            <Button onClick={openGoogleMaps} variant="outline" className="w-full mb-2">
+                                🗺️ Navegar con Maps
+                            </Button>
+
                             {currentTrip.estado === 'aceptado' && (
                                 <Button onClick={() => handleUpdateStatus('en_curso')} className="w-full">
                                     {t('driver_dashboard.start_trip')}
@@ -320,10 +384,18 @@ const MotoristaDashboard = () => {
                     </Card>
                 )}
 
-                {/* Pending Requests */}
                 {!currentTrip && (
                     <div className="requests-section">
-                        <h2 className="section-title">📋 {t('driver_dashboard.pending_requests')}</h2>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <h2 className="section-title" style={{ margin: 0 }}>📋 {t('driver_dashboard.pending_requests')}</h2>
+                            <Button
+                                onClick={fetchData}
+                                variant="ghost"
+                                style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                            >
+                                🔄 {t('common.refresh')}
+                            </Button>
+                        </div>
                         {viajes.length === 0 ? (
                             <Card className="empty-state">
                                 <div className="empty-icon">🔍</div>
@@ -336,10 +408,20 @@ const MotoristaDashboard = () => {
                                         <div className="request-header">
                                             <div>
                                                 <div className="detail-label">{t('client_dashboard.client')}</div>
-                                                <div className="detail-value">{viaje.cliente?.name || 'N/A'}</div>
+                                                <div className="detail-value" style={{ fontWeight: 'bold' }}>{viaje.cliente?.name || 'N/A'}</div>
                                             </div>
                                             <Badge variant="accent">{t('driver_dashboard.new_tag')}</Badge>
                                         </div>
+
+                                        <div className="request-body" style={{ margin: '0.75rem 0', fontSize: '0.85rem' }}>
+                                            <div style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                                                📍 <span style={{ color: 'var(--text-main)' }}>{viaje.origen || t('common.loading')}</span>
+                                            </div>
+                                            <div style={{ color: 'var(--text-muted)' }}>
+                                                🏁 <span style={{ color: 'var(--text-main)' }}>{viaje.destino || t('common.loading')}</span>
+                                            </div>
+                                        </div>
+
                                         <Button onClick={() => handleAcceptTrip(viaje.id)} className="w-full">
                                             {t('driver_dashboard.accept_trip')}
                                         </Button>
@@ -350,6 +432,47 @@ const MotoristaDashboard = () => {
                     </div>
                 )}
             </main>
+
+            {/* Rating Modal */}
+            {ratingModalOpen && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+                }}>
+                    <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '0.5rem', width: '90%', maxWidth: '400px' }}>
+                        <h3 className="text-lg font-bold mb-4">{t('driver_dashboard.rating_modal.title')}</h3>
+
+                        <div className="flex justify-center gap-2 mb-4">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <button key={star} onClick={() => setRating(star)} className="focus:outline-none">
+                                    <Star
+                                        size={32}
+                                        fill={star <= rating ? "#f59e0b" : "none"}
+                                        stroke={star <= rating ? "#f59e0b" : "#9ca3af"}
+                                    />
+                                </button>
+                            ))}
+                        </div>
+
+                        <textarea
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            placeholder={t('driver_dashboard.rating_modal.placeholder')}
+                            className="w-full p-2 border rounded mb-4"
+                            rows="3"
+                        />
+
+                        <div className="flex gap-2">
+                            <Button onClick={() => setRatingModalOpen(false)} variant="outline" className="flex-1">
+                                {t('driver_dashboard.rating_modal.cancel')}
+                            </Button>
+                            <Button onClick={submitRatingAndComplete} className="flex-1">
+                                {t('driver_dashboard.rating_modal.submit')}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

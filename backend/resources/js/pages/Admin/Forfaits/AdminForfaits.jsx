@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 /**
  * AdminForfaits Component
@@ -13,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
  *      Implémente un CRUD complet pour définir les noms, les prix, les trajets inclus et la validité des forfaits.
  */
 const AdminForfaits = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [forfaits, setForfaits] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ const AdminForfaits = () => {
             setForfaits(response.data);
         } catch (error) {
             console.error('Error loading forfaits:', error);
-            toast.error('Error al cargar los forfaits');
+            toast.error(t('common.error'));
         } finally {
             setLoading(false);
         }
@@ -54,10 +56,10 @@ const AdminForfaits = () => {
         try {
             if (editingForfait) {
                 await axios.put(`/api/admin/forfaits/${editingForfait.id}`, formData);
-                toast.success('Forfait actualizado correctamente');
+                toast.success(t('admin_dashboard.forfaits.save_success'));
             } else {
                 await axios.post('/api/admin/forfaits', formData);
-                toast.success('Forfait creado correctamente');
+                toast.success(t('admin_dashboard.forfaits.save_success'));
             }
             setModalOpen(false);
             setEditingForfait(null);
@@ -65,7 +67,7 @@ const AdminForfaits = () => {
             fetchForfaits();
         } catch (error) {
             console.error('Error saving forfait:', error);
-            toast.error('Error al guardar el forfait');
+            toast.error(t('common.error'));
         }
     };
 
@@ -82,15 +84,15 @@ const AdminForfaits = () => {
         setModalOpen(true);
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('¿Estás seguro de eliminar este forfait?')) return;
+    const handleDelete = async (id, name) => {
+        if (!window.confirm(t('admin_dashboard.forfaits.delete_confirm', { name }))) return;
         try {
             await axios.delete(`/api/admin/forfaits/${id}`);
-            toast.success('Forfait eliminado');
+            toast.success(t('common.success'));
             fetchForfaits();
         } catch (error) {
             console.error('Error deleting forfait:', error);
-            toast.error('Error al eliminar');
+            toast.error(t('common.error'));
         }
     };
 
@@ -114,7 +116,7 @@ const AdminForfaits = () => {
                     marginBottom: '2rem'
                 }}>
                     <h1 style={{ fontSize: isMobile ? '1.5rem' : '1.875rem', fontWeight: 'bold', color: '#111827' }}>
-                        {isMobile ? 'Gestión Forfaits' : 'ADMIN - Gestión de Forfaits'}
+                        {isMobile ? t('nav.forfaits') : t('admin_dashboard.forfaits.title')}
                     </h1>
                     <div style={{ display: 'flex', gap: '1rem', width: isMobile ? '100%' : 'auto' }}>
                         {!isMobile && (
@@ -130,7 +132,7 @@ const AdminForfaits = () => {
                                     cursor: 'pointer'
                                 }}
                             >
-                                Volver
+                                {t('common.back')}
                             </button>
                         )}
                         <button
@@ -152,50 +154,54 @@ const AdminForfaits = () => {
                                 textAlign: 'center'
                             }}
                         >
-                            + Nuevo Forfait
+                            {t('admin_dashboard.forfaits.new_btn')}
                         </button>
                     </div>
                 </div>
 
                 {loading ? (
-                    <div style={{ textAlign: 'center', padding: '3rem', color: '#6b7280' }}>Cargando...</div>
+                    <div style={{ textAlign: 'center', padding: '3rem', color: '#6b7280' }}>{t('common.loading')}</div>
                 ) : (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
                         {(Array.isArray(forfaits) ? forfaits : Object.values(forfaits || {})).map((forfait) => (
                             <div key={forfait.id} style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #e5e7eb' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
-                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#111827' }}>{forfait.nombre}</h3>
+                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#111827' }}>
+                                        {t(`plans.${forfait.nombre}`, forfait.nombre)}
+                                    </h3>
                                     <span style={{
                                         padding: '0.25rem 0.75rem',
                                         borderRadius: '9999px',
                                         fontSize: '0.75rem',
                                         fontWeight: '600',
-                                        backgroundColor: forfait.estado === 'activo' ? '#dcfce7' : '#f3f4f6',
-                                        color: forfait.estado === 'activo' ? '#15803d' : '#6b7280'
+                                        backgroundColor: forfait.estado === 'activo' || forfait.estado === 'aprobado' ? '#dcfce7' : '#f3f4f6',
+                                        color: forfait.estado === 'activo' || forfait.estado === 'aprobado' ? '#15803d' : '#6b7280'
                                     }}>
-                                        {forfait.estado}
+                                        {t(`status.${forfait.estado}`, forfait.estado)}
                                     </span>
                                 </div>
                                 <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.primary, marginBottom: '1rem' }}>
                                     {parseInt(forfait.precio).toLocaleString()} CFA
                                 </div>
                                 <div style={{ spaceY: '0.5rem', color: '#4b5563', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
-                                    <p>📅 {forfait.dias_validez} días de validez</p>
-                                    <p>🚀 {forfait.viajes_incluidos} viajes incluidos</p>
-                                    <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>{forfait.descripcion}</p>
+                                    <p>📅 {forfait.dias_validez} {t('admin_dashboard.forfaits.modal.label_days')}</p>
+                                    <p>🚀 {forfait.viajes_incluidos} {t('admin_dashboard.forfaits.modal.label_trips')}</p>
+                                    <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
+                                        {t(`plans.${forfait.nombre}_desc`, forfait.descripcion)}
+                                    </p>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.75rem' }}>
                                     <button
                                         onClick={() => handleEdit(forfait)}
                                         style={{ flex: 1, padding: '0.5rem', backgroundColor: '#eff6ff', color: colors.primary, borderRadius: '0.375rem', border: 'none', fontWeight: '600', cursor: 'pointer' }}
                                     >
-                                        Editar
+                                        {t('common.edit')}
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(forfait.id)}
+                                        onClick={() => handleDelete(forfait.id, forfait.nombre)}
                                         style={{ flex: 1, padding: '0.5rem', backgroundColor: '#fef2f2', color: colors.error, borderRadius: '0.375rem', border: 'none', fontWeight: '600', cursor: 'pointer' }}
                                     >
-                                        Eliminar
+                                        {t('admin_dashboard.clients.actions.delete')}
                                     </button>
                                 </div>
                             </div>
@@ -208,43 +214,43 @@ const AdminForfaits = () => {
                 <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 50 }}>
                     <div style={{ backgroundColor: 'white', borderRadius: '1rem', padding: '2rem', width: '100%', maxWidth: '500px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
-                            {editingForfait ? 'Editar Forfait' : 'Nuevo Forfait'}
+                            {editingForfait ? t('admin_dashboard.forfaits.modal.title_edit') : t('admin_dashboard.forfaits.modal.title_create')}
                         </h2>
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>Nombre</label>
+                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_name')}</label>
                                 <input required type="text" value={formData.nombre} onChange={e => setFormData({ ...formData, nombre: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>Descripción</label>
+                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_description')}</label>
                                 <textarea value={formData.descripcion} onChange={e => setFormData({ ...formData, descripcion: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>Precio (CFA)</label>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_price')}</label>
                                     <input required type="number" value={formData.precio} onChange={e => setFormData({ ...formData, precio: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
                                 </div>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>Viajes</label>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_trips')}</label>
                                     <input required type="number" value={formData.viajes_incluidos} onChange={e => setFormData({ ...formData, viajes_incluidos: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
                                 </div>
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>Días Validez</label>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_days')}</label>
                                     <input required type="number" value={formData.dias_validez} onChange={e => setFormData({ ...formData, dias_validez: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
                                 </div>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>Estado</label>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_status')}</label>
                                     <select value={formData.estado} onChange={e => setFormData({ ...formData, estado: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }}>
-                                        <option value="activo">Activo</option>
-                                        <option value="inactivo">Inactivo</option>
+                                        <option value="activo">{t('status.aprobado')}</option>
+                                        <option value="inactivo">{t('status.rechazado')}</option>
                                     </select>
                                 </div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-                                <button type="button" onClick={() => setModalOpen(false)} style={{ padding: '0.5rem 1rem', borderRadius: '0.375rem', border: 'none', backgroundColor: '#e5e7eb', cursor: 'pointer' }}>Cancelar</button>
-                                <button type="submit" style={{ padding: '0.5rem 1rem', borderRadius: '0.375rem', border: 'none', backgroundColor: colors.primary, color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>Guardar</button>
+                                <button type="button" onClick={() => setModalOpen(false)} style={{ padding: '0.5rem 1rem', borderRadius: '0.375rem', border: 'none', backgroundColor: '#e5e7eb', cursor: 'pointer' }}>{t('admin_dashboard.forfaits.modal.cancel')}</button>
+                                <button type="submit" style={{ padding: '0.5rem 1rem', borderRadius: '0.375rem', border: 'none', backgroundColor: colors.primary, color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>{t('admin_dashboard.forfaits.modal.save')}</button>
                             </div>
                         </form>
                     </div>

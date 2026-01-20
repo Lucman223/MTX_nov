@@ -56,13 +56,24 @@ const MotoristaProfile = () => {
         e.preventDefault();
         setSaving(true);
         try {
+            // Update personal info
             await axios.put('/api/auth/profile', {
                 name: formData.name,
                 email: formData.email,
                 telefono: formData.telefono
             });
-            toast.success('Perfil actualizado correctamente');
+
+            // Update vehicle info
+            await axios.put('/api/motorista/perfil', {
+                matricula: motoInfo.matricula,
+                modelo_moto: motoInfo.modelo_moto,
+                anio_moto: motoInfo.anio_moto,
+                color_moto: motoInfo.color_moto
+            });
+
+            toast.success('Perfil y vehículo actualizados correctamente');
         } catch (error) {
+            console.error(error);
             toast.error('Error al actualizar');
         } finally {
             setSaving(false);
@@ -147,6 +158,15 @@ const MotoristaProfile = () => {
                                 className="mtx-input"
                             />
                         </div>
+                        <div>
+                            <label className="form-label">{t('common.phone')}</label>
+                            <input
+                                type="text"
+                                value={formData.telefono}
+                                onChange={e => setFormData({ ...formData, telefono: e.target.value })}
+                                className="mtx-input"
+                            />
+                        </div>
 
                         <Button
                             type="submit"
@@ -165,28 +185,56 @@ const MotoristaProfile = () => {
                     </h2>
 
                     <div style={{ display: 'grid', gap: '1rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', backgroundColor: 'rgba(5, 150, 105, 0.05)', borderRadius: '0.5rem', border: '1px solid var(--secondary-color)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontWeight: '500' }}>{t('driver_dashboard.license_plate')}</span>
-                            <span style={{ fontWeight: 'bold', fontFamily: 'monospace', fontSize: '1.1rem', color: 'var(--text-main)' }}>{motoInfo.matricula || '---'}</span>
+                        <div style={{ display: 'grid', gap: '0.5rem' }}>
+                            <label className="form-label">{t('driver_dashboard.license_plate')}</label>
+                            <input
+                                type="text"
+                                value={motoInfo.matricula || ''}
+                                onChange={e => setMotoInfo({ ...motoInfo, matricula: e.target.value })}
+                                className="mtx-input"
+                                style={{ fontWeight: 'bold', fontFamily: 'monospace' }}
+                            />
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                            <div style={{ padding: '1rem', backgroundColor: 'var(--bg-light)', borderRadius: '0.5rem' }}>
-                                <div className="detail-label">{t('driver_dashboard.model')}</div>
-                                <div className="detail-value" style={{ marginTop: '0.25rem' }}>{motoInfo.modelo_moto || '---'}</div>
+                            <div>
+                                <label className="form-label">{t('driver_dashboard.model')}</label>
+                                <input
+                                    type="text"
+                                    value={motoInfo.modelo_moto || ''}
+                                    onChange={e => setMotoInfo({ ...motoInfo, modelo_moto: e.target.value })}
+                                    className="mtx-input"
+                                />
                             </div>
-                            <div style={{ padding: '1rem', backgroundColor: 'var(--bg-light)', borderRadius: '0.5rem' }}>
-                                <div className="detail-label">{t('driver_dashboard.year')}</div>
-                                <div className="detail-value" style={{ marginTop: '0.25rem' }}>{motoInfo.anio_moto || '---'}</div>
+                            <div>
+                                <label className="form-label">{t('driver_dashboard.year')}</label>
+                                <input
+                                    type="text"
+                                    value={motoInfo.anio_moto || ''}
+                                    onChange={e => setMotoInfo({ ...motoInfo, anio_moto: e.target.value })}
+                                    className="mtx-input"
+                                />
                             </div>
                         </div>
 
-                        <div style={{ padding: '1rem', backgroundColor: 'var(--bg-light)', borderRadius: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div className="detail-label">{t('driver_dashboard.color')}</div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <span style={{ fontWeight: '600' }}>{motoInfo.color_moto || '---'}</span>
+                        <div>
+                            <label className="form-label">{t('driver_dashboard.color')}</label>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <input
+                                    type="text"
+                                    value={motoInfo.color_moto || ''}
+                                    onChange={e => setMotoInfo({ ...motoInfo, color_moto: e.target.value })}
+                                    className="mtx-input"
+                                />
                                 {motoInfo.color_moto && (
-                                    <div style={{ width: '1.5rem', height: '1.5rem', borderRadius: '50%', backgroundColor: motoInfo.color_moto, border: '2px solid white', boxShadow: 'var(--shadow-sm)' }}></div>
+                                    <div style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '0.5rem',
+                                        backgroundColor: motoInfo.color_moto,
+                                        border: '1px solid var(--border-color)',
+                                        flexShrink: 0
+                                    }}></div>
                                 )}
                             </div>
                         </div>

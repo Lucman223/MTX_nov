@@ -113,4 +113,41 @@ class MotoristaController extends Controller
             'nuevo_saldo' => $perfil->billetera,
         ]);
     }
+
+    /**
+     * Get transaction history for current motorista
+     */
+    public function getTransactions() {
+        $user = auth()->user();
+        $transactions = \App\Models\Transaccion::where('usuario_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get();
+            
+        return response()->json($transactions);
+    }
+
+    /**
+     * [ES] Actualiza la información específica del motorista (vehículo).
+     */
+    public function updateMotoristaProfile(Request $request)
+    {
+        $user = auth()->user();
+        $perfil = \App\Models\MotoristaPerfil::where('usuario_id', $user->id)->firstOrFail();
+
+        $validated = $request->validate([
+            'marca_vehiculo' => 'sometimes|string|max:255',
+            'matricula'      => 'sometimes|string|max:255|unique:motoristas_perfiles,matricula,' . $perfil->id,
+            'modelo_moto'    => 'sometimes|string|max:255',
+            'anio_moto'      => 'sometimes|string|max:4',
+            'color_moto'     => 'sometimes|string|max:50',
+        ]);
+
+        $perfil->update($validated);
+
+        return response()->json([
+            'message' => 'Perfil de motorista actualizado correctamente',
+            'perfil'  => $perfil
+        ]);
+    }
 }

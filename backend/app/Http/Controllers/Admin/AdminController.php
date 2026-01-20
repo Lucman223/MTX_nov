@@ -274,8 +274,9 @@ class AdminController extends Controller
         $recentUsers = User::latest()->take(3)->get()->map(function($u) {
             return [
                 'type' => 'user',
-                'text' => "Nuevo usuario: {$u->name} ({$u->rol})",
-                'time' => $u->created_at->diffForHumans(),
+                'key' => 'admin_dashboard.activity.new_user',
+                'params' => ['name' => $u->name, 'role' => $u->rol],
+                'time' => $u->created_at->toISOString(),
                 'color' => '#10b981' // Green
             ];
         });
@@ -283,8 +284,9 @@ class AdminController extends Controller
         $recentTrips = Viaje::latest()->take(3)->get()->map(function($t) {
             return [
                 'type' => 'trip',
-                'text' => "Nuevo viaje: {$t->origen} -> {$t->destino}",
-                'time' => $t->created_at->diffForHumans(),
+                'key' => 'admin_dashboard.activity.new_trip',
+                'params' => ['origin' => $t->origen, 'destination' => $t->destino],
+                'time' => $t->created_at->toISOString(),
                 'color' => '#2563eb' // Blue
             ];
         });
@@ -292,17 +294,18 @@ class AdminController extends Controller
         $recentSales = \App\Models\ClienteForfait::with('forfait')->latest()->take(3)->get()->map(function($s) {
             return [
                 'type' => 'sale',
-                'text' => "Venta: " . ($s->forfait->nombre ?? 'Forfait'),
-                'time' => $s->created_at->diffForHumans(),
+                'key' => 'admin_dashboard.activity.sale',
+                'params' => ['name' => $s->forfait->nombre ?? 'Forfait'],
+                'time' => $s->created_at->toISOString(),
                 'color' => '#f59e0b' // Amber
             ];
         });
 
-        // Merge and sort by time
+        // Merge and sort by raw time first
         $recentActivity = $recentUsers->concat($recentTrips)->concat($recentSales)
-            ->sortByDesc(function($item) {
-                return $item['time'];
-            })->values()->take(5);
+            ->sortByDesc('time')
+            ->values()
+            ->take(5);
 
         return response()->json([
             'totalMotoristas' => $totalMotoristas,

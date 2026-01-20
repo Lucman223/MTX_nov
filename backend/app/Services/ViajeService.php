@@ -10,7 +10,7 @@ use App\Models\MotoristaPerfil;
 
 class ViajeService
 {
-    public function solicitarViaje(User $user, float $origen_lat, float $origen_lng, ?float $destino_lat = null, ?float $destino_lng = null): Viaje
+    public function solicitarViaje(User $user, float $origen_lat, float $origen_lng, ?float $destino_lat = null, ?float $destino_lng = null, ?string $origen = null, ?string $destino = null): Viaje
     {
         // Check for Forfait
         $clienteForfait = ClienteForfait::where('cliente_id', $user->id)
@@ -30,6 +30,8 @@ class ViajeService
             'origen_lng' => $origen_lng,
             'destino_lat' => $destino_lat,
             'destino_lng' => $destino_lng,
+            'origen' => $origen,
+            'destino' => $destino,
             'estado' => 'solicitado',
         ]);
 

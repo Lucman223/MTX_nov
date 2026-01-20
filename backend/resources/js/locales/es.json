@@ -23,7 +23,43 @@
         "withdraw_btn": "Retirar Ganancias",
         "withdraw_success": "Retiro procesado con éxito",
         "insufficient_funds": "Saldo insuficiente",
-        "payout_daily_desc": "Ganancias listas para retirar (Hoy)"
+        "payout_daily_desc": "Ganancias listas para retirar (Hoy)",
+        "trips_today": "Viajes (Hoy)",
+        "savings": "Ahorro",
+        "subscriptions": "Suscripciones",
+        "access_blocked": "Acceso Bloqueado",
+        "blocked_desc": "No tienes viajes de prueba restantes ni suscripción activa.",
+        "current_status": "Estado Actual",
+        "account_status": "Estado Cuenta",
+        "enabled": "✅ Habilitado",
+        "blocked": "❌ Bloqueado",
+        "trial_remaining": "Prueba Restante",
+        "none": "Ninguna",
+        "expires_on": "Vence el",
+        "available_plans": "Planes Disponibles",
+        "validity": "Validez",
+        "days": "días",
+        "feature_24h": "Acceso 24h a plataforma",
+        "feature_unlimited": "Recepción de viajes ilimitada",
+        "feature_priority": "Prioridad en asignación",
+        "processing": "Procesando...",
+        "current_plan": "Plan Actual",
+        "activate_plan": "Activar Plan",
+        "finance_title": "Historial Financiero",
+        "balance_available": "Saldo Disponible",
+        "recent_transactions": "Transacciones Recientes",
+        "withdrawal": "Retiro de Efectivo",
+        "income": "Ingresos de Viaje",
+        "no_transactions": "No hay transacciones registradas.",
+        "view_finances": "Ver Finanzas",
+        "rating_modal": {
+            "title": "Calificar al Cliente",
+            "placeholder": "Comentario opcional...",
+            "cancel": "Cancelar",
+            "submit": "Enviar y Finalizar",
+            "success": "Viaje completado y cliente calificado",
+            "error": "Error al completar el viaje"
+        }
     },
     "common": {
         "login": "Iniciar Sesión",
@@ -33,7 +69,13 @@
         "password": "Contraseña",
         "submit": "Enviar",
         "back_home": "← Volver al inicio",
-        "loading": "Cargando..."
+        "loading": "Cargando...",
+        "back": "Volver",
+        "success": "Éxito",
+        "error": "Error",
+        "edit": "Editar",
+        "refresh": "Actualizar",
+        "date_locale": "es-ES"
     },
     "auth": {
         "welcome_title": "Bienvenido a MotoTX",
@@ -88,23 +130,28 @@
         "limit_exceeded": "Límite Excedido",
         "invalid_trip": "Viaje no permitido",
         "limit": "Límite",
-        "need_premium_pack": "Este trayecto supera los KM de tu paquete Urbano. ¡Prueba el Pack Transversale!"
+        "need_premium_pack": "Este trayecto supera los KM de tu paquete Urbano. ¡Prueba el Pack Transversale!",
+        "tap_map_instruction": "También puedes tocar directamente en el mapa para marcar los puntos.",
+        "request_trip": "Solicitar Viaje",
+        "your_rating": "Tu Calificación",
+        "rate_trip": "Calificar Viaje"
     },
     "client_forfaits": {
         "title": "Comprar Forfaits",
-        "payment_title": "Pago con Orange Money",
-        "phone_label": "Número de Teléfono",
-        "phone_hint": "Ingrese un número válido (mín 8 dígitos)",
-        "debit_warning": "Se debitarán <strong>{{amount}} CFA</strong> de su cuenta.",
-        "waiting": "Esperando confirmación...",
-        "processing": "Procesando Pago...",
-        "pay_btn": "Pagar {{amount}} CFA",
-        "payment_error": "Error al iniciar pago",
-        "timeout_error": "Tiempo agotado. Verifique su SMS.",
-        "purchase_success": "¡Compra exitosa!",
+        "subtitle": "Elige el paquete que mejor se adapte a ti",
         "trips_count": "{{count}} viajes",
-        "default_desc": "La mejor opción",
-        "selected": "Seleccionado"
+        "default_desc": "Acceso a viajes ilimitados dentro del radio urbano",
+        "payment_title": "Pago Seguro con OM",
+        "phone_label": "Número Orange Money",
+        "phone_placeholder": "Ej: 771234567",
+        "debit_warning": "Se debitarán <strong>{{amount}} CFA</strong> de su cuenta.",
+        "pay_btn": "Pagar {{amount}} CFA",
+        "processing": "Procesando pago...",
+        "waiting": "Por favor, espera la confirmación en tu móvil...",
+        "purchase_success": "¡Compra realizada con éxito!",
+        "payment_error": "Error al procesar el pago",
+        "timeout_error": "Tiempo de espera agotado. Verifica tu saldo.",
+        "selected": "SELECCIONADO"
     },
     "admin_dashboard": {
         "welcome": "Bienvenido, {{name}} 👋",
@@ -114,10 +161,13 @@
             "drivers": "Total Motoristas",
             "drivers_pending": "{{count}} pendientes",
             "trips_today": "Viajes Hoy",
-            "trips_total": "{{count}} totales",
+            "trips_total": "Viajes Totales",
             "income": "Ingresos del Mes",
             "forfaits_sold": "Forfaits vendidos",
-            "active_users": "Usuarios Activos"
+            "active_users": "Usuarios Activos",
+            "vs_last_month": "vs mes anterior",
+            "average_rating": "Rating Promedio",
+            "distribution": "Distribución por Estados"
         },
         "actions": {
             "title": "Acciones Rápidas",
@@ -128,12 +178,124 @@
             "manage_forfaits": "Ver Forfaits",
             "manage_forfaits_desc": "Administrar paquetes y precios",
             "reports": "Reportes",
-            "reports_desc": "Estadísticas y análisis"
+            "reports_desc": "Estadísticas y análisis",
+            "export_pdf": "Exportar PDF",
+            "coming_soon": "(Próximamente)"
         },
         "activity": {
             "title": "Actividad Reciente",
-            "empty": "No hay actividad reciente."
+            "empty": "No hay actividad reciente.",
+            "new_user": "Nuevo usuario: {{name}} ({{role}})",
+            "new_trip": "Nuevo viaje: {{origin}} -> {{destination}}",
+            "sale": "Venta: {{name}}"
+        },
+        "viajes": {
+            "title": "Historial Global de Viajes",
+            "title_mobile": "Historial Viajes",
+            "filter_all": "Todos los estados",
+            "empty": "No hay viajes en esta categoría",
+            "table": {
+                "id": "ID",
+                "date": "Fecha",
+                "client": "Cliente",
+                "driver": "Motorista",
+                "routes": "Origen / Destino",
+                "status": "Estado",
+                "fare": "Tarifa"
+            }
+        },
+        "charts": {
+            "income_title": "📈 Ingresos (Últimos 30 días)",
+            "trips_title": "🚀 Viajes (Últimos 30 días)",
+            "no_data": "No hay datos históricos disponibles",
+            "income_legend": "Ingresos"
+        },
+        "motoristas": {
+            "title": "Gestión de Motoristas",
+            "table": {
+                "name": "Nombre",
+                "vehicle": "Vehículo",
+                "registration": "Registro",
+                "status": "Estado",
+                "actions": "Acciones"
+            },
+            "actions": {
+                "approve": "Aprobar",
+                "reject": "Rechazar"
+            },
+            "info": {
+                "vehicle": "Vehículo",
+                "plate": "Matrícula"
+            }
+        },
+        "clients": {
+            "title": "Gestión de Clientes",
+            "empty": "No hay clientes registrados en la plataforma.",
+            "delete_confirm": "¿Estás seguro de eliminar al cliente {{name}}? Esta acción es irreversible.",
+            "delete_success": "Cliente eliminado correctamente",
+            "table": {
+                "name": "Nombre",
+                "contact": "Email / Contacto",
+                "registration": "Registrado",
+                "actions": "Acciones"
+            },
+            "actions": {
+                "delete": "Eliminar"
+            }
+        },
+        "forfaits": {
+            "title": "Gestión de Forfaits",
+            "subtitle": "Administra los paquetes de viajes disponibles para los clientes.",
+            "new_btn": "+ Nuevo Forfait",
+            "delete_confirm": "¿Estás seguro de eliminar el forfait {{name}}?",
+            "save_success": "Forfait guardado correctamente",
+            "table": {
+                "name": "Nombre",
+                "price": "Precio",
+                "trips": "Viajes",
+                "distance": "Distancia Máx.",
+                "actions": "Acciones"
+            },
+            "modal": {
+                "title_create": "Crear Nuevo Forfait",
+                "title_edit": "Editar Forfait",
+                "label_name": "Nombre del Paquete",
+                "label_price": "Precio (CFA)",
+                "label_trips": "Número de Viajes",
+                "label_days": "Días de Validez",
+                "label_distance": "Distancia Máxima (km)",
+                "label_status": "Estado",
+                "label_description": "Descripción",
+                "save": "Guardar Forfait",
+                "cancel": "Cancelar"
+            }
         }
+    },
+    "rating_modal": {
+        "title": "Calificar Viaje",
+        "question": "¿Cómo fue tu experiencia con {{name}}?",
+        "comment_label": "Comentario (opcional)",
+        "comment_placeholder": "Cuéntanos más sobre tu experiencia...",
+        "select_rating": "Selecciona una calificación",
+        "bad_1": "Muy malo",
+        "bad_2": "Malo",
+        "regular": "Regular",
+        "good": "Bueno",
+        "excellent": "Excelente",
+        "submit": "Enviar Calificación",
+        "submitting": "Enviando...",
+        "success": "¡Calificación enviada con éxito!",
+        "error": "Error al enviar la calificación"
+    },
+    "status": {
+        "solicitado": "Solicitado",
+        "aceptado": "Aceptado",
+        "en_curso": "En curso",
+        "completado": "Completado",
+        "cancelado": "Cancelado",
+        "pendiente": "Pendiente",
+        "aprobado": "Aprobado",
+        "rechazado": "Rechazado"
     },
     "landing": {
         "hero_title": "Tu Solución de Transporte en Bamako",
@@ -163,5 +325,36 @@
         "footer_desc": "Plataforma de Gestión de Forfaits para Mototaxi en Bamako",
         "footer_copyright": "© 2025 MotoTX - Desarrollado con ❤️ para mejorar el transporte en Mali",
         "privacy_policy": "Política de Privacidad"
+    },
+    "plans": {
+        "Diario": "Diario",
+        "Semanal": "Semanal",
+        "Mensual VIP": "Mensual VIP",
+        "desc_diario": "Acceso total por 24 horas",
+        "desc_semanal": "Ahorra con el plan semanal",
+        "desc_mensual": "Acceso premium y prioridad"
+    },
+    "client_profile": {
+        "personal_info": "Información Personal",
+        "manage_desc": "Gestiona tu cuenta y forfaits",
+        "saving": "Guardando...",
+        "save_changes": "Guardar Cambios",
+        "danger_zone": "Zona de Peligro",
+        "delete_account": "Eliminar Cuenta",
+        "delete_confirm": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.",
+        "delete_contact": "Por favor contacta a soporte@mototx.ml para eliminar tu cuenta permanentemente por seguridad.",
+        "my_forfaits": "Mis Forfaits",
+        "buy_more": "Comprar Más",
+        "no_forfaits": "No tienes forfaits activos.",
+        "trips_remaining": "Viajes restantes",
+        "active_forfait": "Forfait Activo",
+        "purchase_history": "Historial de Compras",
+        "date": "Fecha",
+        "plan": "Plan",
+        "price": "Precio",
+        "no_history": "No hay historial disponible.",
+        "update_success": "Perfil actualizado",
+        "update_error": "Error al actualizar",
+        "loading_error": "Error al cargar datos"
     }
 }

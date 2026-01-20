@@ -23,7 +23,41 @@
         "withdraw_btn": "Withdraw Earnings",
         "withdraw_success": "Withdrawal processed successfully",
         "insufficient_funds": "Insufficient balance",
-        "payout_daily_desc": "Earnings ready to withdraw (Today)"
+        "payout_daily_desc": "Earnings ready (Today)",
+        "trips_today": "Trips (Today)",
+        "savings": "Savings",
+        "subscriptions": "Subscriptions",
+        "current_status": "Current Status",
+        "account_status": "Account Status",
+        "enabled": "✅ Enabled",
+        "blocked": "❌ Blocked",
+        "trial_remaining": "Trial Remaining",
+        "none": "None",
+        "expires_on": "Expires on",
+        "available_plans": "Available Plans",
+        "validity": "Validity",
+        "days": "days",
+        "feature_24h": "24h Platform Access",
+        "feature_unlimited": "Unlimited Trip Requests",
+        "feature_priority": "Priority Assignment",
+        "processing": "Processing...",
+        "current_plan": "Current Plan",
+        "activate_plan": "Activate Plan",
+        "finance_title": "Financial History",
+        "balance_available": "Available Balance",
+        "recent_transactions": "Recent Transactions",
+        "withdrawal": "Cash Withdrawal",
+        "income": "Trip Income",
+        "no_transactions": "No registered transactions.",
+        "view_finances": "View Finances",
+        "rating_modal": {
+            "title": "Rate the Client",
+            "placeholder": "Optional comment...",
+            "cancel": "Cancel",
+            "submit": "Send and Finish",
+            "success": "Trip completed and client rated",
+            "error": "Error completing trip"
+        }
     },
     "common": {
         "login": "Login",
@@ -33,7 +67,13 @@
         "password": "Password",
         "submit": "Submit",
         "back_home": "← Back to Home",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "back": "Back",
+        "success": "Success",
+        "error": "Error",
+        "edit": "Edit",
+        "refresh": "Refresh",
+        "date_locale": "en-US"
     },
     "auth": {
         "welcome_title": "Welcome to MotoTX",
@@ -53,6 +93,150 @@
     },
     "seo": {
         "default_description": "Reliable and fast transport in Bamako. Secure motorcycle taxis."
+    },
+    "admin_dashboard": {
+        "welcome": "Welcome, {{name}} 👋",
+        "summary": "Here is a summary of the platform activity",
+        "loading": "Loading statistics...",
+        "stats": {
+            "drivers": "Total Drivers",
+            "drivers_pending": "{{count}} pending",
+            "trips_today": "Trips Today",
+            "trips_total": "Total Trips",
+            "income": "Monthly Income",
+            "forfaits_sold": "Forfaits sold",
+            "active_users": "Active Users",
+            "vs_last_month": "vs last month",
+            "average_rating": "Average Rating",
+            "distribution": "Trips by Status"
+        },
+        "actions": {
+            "title": "Quick Actions",
+            "manage_drivers": "Manage Drivers",
+            "manage_drivers_desc": "Approve, reject and manage drivers",
+            "manage_clients": "Manage Clients",
+            "manage_clients_desc": "View registered users list",
+            "manage_forfaits": "View Forfaits",
+            "manage_forfaits_desc": "Manage packs and prices",
+            "reports": "Reports",
+            "reports_desc": "Stats and analysis",
+            "export_pdf": "Export PDF",
+            "coming_soon": "(Coming Soon)"
+        },
+        "activity": {
+            "title": "Recent Activity",
+            "empty": "No recent activity.",
+            "new_user": "New user: {{name}} ({{role}})",
+            "new_trip": "New trip: {{origin}} -> {{destination}}",
+            "sale": "Sale: {{name}}"
+        },
+        "viajes": {
+            "title": "Global Trip History",
+            "title_mobile": "Trip History",
+            "filter_all": "All statuses",
+            "empty": "No trips in this category",
+            "table": {
+                "id": "ID",
+                "date": "Date",
+                "client": "Client",
+                "driver": "Driver",
+                "routes": "Origin / Destination",
+                "status": "Status",
+                "fare": "Fare"
+            }
+        },
+        "charts": {
+            "income_title": "📈 Income (Last 30 days)",
+            "trips_title": "🚀 Trips (Last 30 days)",
+            "no_data": "No historical data available",
+            "income_legend": "Income"
+        },
+        "motoristas": {
+            "title": "Driver Management",
+            "table": {
+                "name": "Name",
+                "vehicle": "Vehicle",
+                "registration": "Registration",
+                "status": "Status",
+                "actions": "Actions"
+            },
+            "actions": {
+                "approve": "Approve",
+                "reject": "Reject"
+            },
+            "info": {
+                "vehicle": "Vehicle",
+                "plate": "Plate"
+            }
+        },
+        "clients": {
+            "title": "Client Management",
+            "empty": "No registered clients on the platform.",
+            "delete_confirm": "Are you sure you want to delete client {{name}}? This action is irreversible.",
+            "delete_success": "Client deleted successfully",
+            "table": {
+                "name": "Name",
+                "contact": "Email / Contact",
+                "registration": "Registered",
+                "actions": "Actions"
+            },
+            "actions": {
+                "delete": "Delete"
+            }
+        },
+        "forfaits": {
+            "title": "Forfait Management",
+            "subtitle": "Manage trip packages available for clients.",
+            "new_btn": "+ New Forfait",
+            "delete_confirm": "Are you sure you want to delete forfait {{name}}?",
+            "save_success": "Forfait saved successfully",
+            "table": {
+                "name": "Name",
+                "price": "Price",
+                "trips": "Trips",
+                "distance": "Max Distance",
+                "actions": "Actions"
+            },
+            "modal": {
+                "title_create": "Create New Forfait",
+                "title_edit": "Edit Forfait",
+                "label_name": "Package Name",
+                "label_price": "Price (CFA)",
+                "label_trips": "Number of Trips",
+                "label_days": "Validity Period (Days)",
+                "label_status": "Status",
+                "label_distance": "Max Distance (km)",
+                "label_description": "Description",
+                "save": "Save Forfait",
+                "cancel": "Cancel"
+            }
+        }
+    },
+    "rating_modal": {
+        "title": "Rate Trip",
+        "question": "How was your experience with {{name}}?",
+        "comment_label": "Comment (optional)",
+        "comment_placeholder": "Tell us more about your experience...",
+        "select_rating": "Select a rating",
+        "bad_1": "Very bad",
+        "bad_2": "Bad",
+        "regular": "Regular",
+        "good": "Good",
+        "excellent": "Excellent",
+        "submit": "Submit Rating",
+        "submitting": "Submitting...",
+        "success": "Rating submitted successfully!",
+        "error": "Error submitting rating"
+    },
+    "status": {
+        "solicitado": "Requested",
+        "aceptado": "Accepted",
+        "en_curso": "In progress",
+        "completado": "Completed",
+        "cancelado": "Cancelled",
+        "pendiente": "Pending",
+        "aprobado": "Approved",
+        "rechazado": "Rejected"
     },
     "nav": {
         "admin_title": "MotoTX Admin",
@@ -80,23 +264,36 @@
         "driver": "Driver",
         "history": "📋 History",
         "profile": "👤 Profile",
-        "trips_badge": "{{count}} trips"
+        "trips_badge": "{{count}} trips",
+        "trip_details": "Trip Details",
+        "trip_cost": "Trip Credit",
+        "forfait_applied": "Forfait Applied",
+        "limit_exceeded": "Limit Exceeded",
+        "invalid_trip": "Invalid Trip Selection",
+        "limit": "Limit",
+        "need_premium_pack": "This trip exceeds your Urban pack KM. Try the Transversale Pack!",
+        "tap_map_instruction": "You can also tap directly on the map to mark points.",
+        "request_trip": "Request Trip",
+        "your_rating": "Your Rating",
+        "rate_trip": "Rate Trip"
     },
     "client_forfaits": {
         "title": "Buy Forfaits",
-        "payment_title": "Payment with Orange Money",
-        "phone_label": "Phone Number",
-        "phone_hint": "Enter a valid number (min 8 digits)",
-        "debit_warning": "<strong>{{amount}} CFA</strong> will be debited from your account.",
-        "waiting": "Waiting for confirmation...",
-        "processing": "Processing Payment...",
-        "pay_btn": "Pay {{amount}} CFA",
-        "payment_error": "Error initiating payment",
-        "timeout_error": "Timeout. Check your SMS.",
-        "purchase_success": "Purchase successful!",
+        "subtitle": "Choose the pack that best suits you",
         "trips_count": "{{count}} trips",
-        "default_desc": "Best value pack",
-        "selected": "Selected"
+        "default_desc": "Unlimited trips within the urban radius",
+        "payment_title": "Secure Payment with OM",
+        "phone_label": "Orange Money Number",
+        "phone_placeholder": "Ex: 771234567",
+        "debit_warning": "<strong>{{amount}} CFA</strong> will be debited from your account.",
+        "pay_btn": "Pay {{amount}} CFA",
+        "processing": "Processing payment...",
+        "waiting": "Please wait for confirmation on your phone...",
+        "purchase_success": "Purchase successful!",
+        "payment_error": "Payment processing error",
+        "timeout_error": "Timeout. Please check your balance.",
+        "selected": "SELECTED",
+        "back": "Back"
     },
     "landing": {
         "hero_title": "Your Transport Solution in Bamako",
@@ -126,5 +323,36 @@
         "footer_desc": "Forfait Management Platform for Mototaxi in Bamako",
         "footer_copyright": "© 2025 MotoTX - Developed with ❤️ to improve transport in Mali",
         "privacy_policy": "Privacy Policy"
+    },
+    "plans": {
+        "Diario": "Daily",
+        "Semanal": "Weekly",
+        "Mensual VIP": "Monthly VIP",
+        "desc_diario": "Full access for 24 hours",
+        "desc_semanal": "Save with the weekly plan",
+        "desc_mensual": "Premium access and priority assignment"
+    },
+    "client_profile": {
+        "personal_info": "Personal Information",
+        "manage_desc": "Manage your account and forfaits",
+        "saving": "Saving...",
+        "save_changes": "Save Changes",
+        "danger_zone": "Danger Zone",
+        "delete_account": "Delete Account",
+        "delete_confirm": "Are you sure you want to delete your account? This action cannot be undone.",
+        "delete_contact": "Please contact support@mototx.ml to permanently delete your account for security.",
+        "my_forfaits": "My Forfaits",
+        "buy_more": "Buy More",
+        "no_forfaits": "No active forfaits.",
+        "trips_remaining": "Trips remaining",
+        "active_forfait": "Active Forfait",
+        "purchase_history": "Purchase History",
+        "date": "Date",
+        "plan": "Plan",
+        "price": "Price",
+        "no_history": "No history available.",
+        "update_success": "Profile updated",
+        "update_error": "Error updating",
+        "loading_error": "Error loading data"
     }
 }

@@ -39,10 +39,10 @@ const ClienteForfaits = () => {
             console.error('Error fetching forfaits:', error);
             if (forfaits.length === 0) {
                 setForfaits([
-                    { id: 1, nombre: 'Pack Prueba', precio: 2500, viajes_incluidos: 5, descripcion: 'Ideal para probar' },
-                    { id: 2, nombre: 'Pack Estándar', precio: 5000, viajes_incluidos: 10, descripcion: 'El más popular' },
-                    { id: 3, nombre: 'Pack Viajero', precio: 9000, viajes_incluidos: 20, descripcion: 'Para usuarios frecuentes' },
-                    { id: 4, nombre: 'Pack Pro', precio: 2000, viajes_incluidos: 50, descripcion: 'Máximo ahorro' }
+                    { id: 1, nombre: t('plans.Prueba', 'Pack Prueba'), precio: 2500, viajes_incluidos: 5, descripcion: t('plans.Prueba_desc', 'Ideal para probar') },
+                    { id: 2, nombre: t('plans.Estándar', 'Pack Estándar'), precio: 5000, viajes_incluidos: 10, descripcion: t('plans.Estándar_desc', 'El más popular') },
+                    { id: 3, nombre: t('plans.Viajero', 'Pack Viajero'), precio: 9000, viajes_incluidos: 20, descripcion: t('plans.Viajero_desc', 'Para usuarios frecuentes') },
+                    { id: 4, nombre: t('plans.Pro', 'Pack Pro'), precio: 20000, viajes_incluidos: 50, descripcion: t('plans.Pro_desc', 'Máximo ahorro') }
                 ]);
             }
         } finally {
@@ -127,14 +127,14 @@ const ClienteForfaits = () => {
 
             <header className="mtx-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <Button variant="ghost" onClick={() => navigate('/cliente')} label="Volver">
+                    <Button variant="ghost" onClick={() => navigate('/cliente')} label={t('client_forfaits.back')}>
                         ←
                     </Button>
                     <div>
                         <h1 className="header-title" style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: 0 }}>
                             {t('client_forfaits.title')}
                         </h1>
-                        <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.875rem' }}>Elige el paquete que mejor se adapte a ti</p>
+                        <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.875rem' }}>{t('client_forfaits.subtitle')}</p>
                     </div>
                 </div>
             </header>
@@ -162,10 +162,10 @@ const ClienteForfaits = () => {
                             >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
                                     <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-main)' }}>
-                                        {forfait.nombre}
+                                        {t(`plans.${forfait.nombre}`, forfait.nombre)}
                                     </h3>
                                     {selectedForfait?.id === forfait.id && (
-                                        <Badge variant="premium">SELECCIONADO</Badge>
+                                        <Badge variant="premium">{t('client_forfaits.selected')}</Badge>
                                     )}
                                 </div>
 
@@ -188,7 +188,7 @@ const ClienteForfaits = () => {
                                 </div>
 
                                 <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
-                                    {forfait.descripcion || t('client_forfaits.default_desc')}
+                                    {t(`plans.${forfait.nombre}_desc`, forfait.descripcion || t('client_forfaits.default_desc'))}
                                 </p>
                             </Card>
                         ))}
@@ -217,7 +217,7 @@ const ClienteForfaits = () => {
                                         type="text"
                                         value={phoneNumber}
                                         onChange={(e) => setPhoneNumber(e.target.value)}
-                                        placeholder="Ej: 771234567"
+                                        placeholder={t('client_forfaits.phone_placeholder')}
                                         className="mtx-input"
                                         style={{ paddingLeft: '3rem' }}
                                         required
@@ -271,3 +271,4 @@ const ClienteForfaits = () => {
 };
 
 export default ClienteForfaits;
+

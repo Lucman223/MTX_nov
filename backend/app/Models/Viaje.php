@@ -33,6 +33,8 @@ class Viaje extends Model
         'origen_lng',
         'destino_lat',
         'destino_lng',
+        'origen', // [NEW] Address text
+        'destino', // [NEW] Address text
         'estado',
         'fecha_solicitud',
         'fecha_fin',

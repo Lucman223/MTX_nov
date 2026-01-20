@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 const RatingModal = ({ tripId, motoristaName, onClose, onSuccess }) => {
+    const { t } = useTranslation();
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
     const [comentario, setComentario] = useState('');
@@ -16,7 +19,7 @@ const RatingModal = ({ tripId, motoristaName, onClose, onSuccess }) => {
 
     const handleSubmit = async () => {
         if (rating === 0) {
-            alert('Por favor selecciona una calificación');
+            toast.error(t('rating_modal.select_rating'));
             return;
         }
 
@@ -27,13 +30,13 @@ const RatingModal = ({ tripId, motoristaName, onClose, onSuccess }) => {
                 comentario: comentario || null
             });
 
-            alert('¡Calificación enviada con éxito!');
+            toast.success(t('rating_modal.success'));
             onSuccess();
             onClose();
         } catch (error) {
             console.error('Error submitting rating:', error);
-            const msg = error.response?.data?.error || 'Error al enviar la calificación';
-            alert(msg);
+            const msg = error.response?.data?.error || t('rating_modal.error');
+            toast.error(msg);
         } finally {
             setSubmitting(false);
         }
@@ -62,10 +65,10 @@ const RatingModal = ({ tripId, motoristaName, onClose, onSuccess }) => {
                 boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
             }}>
                 <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1rem' }}>
-                    Calificar Viaje
+                    {t('rating_modal.title')}
                 </h2>
                 <p style={{ color: '#6b7280', marginBottom: '2rem' }}>
-                    ¿Cómo fue tu experiencia con <strong>{motoristaName}</strong>?
+                    {t('rating_modal.question', { name: motoristaName })}
                 </p>
 
                 {/* Star Rating */}
@@ -90,24 +93,24 @@ const RatingModal = ({ tripId, motoristaName, onClose, onSuccess }) => {
                         ))}
                     </div>
                     <div style={{ marginTop: '0.5rem', color: '#6b7280', fontSize: '0.875rem' }}>
-                        {rating === 0 && 'Selecciona una calificación'}
-                        {rating === 1 && 'Muy malo'}
-                        {rating === 2 && 'Malo'}
-                        {rating === 3 && 'Regular'}
-                        {rating === 4 && 'Bueno'}
-                        {rating === 5 && 'Excelente'}
+                        {rating === 0 && t('rating_modal.select_rating')}
+                        {rating === 1 && t('rating_modal.bad_1')}
+                        {rating === 2 && t('rating_modal.bad_2')}
+                        {rating === 3 && t('rating_modal.regular')}
+                        {rating === 4 && t('rating_modal.good')}
+                        {rating === 5 && t('rating_modal.excellent')}
                     </div>
                 </div>
 
                 {/* Comment */}
                 <div style={{ marginBottom: '2rem' }}>
                     <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#374151' }}>
-                        Comentario (opcional)
+                        {t('rating_modal.comment_label')}
                     </label>
                     <textarea
                         value={comentario}
                         onChange={(e) => setComentario(e.target.value)}
-                        placeholder="Cuéntanos más sobre tu experiencia..."
+                        placeholder={t('rating_modal.comment_placeholder')}
                         maxLength={500}
                         style={{
                             width: '100%',
@@ -155,7 +158,7 @@ const RatingModal = ({ tripId, motoristaName, onClose, onSuccess }) => {
                             e.target.style.color = '#6b7280';
                         }}
                     >
-                        Cancelar
+                        {t('common.back')}
                     </button>
                     <button
                         onClick={handleSubmit}
@@ -183,7 +186,7 @@ const RatingModal = ({ tripId, motoristaName, onClose, onSuccess }) => {
                             e.target.style.boxShadow = (submitting || rating === 0) ? 'none' : `0 4px 12px ${colors.accent}40`;
                         }}
                     >
-                        {submitting ? 'Enviando...' : 'Enviar Calificación'}
+                        {submitting ? t('rating_modal.submitting') : t('rating_modal.submit')}
                     </button>
                 </div>
             </div>

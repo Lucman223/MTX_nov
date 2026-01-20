@@ -70,7 +70,9 @@ class ViajeController extends Controller
                 $request->origen_lat,
                 $request->origen_lng,
                 $request->destino_lat,
-                $request->destino_lng
+                $request->destino_lng,
+                $request->origen,   // [NEW]
+                $request->destino   // [NEW]
             );
 
             // Broadcast new trip request to motoristas
@@ -157,6 +159,7 @@ class ViajeController extends Controller
         // Only return trips that are 'solicitado' and have no motorista assigned yet
         $solicitedTrips = Viaje::where('estado', 'solicitado')
                                ->whereNull('motorista_id')
+                               ->with(['cliente'])
                                ->orderBy('created_at', 'desc')
                                ->get();
 

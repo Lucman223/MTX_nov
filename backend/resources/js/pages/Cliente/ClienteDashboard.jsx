@@ -95,15 +95,17 @@ const ClienteDashboard = () => {
                 origen_lat: origen[0],
                 origen_lng: origen[1],
                 destino_lat: destino[0],
-                destino_lng: destino[1]
+                destino_lng: destino[1],
+                origen: addressOrigen,
+                destino: addressDestino
             });
 
-            alert('¡Viaje solicitado con éxito! Un motorista aceptará pronto.');
-            setActiveTrip(response.data.data); // Set immediate state
+            toast.success(t('auth.trip_requested_success', '¡Viaje solicitado con éxito!'));
+            setActiveTrip(response.data.data);
         } catch (error) {
             console.error('Error al solicitar viaje:', error);
-            const msg = error.response?.data?.error || error.response?.data?.message || 'Error al conectar con el servidor';
-            alert(`Error: ${msg} `);
+            const msg = error.response?.data?.error || error.response?.data?.message || t('common.error');
+            toast.error(`${t('common.error')}: ${msg}`);
         }
     };
 
@@ -133,6 +135,39 @@ const ClienteDashboard = () => {
         return { distance: distance.toFixed(1), time: Math.max(2, time) };
     };
 
+    // Reverse Geocoding Function
+    const reverseGeocode = async (coords, type) => {
+        if (!coords) return;
+        if (type === 'origen') setAddressOrigen('Buscando...');
+        if (type === 'destino') setAddressDestino('Buscando...');
+
+        try {
+            const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords[0]}&lon=${coords[1]}`);
+            if (res.data && res.data.display_name) {
+                // Keep it short: first 2 parts
+                const shortName = res.data.display_name.split(',').slice(0, 2).join(',');
+                if (type === 'origen') setAddressOrigen(shortName);
+                if (type === 'destino') setAddressDestino(shortName);
+            } else {
+                if (type === 'origen') setAddressOrigen(`${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
+                if (type === 'destino') setAddressDestino(`${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
+            }
+        } catch (error) {
+            console.error("Reverse geocoding failed", error);
+            if (type === 'origen') setAddressOrigen(`${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
+            if (type === 'destino') setAddressDestino(`${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
+        }
+    };
+
+    // Auto-fetch address on coordinate change (debounced 1s could be better but direct for now)
+    useEffect(() => {
+        if (origen) reverseGeocode(origen, 'origen');
+    }, [origen]);
+
+    useEffect(() => {
+        if (destino) reverseGeocode(destino, 'destino');
+    }, [destino]);
+
     useEffect(() => {
         if (origen && destino) {
             const metrics = getMetrics(origen, destino);
@@ -145,6 +180,14 @@ const ClienteDashboard = () => {
             }
         }
     }, [origen, destino, maxDistance]);
+
+    // [ES] Cambio automático a destino tras marcar origen
+    // [FR] Changement automatique vers destination après avoir marqué l'origine
+    useEffect(() => {
+        if (origen && puntoActivo === 'origen') {
+            setPuntoActivo('destino');
+        }
+    }, [origen]);
 
     const handleAddressSearch = async (type) => {
         const query = type === 'origen' ? addressOrigen : addressDestino;
@@ -195,7 +238,7 @@ const ClienteDashboard = () => {
                     <div>
                         <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)', margin: 0 }}>MotoTX</h1>
                         <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                            {user?.name || 'Cliente'}
+                            {user?.email === 'cliente@test.com' ? t('auth.role_client') + ' (Demo)' : user?.name || t('auth.role_client')}
                         </span>
                     </div>
                 </div>
@@ -258,7 +301,7 @@ const ClienteDashboard = () => {
                         </h2>
 
                         <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem', fontStyle: 'italic' }}>
-                            💡 {t('client_dashboard.tap_map_instruction', 'También puedes tocar directamente en el mapa para marcar los puntos.')}
+                            💡 {t('client_dashboard.tap_map_instruction')}
                         </p>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>

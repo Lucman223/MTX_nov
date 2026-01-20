@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 /**
  * AdminViajes Component
@@ -13,10 +14,11 @@ import { useNavigate } from 'react-router-dom';
  *      Permet de filtrer par statut (en attente, en cours, terminé) et affiche les détails du client, du chauffeur et du tarif.
  */
 const AdminViajes = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [viajes, setViajes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('todos');
+    const [filter, setFilter] = useState('all');
 
     useEffect(() => {
         fetchViajes();
@@ -28,13 +30,14 @@ const AdminViajes = () => {
             setViajes(response.data);
         } catch (error) {
             console.error('Error loading viajes:', error);
-            toast.error('Error al cargar historial de viajes');
+            toast.error(t('common.error'));
         } finally {
             setLoading(false);
         }
     };
 
     const statusColors = {
+        solicitado: 'bg-yellow-100 text-yellow-800',
         pendiente: 'bg-yellow-100 text-yellow-800',
         aceptado: 'bg-blue-100 text-blue-800',
         en_curso: 'bg-purple-100 text-purple-800',
@@ -44,7 +47,7 @@ const AdminViajes = () => {
 
     const safeViajes = Array.isArray(viajes) ? viajes : Object.values(viajes || {});
 
-    const filteredViajes = filter === 'todos'
+    const filteredViajes = filter === 'all'
         ? safeViajes
         : safeViajes.filter(v => v.estado === filter);
 
@@ -59,32 +62,32 @@ const AdminViajes = () => {
     return (
         <div style={{ padding: isMobile ? '1rem' : '2rem', paddingBottom: isMobile ? '80px' : '2rem' }}>
             <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '1rem' : '0', marginBottom: '2rem' }}>
-                <h1 style={{ fontSize: isMobile ? '1.5rem' : '1.875rem', fontWeight: 'bold' }}>{isMobile ? 'Historial Viajes' : 'Historial Global de Viajes'}</h1>
+                <h1 style={{ fontSize: isMobile ? '1.5rem' : '1.875rem', fontWeight: 'bold' }}>{isMobile ? t('admin_dashboard.viajes.title_mobile') : t('admin_dashboard.viajes.title')}</h1>
                 <div style={{ display: 'flex', gap: '1rem', width: isMobile ? '100%' : 'auto', flexWrap: 'wrap' }}>
                     <select
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                         style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #d1d5db', flex: isMobile ? 1 : 'initial' }}
                     >
-                        <option value="todos">Todos los estados</option>
-                        <option value="pendiente">Pendientes</option>
-                        <option value="en_curso">En Curso</option>
-                        <option value="completado">Completados</option>
-                        <option value="cancelado">Cancelados</option>
+                        <option value="all">{t('admin_dashboard.viajes.filter_all')}</option>
+                        <option value="solicitado">{t('status.solicitado')}</option>
+                        <option value="en_curso">{t('status.en_curso')}</option>
+                        <option value="completado">{t('status.completado')}</option>
+                        <option value="cancelado">{t('status.cancelado')}</option>
                     </select>
                     {!isMobile && (
                         <button
                             onClick={() => navigate('/admin')}
                             style={{ padding: '0.5rem 1rem', background: '#e5e7eb', borderRadius: '0.5rem', fontWeight: '600' }}
                         >
-                            Volver
+                            {t('common.back')}
                         </button>
                     )}
                 </div>
             </div>
 
             {loading ? (
-                <div>Cargando...</div>
+                <div>{t('common.loading')}</div>
             ) : (
                 <>
                     {/* Desktop Table View */}
@@ -93,20 +96,20 @@ const AdminViajes = () => {
                             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                 <thead style={{ backgroundColor: '#f9fafb' }}>
                                     <tr>
-                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>ID</th>
-                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>Fecha</th>
-                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>Cliente</th>
-                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>Motorista</th>
-                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>Origen / Destino</th>
-                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>Estado</th>
-                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>Tarifa</th>
+                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>{t('admin_dashboard.viajes.table.id')}</th>
+                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>{t('admin_dashboard.viajes.table.date')}</th>
+                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>{t('admin_dashboard.viajes.table.client')}</th>
+                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>{t('admin_dashboard.viajes.table.driver')}</th>
+                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>{t('admin_dashboard.viajes.table.routes')}</th>
+                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>{t('admin_dashboard.viajes.table.status')}</th>
+                                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#6b7280' }}>{t('admin_dashboard.viajes.table.fare')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {filteredViajes.map((viaje) => (
                                         <tr key={viaje.id} style={{ borderTop: '1px solid #e5e7eb' }}>
                                             <td style={{ padding: '1rem' }}>#{viaje.id}</td>
-                                            <td style={{ padding: '1rem' }}>{new Date(viaje.created_at).toLocaleString()}</td>
+                                            <td style={{ padding: '1rem' }}>{new Date(viaje.created_at).toLocaleString(t('common.date_locale'))}</td>
                                             <td style={{ padding: '1rem' }}>{viaje.cliente?.name || 'N/A'}</td>
                                             <td style={{ padding: '1rem' }}>{viaje.motorista?.name || '-'}</td>
                                             <td style={{ padding: '1rem', maxWidth: '300px' }}>
@@ -115,7 +118,7 @@ const AdminViajes = () => {
                                             </td>
                                             <td style={{ padding: '1rem' }}>
                                                 <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${statusColors[viaje.estado] || 'bg-gray-100 text-gray-800'}`}>
-                                                    {viaje.estado}
+                                                    {t(`status.${viaje.estado}`)}
                                                 </span>
                                             </td>
                                             <td style={{ padding: '1rem', fontWeight: '600' }}>
@@ -142,21 +145,21 @@ const AdminViajes = () => {
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                                         <span style={{ fontWeight: 'bold', color: '#374151' }}>#{viaje.id}</span>
                                         <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${statusColors[viaje.estado] || 'bg-gray-100 text-gray-800'}`}>
-                                            {viaje.estado}
+                                            {t(`status.${viaje.estado}`)}
                                         </span>
                                     </div>
 
                                     <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>
-                                        {new Date(viaje.created_at).toLocaleString()}
+                                        {new Date(viaje.created_at).toLocaleString(t('common.date_locale'))}
                                     </div>
 
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '1rem', fontSize: '0.875rem' }}>
                                         <div>
-                                            <span style={{ fontWeight: '600', display: 'block' }}>Cliente:</span>
+                                            <span style={{ fontWeight: '600', display: 'block' }}>{t('admin_dashboard.viajes.table.client')}:</span>
                                             {viaje.cliente?.name || 'N/A'}
                                         </div>
                                         <div>
-                                            <span style={{ fontWeight: '600', display: 'block' }}>Motorista:</span>
+                                            <span style={{ fontWeight: '600', display: 'block' }}>{t('admin_dashboard.viajes.table.driver')}:</span>
                                             {viaje.motorista?.name || '-'}
                                         </div>
                                     </div>
@@ -178,7 +181,7 @@ const AdminViajes = () => {
                                 </div>
                             ))}
                             {filteredViajes.length === 0 && (
-                                <div className="text-center p-4 text-gray-500">No hay viajes en esta categoría</div>
+                                <div className="text-center p-4 text-gray-500">{t('admin_dashboard.viajes.empty')}</div>
                             )}
                         </div>
                     )}

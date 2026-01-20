@@ -27,6 +27,16 @@ const ClienteProfile = () => {
 
     const { t } = useTranslation();
 
+    // UI Color System (Internal)
+    const colors = {
+        primary: '#2563eb',
+        primaryHover: '#1d4ed8',
+        secondary: '#059669',
+        border: '#e5e7eb',
+        text: '#1f2937',
+        subtext: '#6b7280'
+    };
+
     useEffect(() => { fetchProfile(); }, []);
 
     const fetchProfile = async () => {
@@ -43,7 +53,7 @@ const ClienteProfile = () => {
             setForfaits(activeForfaits);
         } catch (error) {
             console.error('Error:', error);
-            toast.error('Error al cargar datos');
+            toast.error(t('client_profile.loading_error'));
         } finally {
             setLoading(false);
         }
@@ -54,9 +64,9 @@ const ClienteProfile = () => {
         setSaving(true);
         try {
             await axios.put('/api/auth/profile', formData);
-            toast.success('Perfil actualizado');
+            toast.success(t('client_profile.update_success'));
         } catch (error) {
-            toast.error('Error al actualizar');
+            toast.error(t('client_profile.update_error'));
         } finally {
             setSaving(false);
         }
@@ -85,19 +95,19 @@ const ClienteProfile = () => {
                         <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0, color: 'white' }}>
                             {t('client_dashboard.profile')}
                         </h1>
-                        <p style={{ margin: 0, opacity: 0.9, fontSize: '0.95rem' }}>Gestiona tu cuenta y forfaits</p>
+                        <p style={{ margin: 0, opacity: 0.9, fontSize: '0.95rem' }}>{t('client_profile.manage_desc')}</p>
                     </div>
                 </div>
                 <div className="desktop-nav">
                     <Button onClick={() => navigate('/cliente')} label="Dashboard">
-                        ← Dashboard
+                        ← {t('nav.dashboard')}
                     </Button>
                 </div>
             </header>
 
             {/* Mobile Bottom Nav */}
             <nav className="mobile-bottom-nav">
-                <Button variant="ghost" onClick={() => navigate('/cliente')} label="Dashboard">
+                <Button variant="ghost" onClick={() => navigate('/cliente')} label={t('nav.dashboard')}>
                     <span style={{ fontSize: '1.25rem' }}>🏠</span>
                     {t('nav.dashboard')}
                 </Button>
@@ -114,12 +124,12 @@ const ClienteProfile = () => {
             <main className="main-content-centered" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginTop: '-2rem' }}>
                 <Card className="profile-info-card">
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)' }}>
-                        Información Personal
+                        {t('client_profile.personal_info')}
                     </h2>
 
                     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.25rem' }}>
                         <div>
-                            <label className="form-label">Nombre</label>
+                            <label className="form-label">{t('common.name')}</label>
                             <input
                                 type="text"
                                 value={formData.name}
@@ -128,7 +138,7 @@ const ClienteProfile = () => {
                             />
                         </div>
                         <div>
-                            <label className="form-label">Email</label>
+                            <label className="form-label">{t('common.email')}</label>
                             <input
                                 type="email"
                                 value={formData.email}
@@ -137,7 +147,7 @@ const ClienteProfile = () => {
                             />
                         </div>
                         <div>
-                            <label className="form-label">Teléfono</label>
+                            <label className="form-label">{t('common.phone')}</label>
                             <input
                                 type="text"
                                 value={formData.telefono}
@@ -151,22 +161,22 @@ const ClienteProfile = () => {
                             disabled={saving}
                             className="w-full"
                         >
-                            {saving ? 'Guardando...' : 'Guardar Cambios'}
+                            {saving ? t('client_profile.saving') : t('client_profile.save_changes')}
                         </Button>
                     </form>
 
                     <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
-                        <h3 style={{ fontSize: '1rem', color: 'var(--error-color)', marginBottom: '0.5rem' }}>Zona de Peligro</h3>
+                        <h3 style={{ fontSize: '1rem', color: 'var(--error-color)', marginBottom: '0.5rem' }}>{t('client_profile.danger_zone')}</h3>
                         <Button
                             onClick={() => {
-                                if (window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-                                    toast.error('Por favor contacta a soporte@mototx.ml para eliminar tu cuenta permanentemente por seguridad.');
+                                if (window.confirm(t('client_profile.delete_confirm'))) {
+                                    toast.error(t('client_profile.delete_contact'));
                                 }
                             }}
                             variant="error"
                             className="w-full"
                         >
-                            Eliminar Cuenta
+                            {t('client_profile.delete_account')}
                         </Button>
                     </div>
                 </Card>
@@ -175,17 +185,17 @@ const ClienteProfile = () => {
                 <Card className="profile-forfaits-card" style={{ height: 'fit-content' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                         <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-main)' }}>
-                            💳 Mis Forfaits
+                            💳 {t('client_profile.my_forfaits')}
                         </h2>
-                        <Button variant="ghost" onClick={() => navigate('/cliente/forfaits')} label="Comprar Más">
-                            Comprar Más
+                        <Button variant="ghost" onClick={() => navigate('/cliente/forfaits')} label={t('client_profile.buy_more')}>
+                            {t('client_profile.buy_more')}
                         </Button>
                     </div>
 
                     {forfaits.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: '2rem', border: '2px dashed #e5e7eb', borderRadius: '1rem', color: colors.subtext }}>
                             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎫</div>
-                            No tienes forfaits activos.
+                            {t('client_profile.no_forfaits')}
                         </div>
                     ) : (
                         <div style={{ display: 'grid', gap: '1rem' }}>
@@ -200,15 +210,15 @@ const ClienteProfile = () => {
                                     overflow: 'hidden'
                                 }}>
                                     <div style={{ position: 'relative', zIndex: 1 }}>
-                                        <div style={{ fontSize: '0.75rem', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Forfait Activo</div>
+                                        <div style={{ fontSize: '0.75rem', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t('client_profile.active_forfait')}</div>
                                         <div style={{ fontSize: '2.5rem', fontWeight: '800', margin: '0.5rem 0' }}>
                                             {ff.viajes_restantes}
                                         </div>
                                         <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>
-                                            Viajes restantes
+                                            {t('client_profile.trips_remaining')}
                                         </div>
                                         <div style={{ marginTop: '1rem', fontSize: '0.8rem', opacity: 0.8, borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '0.5rem' }}>
-                                            Vence el: {new Date(ff.fecha_expiracion).toLocaleDateString()}
+                                            {t('driver_dashboard.expires_on')}: {new Date(ff.fecha_expiracion).toLocaleDateString()}
                                         </div>
                                     </div>
                                     <div style={{
@@ -230,24 +240,24 @@ const ClienteProfile = () => {
                 {/* Purchase History */}
                 <Card className="profile-history-card" style={{ gridColumn: '1 / -1' }}>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)' }}>
-                        📜 Historial de Compras
+                        📜 {t('client_profile.purchase_history')}
                     </h2>
 
                     <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                             <thead>
                                 <tr style={{ borderBottom: `2px solid ${colors.border}`, textAlign: 'left' }}>
-                                    <th style={{ padding: '1rem', color: colors.subtext }}>Fecha</th>
-                                    <th style={{ padding: '1rem', color: colors.subtext }}>Plan</th>
-                                    <th style={{ padding: '1rem', color: colors.subtext }}>Precio</th>
-                                    <th style={{ padding: '1rem', color: colors.subtext }}>Estado</th>
+                                    <th style={{ padding: '1rem', color: colors.subtext }}>{t('client_profile.date')}</th>
+                                    <th style={{ padding: '1rem', color: colors.subtext }}>{t('client_profile.plan')}</th>
+                                    <th style={{ padding: '1rem', color: colors.subtext }}>{t('client_profile.price')}</th>
+                                    <th style={{ padding: '1rem', color: colors.subtext }}>{t('client_dashboard.state')}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {forfaits.length === 0 ? (
                                     <tr>
                                         <td colSpan="4" style={{ padding: '2rem', textAlign: 'center', color: colors.subtext }}>
-                                            No hay historial disponible.
+                                            {t('client_profile.no_history')}
                                         </td>
                                     </tr>
                                 ) : (

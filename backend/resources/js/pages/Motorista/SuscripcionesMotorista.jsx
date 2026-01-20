@@ -40,7 +40,7 @@ const SuscripcionesMotorista = () => {
             setCurrentStatus(statusRes.data);
         } catch (error) {
             console.error('Error loading data:', error);
-            toast.error('Error al cargar planes');
+            toast.error(t('common.error'));
         } finally {
             setLoading(false);
         }
@@ -58,11 +58,11 @@ const SuscripcionesMotorista = () => {
                 phone_number: phone
             });
 
-            toast.success('¡Suscripción activada con éxito!');
+            toast.success(t('common.success'));
             fetchPlanesAndStatus(); // Refresh status
         } catch (error) {
             console.error('Error subscribing:', error);
-            toast.error('Error en el pago');
+            toast.error(t('common.error'));
         } finally {
             setProcessing(null);
         }
@@ -78,7 +78,7 @@ const SuscripcionesMotorista = () => {
 
             <header className="mtx-header driver-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <Button variant="ghost" onClick={() => navigate('/motorista')} label="Volver">
+                    <Button variant="ghost" onClick={() => navigate('/motorista')} label={t('common.back')}>
                         ←
                     </Button>
                     <div>
@@ -98,29 +98,29 @@ const SuscripcionesMotorista = () => {
                 )}
 
                 <Card style={{ marginBottom: '2rem' }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--text-main)' }}>Estado Actual</h2>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--text-main)' }}>{t('driver_dashboard.current_status')}</h2>
                     <div className="trip-details-grid">
                         <div>
-                            <div className="detail-label">Estado Cuenta</div>
+                            <div className="detail-label">{t('driver_dashboard.account_status')}</div>
                             <div style={{ fontSize: '1.125rem', fontWeight: 'bold', color: acceso_permitido ? 'var(--secondary-color)' : 'var(--error-color)' }}>
-                                {acceso_permitido ? '✅ Habilitado' : '❌ Bloqueado'}
+                                {acceso_permitido ? t('driver_dashboard.enabled') : t('driver_dashboard.blocked')}
                             </div>
                         </div>
                         <div>
-                            <div className="detail-label">Prueba Restante</div>
+                            <div className="detail-label">{t('driver_dashboard.trial_remaining')}</div>
                             <div className="detail-value">
-                                {viajes_prueba_restantes} viajes
+                                {viajes_prueba_restantes} {t('client_dashboard.trips_badge', { count: '' })}
                             </div>
                         </div>
                         <div>
-                            <div className="detail-label">Suscripción</div>
+                            <div className="detail-label">{t('driver_dashboard.subscriptions')}</div>
                             <div style={{ fontSize: '1.125rem', fontWeight: 'bold', color: suscripcion_activa ? 'var(--secondary-color)' : 'var(--text-muted)' }}>
-                                {suscripcion_activa ? activePlan?.nombre : 'Ninguna'}
+                                {suscripcion_activa ? activePlan?.nombre : t('driver_dashboard.none')}
                             </div>
                         </div>
                         {suscripcion_activa && (
                             <div>
-                                <div className="detail-label">Vence el</div>
+                                <div className="detail-label">{t('driver_dashboard.expires_on')}</div>
                                 <div className="detail-value">
                                     {new Date(fecha_fin).toLocaleDateString()}
                                 </div>
@@ -130,7 +130,7 @@ const SuscripcionesMotorista = () => {
                 </Card>
 
                 <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)' }}>
-                    Planes Disponibles
+                    {t('driver_dashboard.available_plans')}
                 </h2>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
@@ -144,17 +144,17 @@ const SuscripcionesMotorista = () => {
                                     VIP
                                 </Badge>
                             )}
-                            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem', color: 'var(--text-main)' }}>{plan.nombre}</h3>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem', color: 'var(--text-main)' }}>{t(`plans.${plan.nombre}`)}</h3>
                             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--secondary-color)', marginBottom: '0.5rem' }}>
                                 {plan.precio} CFA
                             </div>
                             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
-                                Validez: {plan.dias_validez} días
+                                {t('driver_dashboard.validity')}: {plan.dias_validez} {t('driver_dashboard.days')}
                             </p>
                             <ul style={{ listStyle: 'none', padding: 0, marginBottom: '2rem', color: 'var(--text-main)', fontSize: '0.9rem' }}>
-                                <li style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem' }}><span>✓</span> Acceso 24h a plataforma</li>
-                                <li style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem' }}><span>✓</span> Recepción de viajes ilimitada</li>
-                                {plan.es_vip && <li style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', fontWeight: 'bold', color: 'var(--accent-color)' }}><span>✓</span> Prioridad en asignación</li>}
+                                <li style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem' }}><span>✓</span> {t('driver_dashboard.feature_24h')}</li>
+                                <li style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem' }}><span>✓</span> {t('driver_dashboard.feature_unlimited')}</li>
+                                {plan.es_vip && <li style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', fontWeight: 'bold', color: 'var(--accent-color)' }}><span>✓</span> {t('driver_dashboard.feature_priority')}</li>}
                             </ul>
                             <Button
                                 variant={suscripcion_activa && activePlan?.id === plan.id ? 'primary' : 'outline'}
@@ -162,7 +162,7 @@ const SuscripcionesMotorista = () => {
                                 onClick={() => handleSubscribe(plan.id)}
                                 className="w-full"
                             >
-                                {processing === plan.id ? 'Procesando...' : (suscripcion_activa && activePlan?.id === plan.id ? 'Plan Actual' : 'Activar Plan')}
+                                {processing === plan.id ? t('driver_dashboard.processing') : (suscripcion_activa && activePlan?.id === plan.id ? t('driver_dashboard.current_plan') : t('driver_dashboard.activate_plan'))}
                             </Button>
                         </Card>
                     ))}

@@ -20,6 +20,8 @@ class Calificacion extends Model
         'viaje_id',
         'motorista_id',
         'cliente_id',
+        'calificador_id', // [NEW]
+        'calificado_id', // [NEW]
         'puntuacion',
         'comentario',
     ];
