@@ -27,4 +27,4 @@ cmds = [
 
 # 4. Start: Comando de arranque
 [start]
-cmd = "rm -f bootstrap/cache/*.php && php artisan optimize:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+cmd = "rm -f bootstrap/cache/*.php && php artisan optimize:clear && touch database/database.sqlite && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
