@@ -84,3 +84,16 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     });
     require __DIR__.'/api/admin.php'; // Admin specific routes, already has 'admin' middleware inside
 });
+
+// Ruta de emergencia para inicializar la base de datos en producción
+Route::get('/init-db', function() {
+    try {
+        Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
+        return response()->json([
+            'message' => 'Base de datos inicializada correctamente con usuarios de prueba.',
+            'output' => Artisan::output()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
