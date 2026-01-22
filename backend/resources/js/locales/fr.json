@@ -57,7 +57,11 @@
             "submit": "Envoyer et Terminer",
             "success": "Trajet terminé et client noté",
             "error": "Erreur lors de la clôture du trajet"
-        }
+        },
+        "completed_trips": "Trajets Effectués",
+        "average_rating": "Note Moyenne",
+        "rating_received": "Note Reçue",
+        "no_rating": "Pas encore noté"
     },
     "common": {
         "login": "Connexion",

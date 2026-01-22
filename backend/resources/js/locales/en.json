@@ -57,7 +57,11 @@
             "submit": "Send and Finish",
             "success": "Trip completed and client rated",
             "error": "Error completing trip"
-        }
+        },
+        "completed_trips": "Trips Completed",
+        "average_rating": "Average Rating",
+        "rating_received": "Rating Received",
+        "no_rating": "Not yet rated"
     },
     "common": {
         "login": "Login",

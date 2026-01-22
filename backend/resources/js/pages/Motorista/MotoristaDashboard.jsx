@@ -240,7 +240,7 @@ const MotoristaDashboard = () => {
                     </div>
                 </div>
 
-                <div className="desktop-nav" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <div className="desktop-nav">
                     <div
                         onClick={currentTrip ? null : handleToggleStatus}
                         className={`status-badge ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}

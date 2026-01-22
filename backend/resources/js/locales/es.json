@@ -59,7 +59,11 @@
             "submit": "Enviar y Finalizar",
             "success": "Viaje completado y cliente calificado",
             "error": "Error al completar el viaje"
-        }
+        },
+        "completed_trips": "Viajes Realizados",
+        "average_rating": "Calificación Media",
+        "rating_received": "Calificación Recibida",
+        "no_rating": "Aún no calificado"
     },
     "common": {
         "login": "Iniciar Sesión",
