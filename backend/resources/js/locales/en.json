@@ -257,6 +257,7 @@
         "admin_role": "Administrator"
     },
     "client_dashboard": {
+        "client": "Client",
         "plan_trip": "Plan Trip",
         "origin": "Origin",
         "destination": "Destination",

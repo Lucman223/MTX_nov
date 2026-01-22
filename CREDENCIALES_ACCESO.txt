@@ -1,11 +1,12 @@
 ================================================================================
 MOTOTX - CREDENCIALES DE ACCESO (VERIFICADAS)
 ================================================================================
-URL PÚBLICA: https://mtxnov-production.up.railway.app
-ENLACE TUNNEL: https://incredible-depot-cedar-prohibited.trycloudflare.com
+URL PÚBLICA:  https://mtxnov-production.up.railway.app
+RESCATE DB:   https://mtxnov-production.up.railway.app/api/init-db
 --------------------------------------------------------------------------------
-Fecha de Verificación: 21/01/2026
+Fecha de Verificación: 22/01/2026
 Estado: FUNCIONAL EN LÍNEA
+...
 
 --------------------------------------------------------------------------------
 1. MOTORISTA (Role: motorista)

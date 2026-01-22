@@ -1,47 +1,51 @@
-# 🚀 Guía de Inicio: Demo MotoTX (Acceso Remoto)
+# 🚀 Guía de Inicio: Demo MotoTX
 
-Esta guía explica cómo arrancar la plataforma y acceder desde cualquier dispositivo (PC o Móvil) para demostraciones.
+Esta guía explica cómo acceder a la plataforma y qué hacer si necesitas restaurarla durante tu presentación.
 
-## 1. Cómo Iniciar (En tu PC)
+## 1. Acceso Principal (RECOMENDADO)
 
-Para poner en marcha todos los servicios, solo tienes que seguir estos pasos:
+La plataforma está desplegada en la nube para un acceso estable desde cualquier dispositivo (PC, Tablet o Móvil).
 
-1.  Abre la carpeta del proyecto en tu PC.
-2.  Busca el archivo **`INICIAR_DEMO.bat`**.
-3.  Haz **doble clic** sobre él.
+👉 **URL:** [https://mtxnov-production.up.railway.app](https://mtxnov-production.up.railway.app)
 
-### ¿Qué hace este script?
-*   **Limpia**: Cierra procesos antiguos de PHP o Node para evitar errores.
-*   **Compila**: Genera los archivos más recientes de la App (Vite).
-*   **Arranca**: Inicia el servidor Laravel y el sistema de WebSockets (notificaciones).
-*   **Conecta**: Crea un túnel seguro a internet para que puedas entrar desde el móvil.
+### ✨ Funcionalidades Premium para la Demo
+- **Accesibilidad**: Usa el botón flotante (esquina inferior izquierda) para activar la fuente para disléxicos.
+- **SEO**: Comparte el link en WhatsApp/RRSS para ver la previsualización profesional.
+- **Ética**: El registro requiere aceptación de términos ( RGPD).
 
 ---
 
-## 2. Cómo Acceder desde el Móvil
+## 2. Plan de Contingencia: Ruta de Rescate 🆘
 
-Una vez que el script esté funcionando (verás varias ventanas negras), sigue estos pasos en el móvil:
+Si durante la demo algo falla, los datos se corrompen o quieres empezar de cero:
 
-1.  Abre el navegador (Chrome o Safari) y ve a:
-    👉 **`https://mototx-bko-live.loca.lt`**
-2.  Si la página te pide una **"Tunnel Password"**:
-    *   Mira la ventana de tu PC. Verás un mensaje que dice: `TU PASSWORD DEL TUNEL ES: XX.XX.XX.XX`.
-    *   Escribe esos números en el móvil y dale a **Submit**.
-3.  **Listo!** Ya puedes navegar por la App.
+1. Ve a esta URL: [https://mtxnov-production.up.railway.app/api/init-db](https://mtxnov-production.up.railway.app/api/init-db)
+2. Espera a ver el mensaje: `"Base de datos inicializada correctamente"`.
+3. **¡Listo!** El sistema se ha reseteado a su estado perfecto con los usuarios de prueba.
 
 ---
 
-## 3. Credenciales de Prueba
+## 3. Acceso Secundario (Local / Backup)
+
+Si no tuvieras internet o Railway fallara, puedes arrancar la app en tu PC:
+1. Abre la carpeta del proyecto.
+2. Haz doble clic en **`INICIAR_DEMO.bat`**.
+3. Sigue las instrucciones de las ventanas negras para el acceso vía LocalTunnel.
+
+---
+
+## 4. Credenciales Oficiales de Prueba
 
 | Rol | Usuario (Email) | Contraseña |
 | :--- | :--- | :--- |
-| **Administrador** | `admin@test.com` | `admin123` |
-| **Motorista** | `motorista@test.com` | `password` |
-| **Cliente** | `cliente@test.com` | `password` |
+| **Administrador** | `admin@mototx.com` | `password` |
+| **Cliente** | `cliente@mototx.com` | `password` |
+| **Motorista** | `moto@mototx.com` | `password123` |
 
 ---
 
-## ⚠️ Notas Importantes
-*   **No cierres las ventanas negras**: Si las cierras, la App dejará de funcionar en el móvil.
-*   **Modo Incógnito**: Si notas que no se actualizan los cambios en el móvil, usa una pestaña de incógnito.
-*   **Cambio de IP**: El "Password" (tu IP pública) puede cambiar si reinicias tu router, así que comprueba siempre el número que sale en la ventana negra.
+## ⚠️ Notas para la Presentación
+*   **Modo Incógnito**: Úsalo siempre para asegurar que ves la versión más reciente.
+*   **Registro Dinámico**: Puedes crear un usuario nuevo "en vivo" para demostrar el flujo completo.
+*   **Paga simulada**: El registro de motorista incluye un flujo de pago (demo) exitoso.
+

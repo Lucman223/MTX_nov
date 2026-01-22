@@ -116,6 +116,7 @@
     },
     "client_dashboard": {
         "title": "Dashboard del Cliente",
+        "client": "Cliente",
         "plan_trip": "Planifica tu Viaje",
         "origin": "Punto de Origen",
         "destination": "Punto de Destino",

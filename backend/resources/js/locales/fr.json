@@ -110,6 +110,7 @@
         "admin_role": "Administrateur"
     },
     "client_dashboard": {
+        "client": "Client",
         "plan_trip": "Planifier un Trajet",
         "origin": "ORIGINE",
         "destination": "DESTINATION",
