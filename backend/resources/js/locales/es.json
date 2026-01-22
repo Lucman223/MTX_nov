@@ -94,7 +94,11 @@
         "role_driver": "🏍️ Motorista",
         "register_success": "¡Cuenta creada con éxito!",
         "register_error": "Error al crear la cuenta.",
-        "password_mismatch": "Las contraseñas no coinciden"
+        "password_mismatch": "Las contraseñas no coinciden",
+        "accept_terms_error": "Debes aceptar los términos y condiciones para continuar",
+        "i_accept": "Acepto los",
+        "terms_and_privacy": "Términos de Servicio y la Política de Privacidad",
+        "rgpd_notice": "Tus datos están protegidos según la normativa vigente."
     },
     "seo": {
         "default_description": "Transporte fiable y rápido en Bamako. Moto taxis seguros."

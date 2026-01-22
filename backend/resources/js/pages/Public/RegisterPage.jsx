@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
+import SEO from '../../components/Common/SEO';
 
 /**
  * RegisterPage Component
@@ -25,6 +26,7 @@ function RegisterPage() {
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [rol, setRol] = useState('cliente');
+    const [aceptaTerminos, setAceptaTerminos] = useState(false);
     const [error, setError] = useState('');
 
     // Color system
@@ -46,6 +48,11 @@ function RegisterPage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError('');
+
+        if (!aceptaTerminos) {
+            setError(t('auth.accept_terms_error') || 'Debe aceptar los términos y condiciones');
+            return;
+        }
 
         if (password !== passwordConfirmation) {
             setError(t('auth.password_mismatch') || 'Passwords do not match');
@@ -88,6 +95,7 @@ function RegisterPage() {
             position: 'relative'
         }}>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                <SEO title={t('common.register')} />
                 <LanguageSwitcher />
             </div>
 
@@ -347,6 +355,21 @@ function RegisterPage() {
                                 {t('auth.role_driver')}
                             </button>
                         </div>
+                    </div>
+
+                    <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                        <input
+                            type="checkbox"
+                            id="aceptaTerminos"
+                            checked={aceptaTerminos}
+                            onChange={(e) => setAceptaTerminos(e.target.checked)}
+                            style={{ marginTop: '0.25rem', cursor: 'pointer' }}
+                        />
+                        <label htmlFor="aceptaTerminos" style={{ fontSize: '0.9rem', color: '#4b5563', cursor: 'pointer' }}>
+                            {t('auth.i_accept')} <Link to="/privacy" style={{ color: getRoleColor(), fontWeight: '600' }}>{t('auth.terms_and_privacy')}</Link>.
+                            <br />
+                            <small style={{ color: '#9ca3af' }}>{t('auth.rgpd_notice')}</small>
+                        </label>
                     </div>
 
                     <button

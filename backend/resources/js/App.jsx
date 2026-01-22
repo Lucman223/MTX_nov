@@ -33,8 +33,8 @@ import SuscripcionesMotorista from './pages/Motorista/SuscripcionesMotorista.jsx
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
-
-
+import { AccessibilityProvider } from './context/AccessibilityContext';
+import { HelmetProvider } from 'react-helmet-async';
 
 /**
  * App Component
@@ -47,16 +47,22 @@ import ErrorBoundary from './components/ErrorBoundary';
  */
 function App() {
     return (
-        <Router>
-            <AuthProvider>
-                <ErrorBoundary>
-                    <Toaster richColors position="top-center" />
-                    <AppContent />
-                </ErrorBoundary>
-            </AuthProvider>
-        </Router>
+        <HelmetProvider>
+            <Router>
+                <AccessibilityProvider>
+                    <AuthProvider>
+                        <ErrorBoundary>
+                            <Toaster richColors position="top-center" />
+                            <AppContent />
+                        </ErrorBoundary>
+                    </AuthProvider>
+                </AccessibilityProvider>
+            </Router>
+        </HelmetProvider>
     );
 }
+
+import AccessibilityToggle from './components/Common/AccessibilityToggle';
 
 function AppContent() {
     const { loading } = useAuth();
@@ -66,47 +72,50 @@ function AppContent() {
     }
 
     return (
-        <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
+        <>
+            <AccessibilityToggle />
+            <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
 
-            {/* Protected Admin Routes with Layout */}
-            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-                <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<AdminDashboard />} />
-                    <Route path="motoristas" element={<MotoristasList />} />
-                    <Route path="forfaits" element={<AdminForfaits />} />
-                    <Route path="viajes" element={<AdminViajes />} />
-                    <Route path="clientes" element={<AdminClientes />} />
-                    <Route path="reportes" element={<AdminReportes />} />
+                {/* Protected Admin Routes with Layout */}
+                <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route index element={<AdminDashboard />} />
+                        <Route path="motoristas" element={<MotoristasList />} />
+                        <Route path="forfaits" element={<AdminForfaits />} />
+                        <Route path="viajes" element={<AdminViajes />} />
+                        <Route path="clientes" element={<AdminClientes />} />
+                        <Route path="reportes" element={<AdminReportes />} />
+                    </Route>
                 </Route>
-            </Route>
 
-            {/* Protected Cliente Routes */}
-            <Route element={<ProtectedRoute allowedRoles={['cliente']} />}>
-                <Route path="/cliente" element={<ClienteDashboard />} />
-                <Route path="/cliente/historial" element={<ClienteHistory />} />
-                <Route path="/cliente/forfaits" element={<ClienteForfaits />} />
-                <Route path="/cliente/perfil" element={<ClienteProfile />} />
-                <Route path="/cliente/viaje-actual" element={<ClientActiveTrip />} />
-            </Route>
+                {/* Protected Cliente Routes */}
+                <Route element={<ProtectedRoute allowedRoles={['cliente']} />}>
+                    <Route path="/cliente" element={<ClienteDashboard />} />
+                    <Route path="/cliente/historial" element={<ClienteHistory />} />
+                    <Route path="/cliente/forfaits" element={<ClienteForfaits />} />
+                    <Route path="/cliente/perfil" element={<ClienteProfile />} />
+                    <Route path="/cliente/viaje-actual" element={<ClientActiveTrip />} />
+                </Route>
 
-            {/* Protected Motorista Routes */}
-            <Route element={<ProtectedRoute allowedRoles={['motorista']} />}>
-                <Route path="/motorista" element={<MotoristaDashboard />} />
-                <Route path="/motorista/historial" element={<MotoristaHistory />} />
-                <Route path="/motorista/finanzas" element={<MotoristaTransactions />} />
-                <Route path="/motorista/perfil" element={<MotoristaProfile />} />
-                <Route path="/motorista/viaje-actual" element={<DriverActiveTrip />} />
-                <Route path="/motorista/suscripciones" element={<SuscripcionesMotorista />} />
-            </Route>
+                {/* Protected Motorista Routes */}
+                <Route element={<ProtectedRoute allowedRoles={['motorista']} />}>
+                    <Route path="/motorista" element={<MotoristaDashboard />} />
+                    <Route path="/motorista/historial" element={<MotoristaHistory />} />
+                    <Route path="/motorista/finanzas" element={<MotoristaTransactions />} />
+                    <Route path="/motorista/perfil" element={<MotoristaProfile />} />
+                    <Route path="/motorista/viaje-actual" element={<DriverActiveTrip />} />
+                    <Route path="/motorista/suscripciones" element={<SuscripcionesMotorista />} />
+                </Route>
 
-            {/* Fallback for unmatched routes */}
-            <Route path="*" element={<div>404 Not Found</div>} />
-        </Routes>
+                {/* Fallback for unmatched routes */}
+                <Route path="*" element={<div>404 Not Found</div>} />
+            </Routes>
+        </>
     );
 }
 

@@ -92,7 +92,11 @@
         "role_driver": "🏍️ Conducteur",
         "register_success": "Compte créé avec succès !",
         "register_error": "Erreur lors de la création du compte.",
-        "password_mismatch": "Les mots de passe ne correspondent pas"
+        "password_mismatch": "Les mots de passe ne correspondent pas",
+        "accept_terms_error": "Vous devez accepter les conditions générales pour continuer",
+        "i_accept": "J'accepte les",
+        "terms_and_privacy": "Conditions d'utilisation et Politique de confidentialité",
+        "rgpd_notice": "Vos données sont protégées selon la réglementation en vigueur."
     },
     "nav": {
         "admin_title": "MotoTX Admin",
