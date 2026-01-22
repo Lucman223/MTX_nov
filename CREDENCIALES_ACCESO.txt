@@ -1,7 +1,7 @@
 ================================================================================
 MOTOTX - CREDENCIALES DE ACCESO (VERIFICADAS)
 ================================================================================
-URL PÚBLICA: https://moto-taxi-production.up.railway.app
+URL PÚBLICA: https://mtxnov-production.up.railway.app
 ENLACE TUNNEL: https://incredible-depot-cedar-prohibited.trycloudflare.com
 --------------------------------------------------------------------------------
 Fecha de Verificación: 21/01/2026

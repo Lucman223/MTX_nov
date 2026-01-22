@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@mototx.com',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'rol' => 'admin',
+            'telefono' => '111222333',
         ]);
 
         // 2. Cliente
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'cliente@mototx.com',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'rol' => 'cliente',
+            'telefono' => '222333444',
         ]);
 
         // 3. Motorista
@@ -37,6 +39,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'moto@mototx.com',
             'password' => \Illuminate\Support\Facades\Hash::make('password123'),
             'rol' => 'motorista',
+            'telefono' => '333444555',
         ]);
 
         // Crear perfil del motorista
