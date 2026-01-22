@@ -89,15 +89,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 Route::get('/init-db', function() {
     try {
         Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
-        
-        $admin = \App\Models\User::where('email', 'admin@mototx.com')->first();
-        $check = $admin ? \Illuminate\Support\Facades\Hash::check('password', $admin->password) : false;
-        
         return response()->json([
             'message' => 'Base de datos inicializada correctamente con usuarios de prueba.',
-            'admin_verified' => $check,
-            'hash_sample' => $admin ? $admin->password : null,
-            'output' => Artisan::output()
+            'status' => 'success'
         ]);
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
