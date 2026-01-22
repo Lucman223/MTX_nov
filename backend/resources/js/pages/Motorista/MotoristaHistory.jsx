@@ -173,15 +173,15 @@ const MotoristaHistory = () => {
 
                                 <div className="trip-details-grid" style={{ background: 'var(--bg-light)', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
                                     <div className="detail-item">
-                                        <div className="detail-label">ORIGEN</div>
+                                        <div className="detail-label">{t('client_dashboard.origin')}</div>
                                         <div className="detail-value" style={{ fontSize: '0.9rem' }}>
-                                            {viaje.origen_lat?.toFixed(4)}, {viaje.origen_lng?.toFixed(4)}
+                                            {viaje.origen || `${viaje.origen_lat?.toFixed(4)}, ${viaje.origen_lng?.toFixed(4)}`}
                                         </div>
                                     </div>
                                     <div className="detail-item">
-                                        <div className="detail-label">DESTINO</div>
+                                        <div className="detail-label">{t('client_dashboard.destination')}</div>
                                         <div className="detail-value" style={{ fontSize: '0.9rem' }}>
-                                            {viaje.destino_lat?.toFixed(4)}, {viaje.destino_lng?.toFixed(4)}
+                                            {viaje.destino || `${viaje.destino_lat?.toFixed(4)}, ${viaje.destino_lng?.toFixed(4)}`}
                                         </div>
                                     </div>
                                 </div>

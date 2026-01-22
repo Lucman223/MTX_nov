@@ -158,15 +158,6 @@ const MotoristaProfile = () => {
                                 className="mtx-input"
                             />
                         </div>
-                        <div>
-                            <label className="form-label">{t('common.phone')}</label>
-                            <input
-                                type="text"
-                                value={formData.telefono}
-                                onChange={e => setFormData({ ...formData, telefono: e.target.value })}
-                                className="mtx-input"
-                            />
-                        </div>
 
                         <Button
                             type="submit"

@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
             'estado_validacion' => 'aprobado', // Auto-aprobar para pruebas
             'estado_actual' => 'inactivo',
             'documento_licencia_path' => 'docs/dummy.pdf',
-            'viajes_prueba_restantes' => 3
+            'viajes_prueba_restantes' => 25
         ]);
 
         $this->call(PlanesMotoristaSeeder::class);

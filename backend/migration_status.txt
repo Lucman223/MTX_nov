@@ -1,0 +1,32 @@
+
+
+
+
+
+
+
+
+
+
+  Migration name  Batch / Status  
+  0001_01_01_000000_create_users_table  [1] Ran  
+  0001_01_01_000001_create_cache_table  [1] Ran  
+  0001_01_01_000002_create_jobs_table  [1] Ran  
+  2025_11_16_181601_add_rol_to_users_table  [1] Ran  
+  2025_11_16_181936_create_motoristas_perfiles_table  [1] Ran  
+  2025_11_16_182140_create_forfaits_table  [1] Ran  
+  2025_11_16_182315_create_clientes_forfaits_table  [1] Ran  
+  2025_11_16_182436_create_viajes_table  [1] Ran  
+  2025_11_16_182552_create_calificaciones_table  [1] Ran  
+  2025_11_16_182655_create_transacciones_table  [1] Ran  
+  2025_11_26_104633_add_columns_to_transacciones_table  [1] Ran  
+  2025_12_08_180000_add_location_to_motoristas_perfiles  [1] Ran  
+  2025_12_09_153342_add_motorista_cliente_to_calificaciones_table  [1] Ran  
+  2025_12_11_000000_add_estado_to_clientes_forfaits  [1] Ran  
+  2025_12_15_200000_create_planes_motorista_tables  [1] Ran  
+  2025_12_15_200100_add_viajes_prueba_to_motoristas  [1] Ran  
+  2025_12_24_132000_add_wallet_to_motoristas_perfiles_and_costo_to_viajes  [2] Ran  
+  2026_01_17_225657_add_distancia_maxima_to_forfaits_table  [3] Ran  
+  2026_01_18_192917_add_addresses_to_viajes_table  [4] Ran  
+  2026_01_19_143413_add_telefono_and_foto_to_users_table  [5] Ran  
+

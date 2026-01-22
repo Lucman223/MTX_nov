@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('motoristas_perfiles', function (Blueprint $table) {
-            $table->integer('viajes_prueba_restantes')->default(3)->after('estado_actual');
+            $table->integer('viajes_prueba_restantes')->default(25)->after('estado_actual');
         });
     }
 

@@ -89,7 +89,10 @@
         "password_confirm": "Confirm Password",
         "i_want_to_be": "I want to be:",
         "role_client": "👤 Client",
-        "role_driver": "🏍️ Driver"
+        "role_driver": "🏍️ Driver",
+        "register_success": "Account created successfully!",
+        "register_error": "Error creating account.",
+        "password_mismatch": "Passwords do not match"
     },
     "seo": {
         "default_description": "Reliable and fast transport in Bamako. Secure motorcycle taxis."

@@ -89,7 +89,10 @@
         "password_confirm": "Confirmer le mot de passe",
         "i_want_to_be": "Je veux être :",
         "role_client": "👤 Client",
-        "role_driver": "🏍️ Conducteur"
+        "role_driver": "🏍️ Conducteur",
+        "register_success": "Compte créé avec succès !",
+        "register_error": "Erreur lors de la création du compte.",
+        "password_mismatch": "Les mots de passe ne correspondent pas"
     },
     "nav": {
         "admin_title": "MotoTX Admin",

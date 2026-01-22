@@ -123,8 +123,28 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    /**
+     * [ES] Registra un nuevo usuario.
+     *      Envía los datos al backend y realiza el login automático.
+     *
+     * @param {Object} data - User data (name, email, password, password_confirmation, rol, telefono).
+     */
+    const register = async (data) => {
+        setLoading(true);
+        try {
+            await axios.post('/api/auth/register', data);
+            // After successful registration, login automatically
+            return await login(data.email, data.password);
+        } catch (error) {
+            console.error('Registration failed:', error);
+            throw new Error(error.response?.data?.message || 'Registration failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, loading, login, logout, refreshUser }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, loading, login, logout, register, refreshUser }}>
             {children}
         </AuthContext.Provider>
     );

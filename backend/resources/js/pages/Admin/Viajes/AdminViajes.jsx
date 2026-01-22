@@ -122,7 +122,7 @@ const AdminViajes = () => {
                                                 </span>
                                             </td>
                                             <td style={{ padding: '1rem', fontWeight: '600' }}>
-                                                {viaje.tarifa_estimada ? `${parseInt(viaje.tarifa_estimada).toLocaleString()} CFA` : '-'}
+                                                {viaje.costo ? `${parseInt(viaje.costo).toLocaleString()} CFA` : '-'}
                                             </td>
                                         </tr>
                                     ))}
@@ -176,7 +176,7 @@ const AdminViajes = () => {
                                     </div>
 
                                     <div style={{ textAlign: 'right', fontWeight: 'bold', color: '#2563eb', fontSize: '1rem' }}>
-                                        {viaje.tarifa_estimada ? `${parseInt(viaje.tarifa_estimada).toLocaleString()} CFA` : '-'}
+                                        {viaje.costo ? `${parseInt(viaje.costo).toLocaleString()} CFA` : '-'}
                                     </div>
                                 </div>
                             ))}

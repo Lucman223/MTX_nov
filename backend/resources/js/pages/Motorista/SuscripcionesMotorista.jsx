@@ -115,7 +115,7 @@ const SuscripcionesMotorista = () => {
                         <div>
                             <div className="detail-label">{t('driver_dashboard.subscriptions')}</div>
                             <div style={{ fontSize: '1.125rem', fontWeight: 'bold', color: suscripcion_activa ? 'var(--secondary-color)' : 'var(--text-muted)' }}>
-                                {suscripcion_activa ? activePlan?.nombre : t('driver_dashboard.none')}
+                                {suscripcion_activa ? t(`plans.${activePlan?.nombre}`) : t('driver_dashboard.none')}
                             </div>
                         </div>
                         {suscripcion_activa && (

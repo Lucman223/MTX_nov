@@ -1,13 +1,16 @@
 ================================================================================
 MOTOTX - CREDENCIALES DE ACCESO (VERIFICADAS)
 ================================================================================
-Fecha de Verificación: 15/12/2025
-Estado: FUNCIONAL
+URL PÚBLICA: https://moto-taxi-production.up.railway.app
+ENLACE TUNNEL: https://incredible-depot-cedar-prohibited.trycloudflare.com
+--------------------------------------------------------------------------------
+Fecha de Verificación: 21/01/2026
+Estado: FUNCIONAL EN LÍNEA
 
 --------------------------------------------------------------------------------
 1. MOTORISTA (Role: motorista)
    - Funcionalidad clave: Suscripciones, Aceptar Viajes.
-   - Estado Inicial: 3 Viajes de Prueba.
+   - Estado Inicial: 25 Viajes de Prueba.
    * Email:      moto@mototx.com
    * Contraseña: password123
 
@@ -25,6 +28,6 @@ Estado: FUNCIONAL
 --------------------------------------------------------------------------------
 
 NOTAS IMPORTANTES:
-- Si el Motorista agota sus 3 viajes de prueba, DEBERÁ comprar un plan (simulado) para seguir operando.
+- Si el Motorista agota sus 25 viajes de prueba, DEBERÁ comprar un plan (simulado) para seguir operando.
 - El registro de nuevos usuarios está ABIERTO y funcionando.
 ================================================================================

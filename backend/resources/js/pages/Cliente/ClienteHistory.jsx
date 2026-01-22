@@ -155,13 +155,13 @@ const ClienteHistory = () => {
                                     <div className="detail-item">
                                         <div className="detail-label">{t('client_dashboard.origin')}</div>
                                         <div className="detail-value" style={{ fontSize: '0.9rem' }}>
-                                            {viaje.origen_lat?.toFixed(4)}, {viaje.origen_lng?.toFixed(4)}
+                                            {viaje.origen || `${viaje.origen_lat?.toFixed(4)}, ${viaje.origen_lng?.toFixed(4)}`}
                                         </div>
                                     </div>
                                     <div className="detail-item">
                                         <div className="detail-label">{t('client_dashboard.destination')}</div>
                                         <div className="detail-value" style={{ fontSize: '0.9rem' }}>
-                                            {viaje.destino_lat?.toFixed(4)}, {viaje.destino_lng?.toFixed(4)}
+                                            {viaje.destino || `${viaje.destino_lat?.toFixed(4)}, ${viaje.destino_lng?.toFixed(4)}`}
                                         </div>
                                     </div>
                                 </div>

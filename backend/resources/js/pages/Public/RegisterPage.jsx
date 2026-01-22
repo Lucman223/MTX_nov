@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
+import { useAuth } from '../../context/AuthContext';
+import { toast } from 'sonner';
 
 /**
  * RegisterPage Component
@@ -10,18 +12,20 @@ import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
  *      Permite la creación de cuentas para Clientes y Motoristas.
  *
  * [FR] Page d'inscription des nouveaux utilisateurs.
- *      Permet la création de comptes pour les Clients et les Chauffeurs.
+ *      Permet la création de comptes para los Clients et les Chauffeurs.
  */
 function RegisterPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const { register, loading } = useAuth();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [telefono, setTelefono] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [rol, setRol] = useState('cliente');
+    const [error, setError] = useState('');
 
     // Color system
     const colors = {
@@ -39,10 +43,32 @@ function RegisterPage() {
         }
     }, [searchParams]);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // API call to register will be handled here
-        console.log('Register attempt with:', { name, email, telefono, password, password_confirmation: passwordConfirmation, rol });
+        setError('');
+
+        if (password !== passwordConfirmation) {
+            setError(t('auth.password_mismatch') || 'Passwords do not match');
+            return;
+        }
+
+        try {
+            await register({
+                name,
+                email,
+                telefono,
+                password,
+                password_confirmation: passwordConfirmation,
+                rol
+            });
+            toast.success(t('auth.register_success') || 'Account created successfully!');
+            // Redirection is handled by the useEffect in LoginPage or App if we redirect to login/dashboard
+            // Since register calls login, and login updates AuthContext, redirection should happen automatically if App.jsx handles it.
+            // But let's be explicit if needed, or rely on AuthContext state change.
+        } catch (err) {
+            setError(err.message || t('auth.register_error'));
+            toast.error(err.message || t('auth.register_error'));
+        }
     };
 
     const getRoleColor = () => {
@@ -87,6 +113,20 @@ function RegisterPage() {
                     <p style={{ color: '#6b7280', margin: 0 }}>{t('auth.register_subtitle')}</p>
                 </div>
 
+                {error && (
+                    <div style={{
+                        padding: '1rem',
+                        background: '#fee2e2',
+                        border: `1px solid ${colors.error}`,
+                        borderRadius: '0.5rem',
+                        color: colors.error,
+                        marginBottom: '1.5rem',
+                        textAlign: 'center'
+                    }}>
+                        {error}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit}>
                     <div style={{ marginBottom: '1.25rem' }}>
                         <label
@@ -106,6 +146,7 @@ function RegisterPage() {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
+                            disabled={loading}
                             style={{
                                 width: '100%',
                                 padding: '0.75rem 1rem',
@@ -113,7 +154,8 @@ function RegisterPage() {
                                 borderRadius: '0.5rem',
                                 fontSize: '1rem',
                                 transition: 'border-color 0.2s',
-                                outline: 'none'
+                                outline: 'none',
+                                opacity: loading ? 0.7 : 1
                             }}
                             onFocus={(e) => e.target.style.borderColor = getRoleColor()}
                             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -138,6 +180,7 @@ function RegisterPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            disabled={loading}
                             style={{
                                 width: '100%',
                                 padding: '0.75rem 1rem',
@@ -145,7 +188,8 @@ function RegisterPage() {
                                 borderRadius: '0.5rem',
                                 fontSize: '1rem',
                                 transition: 'border-color 0.2s',
-                                outline: 'none'
+                                outline: 'none',
+                                opacity: loading ? 0.7 : 1
                             }}
                             onFocus={(e) => e.target.style.borderColor = getRoleColor()}
                             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -170,6 +214,7 @@ function RegisterPage() {
                             value={telefono}
                             onChange={(e) => setTelefono(e.target.value)}
                             required
+                            disabled={loading}
                             style={{
                                 width: '100%',
                                 padding: '0.75rem 1rem',
@@ -177,7 +222,8 @@ function RegisterPage() {
                                 borderRadius: '0.5rem',
                                 fontSize: '1rem',
                                 transition: 'border-color 0.2s',
-                                outline: 'none'
+                                outline: 'none',
+                                opacity: loading ? 0.7 : 1
                             }}
                             onFocus={(e) => e.target.style.borderColor = getRoleColor()}
                             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -202,6 +248,7 @@ function RegisterPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            disabled={loading}
                             style={{
                                 width: '100%',
                                 padding: '0.75rem 1rem',
@@ -209,7 +256,8 @@ function RegisterPage() {
                                 borderRadius: '0.5rem',
                                 fontSize: '1rem',
                                 transition: 'border-color 0.2s',
-                                outline: 'none'
+                                outline: 'none',
+                                opacity: loading ? 0.7 : 1
                             }}
                             onFocus={(e) => e.target.style.borderColor = getRoleColor()}
                             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -234,6 +282,7 @@ function RegisterPage() {
                             value={passwordConfirmation}
                             onChange={(e) => setPasswordConfirmation(e.target.value)}
                             required
+                            disabled={loading}
                             style={{
                                 width: '100%',
                                 padding: '0.75rem 1rem',
@@ -241,7 +290,8 @@ function RegisterPage() {
                                 borderRadius: '0.5rem',
                                 fontSize: '1rem',
                                 transition: 'border-color 0.2s',
-                                outline: 'none'
+                                outline: 'none',
+                                opacity: loading ? 0.7 : 1
                             }}
                             onFocus={(e) => e.target.style.borderColor = getRoleColor()}
                             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -262,6 +312,7 @@ function RegisterPage() {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                             <button
                                 type="button"
+                                disabled={loading}
                                 onClick={() => setRol('cliente')}
                                 style={{
                                     padding: '1rem',
@@ -270,14 +321,16 @@ function RegisterPage() {
                                     border: `2px solid ${colors.primary}`,
                                     borderRadius: '0.75rem',
                                     fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s'
+                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                    transition: 'all 0.2s',
+                                    opacity: loading && rol !== 'cliente' ? 0.5 : 1
                                 }}
                             >
                                 {t('auth.role_client')}
                             </button>
                             <button
                                 type="button"
+                                disabled={loading}
                                 onClick={() => setRol('motorista')}
                                 style={{
                                     padding: '1rem',
@@ -286,8 +339,9 @@ function RegisterPage() {
                                     border: `2px solid ${colors.secondary}`,
                                     borderRadius: '0.75rem',
                                     fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s'
+                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                    transition: 'all 0.2s',
+                                    opacity: loading && rol !== 'motorista' ? 0.5 : 1
                                 }}
                             >
                                 {t('auth.role_driver')}
@@ -297,6 +351,7 @@ function RegisterPage() {
 
                     <button
                         type="submit"
+                        disabled={loading}
                         style={{
                             width: '100%',
                             padding: '1rem',
@@ -306,20 +361,23 @@ function RegisterPage() {
                             borderRadius: '0.75rem',
                             fontSize: '1.05rem',
                             fontWeight: 'bold',
-                            cursor: 'pointer',
+                            cursor: loading ? 'not-allowed' : 'pointer',
                             transition: 'all 0.2s',
-                            boxShadow: `0 4px 12px ${getRoleColor()}40`
+                            boxShadow: `0 4px 12px ${getRoleColor()}40`,
+                            opacity: loading ? 0.7 : 1
                         }}
                         onMouseOver={(e) => {
-                            e.target.style.transform = 'translateY(-2px)';
-                            e.target.style.boxShadow = `0 6px 16px ${getRoleColor()}50`;
+                            if (!loading) {
+                                e.target.style.transform = 'translateY(-2px)';
+                                e.target.style.boxShadow = `0 6px 16px ${getRoleColor()}50`;
+                            }
                         }}
                         onMouseOut={(e) => {
                             e.target.style.transform = 'translateY(0)';
                             e.target.style.boxShadow = `0 4px 12px ${getRoleColor()}40`;
                         }}
                     >
-                        {t('common.register')}
+                        {loading ? t('common.loading') : t('common.register')}
                     </button>
                 </form>
 

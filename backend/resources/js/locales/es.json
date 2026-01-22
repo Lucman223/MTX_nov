@@ -91,7 +91,10 @@
         "password_confirm": "Confirmar Contraseña",
         "i_want_to_be": "Quiero ser:",
         "role_client": "👤 Cliente",
-        "role_driver": "🏍️ Motorista"
+        "role_driver": "🏍️ Motorista",
+        "register_success": "¡Cuenta creada con éxito!",
+        "register_error": "Error al crear la cuenta.",
+        "password_mismatch": "Las contraseñas no coinciden"
     },
     "seo": {
         "default_description": "Transporte fiable y rápido en Bamako. Moto taxis seguros."

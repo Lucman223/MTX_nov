@@ -91,6 +91,18 @@ class ViajeService
                 // Add trip cost to wallet
                 $perfil->increment('billetera', $viaje->costo);
 
+                // Register financial transaction for the driver
+                \App\Models\Transaccion::create([
+                    'usuario_id' => $motorista->id,
+                    'monto' => $viaje->costo,
+                    'tipo' => 'ingreso_viaje',
+                    'estado' => 'completado',
+                    'metodo_pago' => 'MotoTX Wallet',
+                    'descripcion' => "Ganancia por viaje #{$viaje->id}",
+                    'fecha_transaccion' => now(),
+                    'moneda' => 'CFA'
+                ]);
+
                 $hasSubscription = $perfil->activeSubscription()->exists();
                 if (!$hasSubscription && $perfil->viajes_prueba_restantes > 0) {
                     $perfil->decrement('viajes_prueba_restantes');
