@@ -19,28 +19,28 @@
         <!-- Marcado Estructurado JSON-LD (Cr 1.e.3) -->
         <script type="application/ld+json">
         {
-          "@context": "https://schema.org",
-          "@type": "Service",
+          "@@context": "https://schema.org",
+          "@@type": "Service",
           "name": "MotoTX",
           "description": "Servicio de transporte de moto-taxi en Bamako, Mali.",
           "provider": {
-            "@type": "LocalBusiness",
+            "@@type": "LocalBusiness",
             "name": "MotoTX Bamako",
             "address": {
-              "@type": "PostalAddress",
+              "@@type": "PostalAddress",
               "addressLocality": "Bamako",
               "addressCountry": "ML"
             }
           },
           "areaServed": "Bamako",
           "hasOfferCatalog": {
-            "@type": "OfferCatalog",
+            "@@type": "OfferCatalog",
             "name": "Planes de Transporte",
             "itemListElement": [
               {
-                "@type": "Offer",
+                "@@type": "Offer",
                 "itemOffered": {
-                  "@type": "Service",
+                  "@@type": "Service",
                   "name": "Viajes Individuales"
                 }
               }
