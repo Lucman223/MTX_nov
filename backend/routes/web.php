@@ -66,9 +66,26 @@ Route::get('/debug-reset-pass', function() {
             $user->save();
             return 'EXITO: Cache borrada y Password de cliente@mototx.com reseteada a: 123456';
         }
-        return 'ERROR: Usuario no encontrado';
+        return 'ERROR: Usuario no encontrado. Ve a /debug-init-db para crearlos.';
     } catch (\Exception $e) {
         return 'ERROR SISTEMA: ' . $e->getMessage();
+    }
+});
+
+// ULTIMO RECURSO: Recrear Base de Datos
+Route::get('/debug-init-db', function() {
+    try {
+        // Aumentar tiempo de ejecución para migraciones lentas
+        set_time_limit(300);
+        
+        Artisan::call('migrate:fresh', [
+            '--force' => true,
+            '--seed' => true
+        ]);
+        
+        return 'EXITO TOTAL: Base de datos recreada y semillas ejecutadas. Usuario: cliente@mototx.com / password';
+    } catch (\Exception $e) {
+        return 'ERROR CRITICO DB: ' . $e->getMessage();
     }
 });
 
