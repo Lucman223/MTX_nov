@@ -86,8 +86,7 @@ export const AuthProvider = ({ children }) => {
             return true;
         } catch (error) {
             console.error('Login failed:', error);
-            // Optionally, handle specific error messages from backend
-            throw new Error(error.response?.data?.message || 'Login failed');
+            throw error; // Throw original error for debugging in Login page
         } finally {
             setLoading(false);
         }

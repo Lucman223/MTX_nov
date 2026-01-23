@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // Trust all proxies (Railway/Cloudflare)
         $middleware->trustProxies(at: '*');
         
+        // Explicitly exempt API from CSRF (just in case)
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
+
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'motorista' => \App\Http\Middleware\MotoristaMiddleware::class,
