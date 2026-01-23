@@ -13,9 +13,13 @@ export default defineConfig({
         }),
         tailwindcss(),
         VitePWA({
+            strategies: 'injectManifest',
+            srcDir: 'resources/js',
+            filename: 'sw.js',
             registerType: 'autoUpdate',
             devOptions: {
-                enabled: false // Disabled to prevent caching issues in dev tunnel
+                enabled: true, // Enable in dev for testing
+                type: 'module'
             },
             manifest: {
                 name: 'MotoTX - Plataforma de Mototaxi',
@@ -37,30 +41,8 @@ export default defineConfig({
                         src: '/pwa-512x512.png',
                         sizes: '512x512',
                         type: 'image/png'
-                    },
-                    {
-                        src: '/pwa-512x512.png',
-                        sizes: '512x512',
-                        type: 'image/png',
-                        purpose: 'any maskable'
                     }
                 ]
-            },
-            workbox: {
-                navigateFallbackDenylist: [/^\/api/],
-                runtimeCaching: [{
-                    urlPattern: ({ url }) => url.pathname.startsWith('/api'),
-                    handler: 'NetworkOnly',
-                    options: {
-                        cacheName: 'api-cache',
-                        backgroundSync: {
-                            name: 'api-queue',
-                            options: {
-                                maxRetentionTime: 24 * 60
-                            }
-                        }
-                    }
-                }]
             }
         })
     ],

@@ -77,10 +77,36 @@ const ClienteDashboard = () => {
 
     useEffect(() => {
         if (activeTrip?.id) {
-            return listenToTripUpdates(activeTrip.id, (updatedTrip) => {
-                setActiveTrip(updatedTrip);
-                toast.info(`Actualización: ${updatedTrip.estado}`);
-            });
+            const callbacks = (updatedTrip) => {
+                // If it's a full trip object (ViajeActualizado/ViajeAceptado)
+                if (updatedTrip && updatedTrip.id) {
+                    setActiveTrip(updatedTrip);
+                    toast.info(`Actualización: ${updatedTrip.estado}`);
+                }
+            };
+
+            // Attach specific location handler to the callback object
+            callbacks.onLocationUpdate = (data) => {
+                if (data.lat && data.lng) {
+                    // Update activeTrip with new motorista location deep merged
+                    setActiveTrip(prev => {
+                        if (!prev || !prev.motorista) return prev;
+                        return {
+                            ...prev,
+                            motorista: {
+                                ...prev.motorista,
+                                motorista_perfil: {
+                                    ...prev.motorista.motorista_perfil,
+                                    latitud_actual: data.lat,
+                                    longitud_actual: data.lng
+                                }
+                            }
+                        };
+                    });
+                }
+            };
+
+            return listenToTripUpdates(activeTrip.id, callbacks);
         }
     }, [activeTrip?.id]);
 

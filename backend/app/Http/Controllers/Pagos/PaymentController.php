@@ -55,10 +55,29 @@ class PaymentController extends Controller
             'estado' => 'pendiente',
             'metodo_pago' => $request->metodo_pago,
             'fecha_transaccion' => now(),
-            'referencia_externa' => 'MOCK-' . strtoupper(uniqid()),
+            'referencia_externa' => 'OM-' . strtoupper(uniqid()), // OM Prefix
             'descripcion' => "Compra de forfait {$forfait->nombre}"
         ]);
 
+        // Integrate with OrangeService
+        if ($request->metodo_pago === 'orange_money') {
+             $omService = new \App\Services\OrangeMoneyService();
+             $omResponse = $omService->webPayment(
+                 $forfait->precio,
+                 $transaccion->referencia_externa,
+                 url("/api/pagos/callback/success?tid={$transaccion->id}"), // Return URLs
+                 url("/api/pagos/callback/cancel?tid={$transaccion->id}")
+             );
+
+             return response()->json([
+                'message' => 'Redireccionando a Orange Money...',
+                'transaction_id' => $transaccion->id,
+                'payment_url' => $omResponse['payment_url'], // Real-looking URL
+                'simulation_mode' => true
+            ]);
+        }
+
+        // Fallback for others
         return response()->json([
             'message' => 'Payment initiated successfully',
             'transaction_id' => $transaccion->id,

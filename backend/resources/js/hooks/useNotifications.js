@@ -70,6 +70,11 @@ const useNotifications = (onNewTrip, onTripUpdate) => {
                 .listen('ViajeAceptado', (e) => {
                     console.log('Trip accepted:', e.viaje);
                     if (callback) callback(e.viaje);
+                })
+                .listen('.location-updated', (e) => { // Note the dot prefix for broadcastAs aliases
+                    console.log('Location updated:', e);
+                    if (callback.onLocationUpdate) callback.onLocationUpdate(e);
+                    // Also support generic callback if it handles the object structure
                 });
 
             return () => {

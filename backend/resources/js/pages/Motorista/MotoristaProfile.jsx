@@ -149,6 +149,34 @@ const MotoristaProfile = () => {
                                 className="mtx-input"
                             />
                         </div>
+                        {/* Preferences */}
+                        <Card className="profile-section">
+                            <h3 className="section-title">⚙️ {t('profile.preferences')}</h3>
+                            <div className="preferences-list">
+                                <div className="pref-item">
+                                    <span>🔔 {t('profile.notifications')}</span>
+                                    <Button
+                                        variant="outline"
+                                        className="btn-sm"
+                                        onClick={() => {
+                                            if (!("Notification" in window)) {
+                                                alert("Navegador no soporta notificaciones");
+                                            } else if (Notification.permission === "granted") {
+                                                new Notification("MotoTX Prueva", { body: "¡Notificaciones activas y funcionando!" });
+                                            } else if (Notification.permission !== "denied") {
+                                                Notification.requestPermission().then(permission => {
+                                                    if (permission === "granted") {
+                                                        new Notification("MotoTX", { body: "¡Gracias por activar las notificaciones!" });
+                                                    }
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        {t('profile.test_notification')}
+                                    </Button>
+                                </div>
+                            </div>
+                        </Card>
                         <div>
                             <label className="form-label">{t('common.phone')}</label>
                             <input

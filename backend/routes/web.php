@@ -46,6 +46,9 @@ Route::get('/debug-data', function () {
     ]);
 });
 
+// Admin Reports Route
+Route::get('/reports/monthly', [\App\Http\Controllers\Admin\ReportController::class, 'generateMonthlyReport']);
+
 // React App Catch-all (exclude API and PWA files)
 Route::get('/{any?}', function () {
     return view('welcome');

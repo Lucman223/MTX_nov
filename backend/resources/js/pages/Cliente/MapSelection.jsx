@@ -67,13 +67,49 @@ const MapSelection = ({ origen, setOrigen, destino, setDestino, puntoActivo, mot
                     <Popup>Punto de Destino</Popup>
                 </Marker>
             )}
-            {motoristaPos && (
-                <Marker position={motoristaPos}>
-                    <Popup>Tu Moto 🏍️</Popup>
-                </Marker>
-            )}
+            {motoristaPos && <MotoristaMarker position={motoristaPos} />}
         </MapContainer>
     );
 };
+
+// Animated Marker Component
+const MotoristaMarker = ({ position }) => {
+    const [currentPos, setCurrentPos] = useState(position);
+
+    // Very basic smoothing/interpolation effect
+    // [ES] Efecto de suavizado básico.
+    useEffect(() => {
+        if (!position) return;
+        const start = currentPos;
+        const end = position;
+
+        // If distance is large, jump (initial load)
+        if (Math.abs(start[0] - end[0]) > 0.1 || Math.abs(start[1] - end[1]) > 0.1) {
+            setCurrentPos(end);
+            return;
+        }
+
+        // Simple interpolation logic could go here, but for now React state update 
+        // will cause a render. Leaflet handles marker moves reasonably well.
+        // We update state to trigger re-render of Marker
+        setCurrentPos(position);
+
+    }, [position]);
+
+    return (
+        <Marker position={currentPos} icon={MotoristaIcon}>
+            <Popup>🛵 Tu Moto</Popup>
+        </Marker>
+    );
+};
+
+// Custom Icon for Bike
+const MotoristaIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/171/171254.png', // Generic bike icon URL or local asset
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+    popupAnchor: [0, -20],
+    className: 'motorista-marker-icon'
+});
 
 export default MapSelection;
