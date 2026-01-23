@@ -52,11 +52,24 @@ Route::get('/debug-config', function () {
         'sanctum_stateful' => config('sanctum.stateful'),
         'session_domain' => config('session.domain'),
         'app_url' => config('app.url'),
-        'request_host' => request()->getHost(),
-        'scheme' => request()->getScheme(),
-        'secure_cookie' => config('session.secure'),
-        'same_site' => config('session.same_site'),
     ]);
+});
+
+// EMERGENCIA: Resetear Password y Cache
+Route::get('/debug-reset-pass', function() {
+    try {
+        Artisan::call('optimize:clear'); // Force clear cache
+        
+        $user = \App\Models\User::where('email', 'cliente@mototx.com')->first();
+        if($user) {
+            $user->password = '123456'; 
+            $user->save();
+            return 'EXITO: Cache borrada y Password de cliente@mototx.com reseteada a: 123456';
+        }
+        return 'ERROR: Usuario no encontrado';
+    } catch (\Exception $e) {
+        return 'ERROR SISTEMA: ' . $e->getMessage();
+    }
 });
 
 // Admin Reports Route
