@@ -46,6 +46,19 @@ Route::get('/debug-data', function () {
     ]);
 });
 
+// Debug Config Route (Temporary)
+Route::get('/debug-config', function () {
+    return response()->json([
+        'sanctum_stateful' => config('sanctum.stateful'),
+        'session_domain' => config('session.domain'),
+        'app_url' => config('app.url'),
+        'request_host' => request()->getHost(),
+        'scheme' => request()->getScheme(),
+        'secure_cookie' => config('session.secure'),
+        'same_site' => config('session.same_site'),
+    ]);
+});
+
 // Admin Reports Route
 Route::get('/reports/monthly', [\App\Http\Controllers\Admin\ReportController::class, 'generateMonthlyReport']);
 
