@@ -48,9 +48,19 @@ function LoginPage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError('');
+
+        // DEBUG: Alert debugging for mobile
+        alert('Intentando login a: ' + (window.axios?.defaults?.baseURL || 'No BaseURL'));
+
         try {
             await login(email, password);
         } catch (err) {
+            console.error(err);
+            // Show full error object
+            alert('Error Login: ' + JSON.stringify(err.message || err));
+            if (err.response) {
+                alert('Status: ' + err.response.status + ' Data: ' + JSON.stringify(err.response.data));
+            }
             setError(err.message || t('auth.login_error'));
         }
     };
