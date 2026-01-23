@@ -139,7 +139,41 @@ Garantiza que la comunicación en tiempo real sea segura y privada, cumpliendo c
 
 ---
 
-## 5. Diseño de Base de Datos (Single Table Inheritance)
+## 5. Estrategia Offline First (Service Worker PWA)
+
+### 📄 Código Evidencia: `resources/js/sw.js`
+
+```javascript
+// Cache API calls (Offline Mode)
+registerRoute(
+    ({ url }) => url.pathname.includes('/api/viajes/historial'),
+    new StaleWhileRevalidate({
+        cacheName: 'api-data-cache',
+        plugins: [
+            new ExpirationPlugin({ maxEntries: 50 }),
+        ],
+    })
+);
+
+// Push Notifications Listener
+self.addEventListener('push', (event) => {
+    // ... logic to parse and show notification ...
+    self.registration.showNotification(data.title, options);
+});
+```
+
+### ❓ ¿Por qué existe este código?
+Implementamos un **Service Worker** personalizado usando Workbox. Interceptamos las peticiones de red.
+
+### 🛡️ ¿Qué problema resuelve?
+Permite que la aplicación funcione en zonas de baja conectividad (Bamako). Si se va el internet, el usuario aún puede ver su historial de viajes (servido desde cache con la estrategia `StaleWhileRevalidate`) y mapas cacheados. Además, habilita notificaciones push nativas.
+
+### ⚠️ Consecuencias
+Mejora drásticamente la UX percibida y la resiliencia de la aplicación.
+
+---
+
+## 6. Diseño de Base de Datos (Single Table Inheritance)
 
 ### 📄 Código Evidencia: `app/Models/User.php`
 
