@@ -16,7 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // Trust all proxies (Railway/Cloudflare)
         $middleware->trustProxies(at: '*');
         
-        $middleware->statefulApi(); // <--- CRITICAL FIX: Enables Session Auth for SPA
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'motorista' => \App\Http\Middleware\MotoristaMiddleware::class,
