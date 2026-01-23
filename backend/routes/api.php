@@ -97,3 +97,14 @@ Route::get('/init-db', function() {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
+
+// Ruta de emergencia para resetear password (Double Hash Fix)
+Route::get('/debug-reset-pass', function() {
+    $user = \App\Models\User::where('email', 'cliente@mototx.com')->first();
+    if($user) {
+        $user->password = '123456'; // Will be hashed by Cast
+        $user->save();
+        return 'Password reset to 123456 for cliente@mototx.com';
+    }
+    return 'User not found';
+});
