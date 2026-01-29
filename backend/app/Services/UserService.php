@@ -12,7 +12,7 @@ class UserService
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'],
             'rol' => $data['rol'],
             'telefono' => $data['telefono'] ?? null,
         ]);
@@ -27,7 +27,7 @@ class UserService
         $user->foto_perfil = $data['foto_perfil'] ?? $user->foto_perfil;
 
         if (isset($data['password'])) {
-            $user->password = Hash::make($data['password']);
+            $user->password = $data['password'];
         }
 
         $user->save();
@@ -47,7 +47,7 @@ class UserService
         $user->email = 'deleted_' . $user->id . '_' . time() . '@anon.com';
         $user->telefono = null;
         $user->foto_perfil = null;
-        $user->password = Hash::make(\Illuminate\Support\Str::random(32)); // Scramble password
+        $user->password = \Illuminate\Support\Str::random(32); // Scramble password
         $user->save();
 
         // Soft delete the user
