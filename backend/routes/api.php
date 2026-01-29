@@ -102,9 +102,37 @@ Route::get('/init-db', function() {
 Route::get('/debug-reset-pass', function() {
     $user = \App\Models\User::where('email', 'cliente@mototx.com')->first();
     if($user) {
-        $user->password = '123456'; // Will be hashed by Cast
+        $user->password = 'password'; 
         $user->save();
-        return 'Password reset to 123456 for cliente@mototx.com';
+        return 'Password reset to [password] for cliente@mototx.com';
     }
     return 'User not found';
+});
+
+Route::get('/debug-auth-check', function() {
+    $results = [];
+    $users = \App\Models\User::whereIn('email', ['admin@mototx.com', 'cliente@mototx.com', 'moto@mototx.com'])->get();
+    
+    if($users->isEmpty()) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No core users found. Please run /api/init-db first.',
+            'total_users_in_db' => \App\Models\User::count()
+        ]);
+    }
+
+    foreach($users as $user) {
+        $pass = ($user->email == 'moto@mototx.com') ? 'password123' : 'password';
+        $results[$user->email] = [
+            'rol' => $user->rol,
+            'check_password' => \Illuminate\Support\Facades\Hash::check($pass, $user->password),
+            'hash_prefix' => substr($user->password, 0, 8)
+        ];
+    }
+    
+    return response()->json([
+        'status' => 'ok',
+        'laravel_version' => app()->version(),
+        'checks' => $results
+    ]);
 });
