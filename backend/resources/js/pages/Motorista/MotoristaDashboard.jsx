@@ -54,14 +54,14 @@ const MotoristaDashboard = () => {
             try {
                 const statsRes = await axios.get('/api/motorista/stats');
                 setStats(statsRes.data);
-            } catch (e) { console.error('Error fetching stats', e); }
+            } catch (e) { }
 
             // Fetch Profile (Wallet Balance)
             try {
                 const profileRes = await axios.get('/api/motorista/perfil');
                 setProfile(profileRes.data);
                 setIsOnline(profileRes.data.estado_actual === 'activo');
-            } catch (e) { console.error('Error fetching profile', e); }
+            } catch (e) { }
 
             const activeRes = await axios.get('/api/viajes/actual');
             if (activeRes.data && activeRes.data.id) {
@@ -72,10 +72,7 @@ const MotoristaDashboard = () => {
                 const pendingRes = await axios.get('/api/motorista/viajes/solicitados');
                 setViajes(Array.isArray(pendingRes.data) ? pendingRes.data : []);
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
         } finally {
-            console.log('Driver Dashboard Data Refreshed:', { currentTrip, pendingTrips: viajes.length });
             setLoading(false);
         }
     };
@@ -92,10 +89,9 @@ const MotoristaDashboard = () => {
                     const { latitude, longitude } = position.coords;
                     try {
                         await axios.put('/api/motorista/ubicacion', { latitude, longitude });
-                        console.log('Location updated', { latitude, longitude });
                     } catch (err) { }
                 }, (error) => {
-                    console.error("Geolocation error:", error);
+                    // console.error("Error getting geolocation:", error); // Optionally log error
                 });
             }
         }, 10000);

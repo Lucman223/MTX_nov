@@ -54,7 +54,6 @@ const AdminDashboard = () => {
                 axios.get('/api/admin/chart-data')
             ]);
 
-            console.log('Admin Stats:', statsRes.data);
             setStats(statsRes.data);
             setChartData(chartRes.data);
         } catch (error) {
@@ -87,21 +86,19 @@ const AdminDashboard = () => {
         return activityList.map((activity, index) => (
             <div
                 key={index}
+                className="mtx-card"
                 style={{
-                    padding: '1rem',
-                    borderLeft: `3px solid ${activity.color}`,
-                    backgroundColor: 'white',
-                    borderRadius: '0.5rem',
+                    padding: '1rem 1.5rem',
+                    borderLeft: `5px solid ${activity.color}`,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
                 }}
             >
-                <span style={{ color: '#374151', fontWeight: '500' }}>
+                <span style={{ color: '#374151', fontWeight: '600' }}>
                     {activity.key ? t(activity.key, activity.params) : activity.text}
                 </span>
-                <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+                <span style={{ color: '#9ca3af', fontSize: '0.8rem', fontWeight: '500' }}>
                     {new Date(activity.time).toLocaleString()}
                 </span>
             </div>
@@ -186,9 +183,9 @@ const AdminDashboard = () => {
     }, []);
 
     return (
-        <div style={{ backgroundColor: '#f9fafb' }}>
+        <div className="main-content-centered">
             {/* Main Content */}
-            <main style={{ padding: isMobile ? '0' : '0', maxWidth: '1400px', margin: '0 auto' }}>
+            <main style={{ maxWidth: '1400px', margin: '0 auto', paddingBottom: '3rem' }}>
 
 
                 {/* Welcome Section */}
@@ -204,54 +201,41 @@ const AdminDashboard = () => {
 
                 {/* Stats Grid */}
                 {loading ? (
-                    <div style={{
-                        textAlign: 'center',
-                        padding: '3rem',
-                        color: '#6b7280',
-                        backgroundColor: 'white',
-                        borderRadius: '1rem',
-                        marginBottom: '2.5rem'
-                    }}>
+                    <div className="mtx-card" style={{ textAlign: 'center', padding: '3rem', marginBottom: '2.5rem' }}>
                         {t('admin_dashboard.loading')}
                     </div>
                 ) : (
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
                         gap: '1.5rem',
                         marginBottom: '2.5rem'
                     }}>
                         {statsConfig.map((stat, index) => (
                             <div
                                 key={index}
+                                className="mtx-card"
                                 style={{
-                                    backgroundColor: 'white',
                                     padding: '1.75rem',
-                                    borderRadius: '1rem',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                                    border: '1px solid #e5e7eb',
                                     transition: 'all 0.2s',
-                                    cursor: 'pointer'
+                                    cursor: 'pointer',
+                                    borderLeft: `5px solid ${stat.color}`
                                 }}
                                 onMouseOver={(e) => {
                                     e.currentTarget.style.transform = 'translateY(-4px)';
-                                    e.currentTarget.style.boxShadow = `0 8px 20px ${stat.color}30`;
-                                    e.currentTarget.style.borderColor = stat.color;
+                                    e.currentTarget.style.boxShadow = `0 8px 24px ${stat.color}25`;
                                 }}
                                 onMouseOut={(e) => {
                                     e.currentTarget.style.transform = 'translateY(0)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
-                                    e.currentTarget.style.borderColor = '#e5e7eb';
+                                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
                                 }}
+                                onClick={stat.onClick}
                             >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
-                                    <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '600' }}>
+                                    <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                         {stat.title}
                                     </div>
-                                    <div style={{
-                                        fontSize: '2rem',
-                                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
-                                    }}>
+                                    <div style={{ fontSize: '2rem' }}>
                                         {stat.icon}
                                     </div>
                                 </div>
@@ -264,7 +248,7 @@ const AdminDashboard = () => {
                                         color: colors.accent,
                                         fontWeight: '600',
                                         padding: '0.25rem 0.75rem',
-                                        background: `${colors.accent}20`,
+                                        background: `${colors.accent}15`,
                                         borderRadius: '0.5rem',
                                         display: 'inline-block',
                                         marginBottom: '0.5rem'
@@ -289,49 +273,50 @@ const AdminDashboard = () => {
                     </h3>
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                         gap: '1.5rem'
                     }}>
                         {quickActions.map((action, index) => (
                             <div
                                 key={index}
                                 onClick={action.action}
+                                className="mtx-card"
                                 style={{
-                                    backgroundColor: 'white',
-                                    padding: '2rem',
-                                    borderRadius: '1rem',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                                    border: '1px solid #e5e7eb',
+                                    padding: '2.5rem 2rem',
                                     cursor: 'pointer',
-                                    transition: 'all 0.2s'
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    textAlign: 'center'
                                 }}
                                 onMouseOver={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(-6px)';
-                                    e.currentTarget.style.boxShadow = `0 12px 24px ${action.color}30`;
+                                    e.currentTarget.style.transform = 'translateY(-8px)';
+                                    e.currentTarget.style.boxShadow = `0 20px 25px -5px ${action.color}20`;
                                     e.currentTarget.style.borderColor = action.color;
                                 }}
                                 onMouseOut={(e) => {
                                     e.currentTarget.style.transform = 'translateY(0)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
-                                    e.currentTarget.style.borderColor = '#e5e7eb';
+                                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                                    e.currentTarget.style.borderColor = 'var(--border-color)';
                                 }}
                             >
                                 <div style={{
-                                    fontSize: '3rem',
-                                    marginBottom: '1rem',
-                                    filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+                                    fontSize: '3.5rem',
+                                    marginBottom: '1.5rem',
+                                    filter: 'drop-shadow(0 10px 8px rgba(0,0,0,0.1))'
                                 }}>
                                     {action.icon}
                                 </div>
                                 <h4 style={{
                                     fontSize: '1.25rem',
                                     fontWeight: 'bold',
-                                    color: action.color,
-                                    marginBottom: '0.5rem'
+                                    color: '#1f2937',
+                                    marginBottom: '0.75rem'
                                 }}>
                                     {action.title}
                                 </h4>
-                                <p style={{ color: '#6b7280', fontSize: '0.95rem', lineHeight: 1.5 }}>
+                                <p style={{ color: '#6b7280', fontSize: '0.95rem', lineHeight: 1.6 }}>
                                     {action.description}
                                 </p>
                             </div>
@@ -343,17 +328,11 @@ const AdminDashboard = () => {
                 {!loading && <DashboardCharts data={chartData} />}
 
                 {/* Recent Activity */}
-                <div style={{
-                    backgroundColor: 'white',
-                    padding: '2rem',
-                    borderRadius: '1rem',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                    border: '1px solid #e5e7eb'
-                }}>
-                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
-                        {t('admin_dashboard.activity.title')}
+                <div className="mtx-card" style={{ padding: '2.5rem' }}>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <span style={{ fontSize: '1.2rem' }}>🔔</span> {t('admin_dashboard.activity.title')}
                     </h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
                         {renderActivity()}
                     </div>
                 </div>

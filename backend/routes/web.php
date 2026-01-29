@@ -47,47 +47,47 @@ Route::get('/debug-data', function () {
 });
 
 // Debug Config Route (Temporary)
-Route::get('/debug-config', function () {
-    return response()->json([
-        'sanctum_stateful' => config('sanctum.stateful'),
-        'session_domain' => config('session.domain'),
-        'app_url' => config('app.url'),
-    ]);
-});
+// Route::get('/debug-config', function () {
+//     return response()->json([
+//         'sanctum_stateful' => config('sanctum.stateful'),
+//         'session_domain' => config('session.domain'),
+//         'app_url' => config('app.url'),
+//     ]);
+// });
 
 // EMERGENCIA: Resetear Password y Cache
-Route::get('/debug-reset-pass', function() {
-    try {
-        Artisan::call('optimize:clear'); // Force clear cache
+// Route::get('/debug-reset-pass', function() {
+//     try {
+//         Artisan::call('optimize:clear'); // Force clear cache
         
-        $user = \App\Models\User::where('email', 'cliente@mototx.com')->first();
-        if($user) {
-            $user->password = '123456'; 
-            $user->save();
-            return 'EXITO: Cache borrada y Password de cliente@mototx.com reseteada a: 123456';
-        }
-        return 'ERROR: Usuario no encontrado. Ve a /debug-init-db para crearlos.';
-    } catch (\Exception $e) {
-        return 'ERROR SISTEMA: ' . $e->getMessage();
-    }
-});
+//         $user = \App\Models\User::where('email', 'cliente@mototx.com')->first();
+//         if($user) {
+//             $user->password = '123456'; 
+//             $user->save();
+//             return 'EXITO: Cache borrada y Password de cliente@mototx.com reseteada a: 123456';
+//         }
+//         return 'ERROR: Usuario no encontrado. Ve a /debug-init-db para crearlos.';
+//     } catch (\Exception $e) {
+//         return 'ERROR SISTEMA: ' . $e->getMessage();
+//     }
+// });
 
 // ULTIMO RECURSO: Recrear Base de Datos
-Route::get('/debug-init-db', function() {
-    try {
-        // Aumentar tiempo de ejecución para migraciones lentas
-        set_time_limit(300);
+// Route::get('/debug-init-db', function() {
+//     try {
+//         // Aumentar tiempo de ejecución para migraciones lentas
+//         set_time_limit(300);
         
-        Artisan::call('migrate:fresh', [
-            '--force' => true,
-            '--seed' => true
-        ]);
+//         Artisan::call('migrate:fresh', [
+//             '--force' => true,
+//             '--seed' => true
+//         ]);
         
-        return 'EXITO TOTAL: Base de datos recreada y semillas ejecutadas. Usuario: cliente@mototx.com / password';
-    } catch (\Exception $e) {
-        return 'ERROR CRITICO DB: ' . $e->getMessage();
-    }
-});
+//         return 'EXITO TOTAL: Base de datos recreada y semillas ejecutadas. Usuario: cliente@mototx.com / password';
+//     } catch (\Exception $e) {
+//         return 'ERROR CRITICO DB: ' . $e->getMessage();
+//     }
+// });
 
 // Admin Reports Route
 Route::get('/reports/monthly', [\App\Http\Controllers\Admin\ReportController::class, 'generateMonthlyReport']);

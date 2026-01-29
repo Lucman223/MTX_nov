@@ -26,15 +26,15 @@ ClienteForfait::truncate();
 
 $admin = User::create([
     'name' => 'Admin Test',
-    'email' => 'admin@test.com',
+    'email' => 'admin@mototx.com',
     'password' => Hash::make('password'),
     'rol' => 'admin',
     'telefono' => '00000000'
 ]);
 
 $client = User::create([
-    'name' => 'Client Test',
-    'email' => 'client@test.com',
+    'name' => 'Cliente Test',
+    'email' => 'cliente@mototx.com',
     'password' => Hash::make('password'),
     'rol' => 'cliente',
     'telefono' => '11111111'
@@ -42,8 +42,8 @@ $client = User::create([
 
 $motorista = User::create([
     'name' => 'Moto Test',
-    'email' => 'moto@test.com',
-    'password' => Hash::make('password'),
+    'email' => 'moto@mototx.com',
+    'password' => Hash::make('password123'),
     'rol' => 'motorista',
     'telefono' => '22222222'
 ]);

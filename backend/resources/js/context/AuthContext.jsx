@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }) => {
                     setIsAuthenticated(true);
                 }
             } catch (error) {
-                console.error('Error verifying token:', error);
 
                 // Only logout if it's strictly an Auth error (401 - Unauthorized)
                 if (error.response && error.response.status === 401) {
@@ -85,7 +84,6 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             return true;
         } catch (error) {
-            console.error('Login failed:', error);
             throw error; // Throw original error for debugging in Login page
         } finally {
             setLoading(false);
@@ -118,7 +116,6 @@ export const AuthProvider = ({ children }) => {
             const response = await axios.get('/api/auth/profile');
             setUser(response.data.user);
         } catch (error) {
-            console.error('Error refreshing user profile:', error);
         }
     };
 
@@ -135,7 +132,6 @@ export const AuthProvider = ({ children }) => {
             // After successful registration, login automatically
             return await login(data.email, data.password);
         } catch (error) {
-            console.error('Registration failed:', error);
             throw new Error(error.response?.data?.message || 'Registration failed');
         } finally {
             setLoading(false);

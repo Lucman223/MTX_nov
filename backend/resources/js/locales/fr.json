@@ -253,6 +253,11 @@
                 "label_name": "Nom du Pack",
                 "label_price": "Prix (CFA)",
                 "label_trips": "Nombre de Trajets",
+                "label_days": "Jours de Validité",
+                "label_distance": "Distance Maximale (km)",
+                "label_status": "État",
+                "label_description": "Description",
+                "save": "Enregistrer le Forfait",
                 "cancel": "Annuler"
             }
         }
@@ -310,15 +315,40 @@
         "register_as": "S'inscrire en tant que {{role}}",
         "footer_desc": "Plateforme de gestion de forfaits pour Mototaxi à Bamako",
         "footer_copyright": "© 2025 MotoTX - Développé avec ❤️ pour améliorer le transport au Mali",
-        "privacy_policy": "Politique de Confidentialité"
+        "privacy_policy": "Politique de Confidentialité",
+        "mission_title": "Notre Mission",
+        "mission_text": "Chez MotoTX, notre mission est de transformer le transport urbain à Bamako en offrant une solution sûre, rapide et abordable pour tous. Nous croyons en la technologie au service de la mobilité malienne.",
+        "how_title": "Comment ça marche ?",
+        "faq_title": "Questions Fréquentes",
+        "faq_q1": "Le service est-il disponible 24h/24 ?",
+        "faq_a1": "Oui, nos chauffeurs sont disponibles à toute heure, bien que la disponibilité puisse varier selon la zone.",
+        "faq_q2": "Comment puis-je payer ?",
+        "faq_a2": "Nous acceptons les paiements via Orange Money et d'autres solutions locales intégrées.",
+        "contact_title": "Contactez-nous",
+        "contact_send": "Envoyer le Message",
+        "contact_name": "Votre Nom",
+        "contact_message": "Votre Message"
     },
     "plans": {
         "Diario": "Journalier",
         "Semanal": "Hebdomadaire",
         "Mensual VIP": "Mensuel VIP",
-        "desc_diario": "Accès complet pendant 24 heures",
-        "desc_semanal": "Économisez avec le plan hebdomadaire",
-        "desc_mensual": "Accès premium et priorité d'affectation"
+        "pack_urbano": "Pack Urbain (5km)",
+        "pack_confort": "Pack Confort (10km)",
+        "pack_viajero": "Pack Voyageur (15km)",
+        "pack_transversal": "Pack Transversal (Pro)",
+        "pack_urbano_desc": "Trajets en ville dans un rayon de 5km",
+        "pack_confort_desc": "Idéal pour les trajets moyens jusqu'à 10km",
+        "pack_viajero_desc": "Pour parcourir tout Bamako jusqu'à 15km",
+        "pack_transversal_desc": "Sans limite de distance. Mobilité totale.",
+        "Pack Urbano Bamako (5km)": "Pack Urbain (5km)",
+        "Pack Confort (10km)": "Pack Confort (10km)",
+        "Pack Viajero (15km)": "Pack Voyageur (15km)",
+        "Pack Transversale (Pro)": "Pack Transversal (Pro)",
+        "Pack Urbano Bamako (5km)_desc": "Trajets en ville dans un rayon de 5km",
+        "Pack Confort (10km)_desc": "Idéal pour les trajets moyens jusqu'à 10km",
+        "Pack Viajero (15km)_desc": "Pour parcourir tout Bamako jusqu'à 15km",
+        "Pack Transversale (Pro)_desc": "Sans limite de distance. Mobilité totale."
     },
     "client_profile": {
         "personal_info": "Informations Personnelles",
@@ -342,5 +372,17 @@
         "update_success": "Profil mis à jour",
         "update_error": "Erreur de mise à jour",
         "loading_error": "Erreur de chargement des données"
+    },
+    "seo": {
+        "landing_title": "MotoTX - Transport Sûr et Fiable à Bamako",
+        "landing_desc": "La plateforme de mototaxi premium à Bamako. Sécurité, rapidité et transparence pour tous vos trajets.",
+        "login_title": "Connexion - MotoTX",
+        "login_desc": "Connectez-vous à votre compte MotoTX pour gérer vos trajets ou vos activités de conducteur.",
+        "register_title": "Rejoignez MotoTX - Inscription",
+        "register_desc": "Inscrivez-vous comme client ou conducteur et découvrez une nouvelle façon de se déplacer à Bamako.",
+        "privacy_title": "Politique de Confidentialité - MotoTX",
+        "privacy_desc": "Découvrez comment nous protégeons vos données personnelles conformément à la loi malienne.",
+        "terms_title": "Conditions Générales - MotoTX",
+        "terms_desc": "Les règles et conditions d'utilisation de la plateforme MotoTX au Mali."
     }
 }

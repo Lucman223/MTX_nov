@@ -19,7 +19,7 @@ function RegisterPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { register, loading } = useAuth();
+    const { register, loading, isAuthenticated, user } = useAuth();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [telefono, setTelefono] = useState('');
@@ -29,13 +29,27 @@ function RegisterPage() {
     const [aceptaTerminos, setAceptaTerminos] = useState(false);
     const [error, setError] = useState('');
 
-    // Color system
+    // Color system (Accessible)
     const colors = {
         primary: '#2563eb',
-        secondary: '#10b981',
-        accent: '#f59e0b',
+        secondary: '#059669',
+        accent: '#b45309',
         error: '#ef4444'
     };
+
+    useEffect(() => {
+        if (!loading && isAuthenticated && user) {
+            if (user.rol === 'admin') {
+                navigate('/admin', { replace: true });
+            } else if (user.rol === 'cliente') {
+                navigate('/cliente', { replace: true });
+            } else if (user.rol === 'motorista') {
+                navigate('/motorista', { replace: true });
+            } else {
+                navigate('/', { replace: true });
+            }
+        }
+    }, [isAuthenticated, loading, user, navigate]);
 
     // Pre-select role from URL parameter
     useEffect(() => {
@@ -95,17 +109,19 @@ function RegisterPage() {
             position: 'relative'
         }}>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-                <SEO title={t('common.register')} />
                 <LanguageSwitcher />
             </div>
+            <SEO
+                title={t('seo.register_title')}
+                description={t('seo.register_desc')}
+            />
 
-            <div style={{
-                background: 'white',
-                borderRadius: '1.5rem',
+            <div className="mtx-card" style={{
+                maxWidth: '500px',
+                width: '100%',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
                 padding: '3rem',
-                maxWidth: '500px',
-                width: '100%'
+                border: 'none'
             }}>
                 {/* Logo y título */}
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -151,22 +167,12 @@ function RegisterPage() {
                         <input
                             type="text"
                             id="name"
+                            className="mtx-input"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
                             disabled={loading}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem',
-                                border: '2px solid #e5e7eb',
-                                borderRadius: '0.5rem',
-                                fontSize: '1rem',
-                                transition: 'border-color 0.2s',
-                                outline: 'none',
-                                opacity: loading ? 0.7 : 1
-                            }}
-                            onFocus={(e) => e.target.style.borderColor = getRoleColor()}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -185,22 +191,12 @@ function RegisterPage() {
                         <input
                             type="email"
                             id="email"
+                            className="mtx-input"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
                             disabled={loading}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem',
-                                border: '2px solid #e5e7eb',
-                                borderRadius: '0.5rem',
-                                fontSize: '1rem',
-                                transition: 'border-color 0.2s',
-                                outline: 'none',
-                                opacity: loading ? 0.7 : 1
-                            }}
-                            onFocus={(e) => e.target.style.borderColor = getRoleColor()}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -219,22 +215,12 @@ function RegisterPage() {
                         <input
                             type="tel"
                             id="telefono"
+                            className="mtx-input"
                             value={telefono}
                             onChange={(e) => setTelefono(e.target.value)}
                             required
                             disabled={loading}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem',
-                                border: '2px solid #e5e7eb',
-                                borderRadius: '0.5rem',
-                                fontSize: '1rem',
-                                transition: 'border-color 0.2s',
-                                outline: 'none',
-                                opacity: loading ? 0.7 : 1
-                            }}
-                            onFocus={(e) => e.target.style.borderColor = getRoleColor()}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -253,22 +239,12 @@ function RegisterPage() {
                         <input
                             type="password"
                             id="password"
+                            className="mtx-input"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             disabled={loading}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem',
-                                border: '2px solid #e5e7eb',
-                                borderRadius: '0.5rem',
-                                fontSize: '1rem',
-                                transition: 'border-color 0.2s',
-                                outline: 'none',
-                                opacity: loading ? 0.7 : 1
-                            }}
-                            onFocus={(e) => e.target.style.borderColor = getRoleColor()}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -287,22 +263,12 @@ function RegisterPage() {
                         <input
                             type="password"
                             id="password_confirmation"
+                            className="mtx-input"
                             value={passwordConfirmation}
                             onChange={(e) => setPasswordConfirmation(e.target.value)}
                             required
                             disabled={loading}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem',
-                                border: '2px solid #e5e7eb',
-                                borderRadius: '0.5rem',
-                                fontSize: '1rem',
-                                transition: 'border-color 0.2s',
-                                outline: 'none',
-                                opacity: loading ? 0.7 : 1
-                            }}
-                            onFocus={(e) => e.target.style.borderColor = getRoleColor()}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -374,31 +340,9 @@ function RegisterPage() {
 
                     <button
                         type="submit"
+                        className="mtx-button mtx-button-primary"
                         disabled={loading}
-                        style={{
-                            width: '100%',
-                            padding: '1rem',
-                            background: getRoleColor(),
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '0.75rem',
-                            fontSize: '1.05rem',
-                            fontWeight: 'bold',
-                            cursor: loading ? 'not-allowed' : 'pointer',
-                            transition: 'all 0.2s',
-                            boxShadow: `0 4px 12px ${getRoleColor()}40`,
-                            opacity: loading ? 0.7 : 1
-                        }}
-                        onMouseOver={(e) => {
-                            if (!loading) {
-                                e.target.style.transform = 'translateY(-2px)';
-                                e.target.style.boxShadow = `0 6px 16px ${getRoleColor()}50`;
-                            }
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.transform = 'translateY(0)';
-                            e.target.style.boxShadow = `0 4px 12px ${getRoleColor()}40`;
-                        }}
+                        style={{ width: '100%', background: getRoleColor(), boxShadow: `0 4px 12px ${getRoleColor()}40` }}
                     >
                         {loading ? t('common.loading') : t('common.register')}
                     </button>

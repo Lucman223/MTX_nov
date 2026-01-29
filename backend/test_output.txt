@@ -1,0 +1,338 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   FAIL  Tests\Feature\UserDeletionTest
+  Ô¿» user canÔÇª  0.96s  
+  Ô¿» user cannÔÇª 0.04s  
+  ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ  
+   FAILED  Tests\FÔÇª   
+  Expected response status code [200] but received 500.
+Failed asserting that 500 is identical to 200.
+
+The following exception occurred during the last request:
+
+PDOException: SQLSTATE[HY000]: General error: 1 no such column: users.deleted_at in C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php:406
+Stack trace:
+#0 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(406): PDO->prepare('select * from "...')
+#1 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(811): Illuminate\Database\Connection->Illuminate\Database\{closure}('select * from "...', Array)
+#2 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(778): Illuminate\Database\Connection->runQueryCallback('select * from "...', Array, Object(Closure))
+#3 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(397): Illuminate\Database\Connection->run('select * from "...', Array, Object(Closure))
+#4 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3188): Illuminate\Database\Connection->select('select * from "...', Array, true)
+#5 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3173): Illuminate\Database\Query\Builder->runSelect()
+#6 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3763): Illuminate\Database\Query\Builder->Illuminate\Database\Query\{closure}()
+#7 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3172): Illuminate\Database\Query\Builder->onceWithColumns(Array, Object(Closure))
+#8 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php(902): Illuminate\Database\Query\Builder->get(Array)
+#9 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php(884): Illuminate\Database\Eloquent\Builder->getModels(Array)
+#10 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Concerns\BuildsQueries.php(366): Illuminate\Database\Eloquent\Builder->get(Array)
+#11 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Auth\EloquentUserProvider.php(58): Illuminate\Database\Eloquent\Builder->first()
+#12 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Auth\SessionGuard.php(286): Illuminate\Auth\EloquentUserProvider->retrieveById('1')
+#13 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Providers\Auth\Illuminate.php(56): Illuminate\Auth\SessionGuard->onceUsingId('1')
+#14 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\JWTAuth.php(65): Tymon\JWTAuth\Providers\Auth\Illuminate->byId('1')
+#15 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Http\Middleware\BaseMiddleware.php(68): Tymon\JWTAuth\JWTAuth->authenticate()
+#16 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Http\Middleware\Authenticate.php(30): Tymon\JWTAuth\Http\Middleware\BaseMiddleware->authenticate(Object(Illuminate\Http\Request))
+#17 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Tymon\JWTAuth\Http\Middleware\Authenticate->handle(Object(Illuminate\Http\Request), Object(Closure))
+#18 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#19 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Routing\Middleware\SubstituteBindings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#20 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(137): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#21 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(821): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#22 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(800): Illuminate\Routing\Router->runRouteWithinStack(Object(Illuminate\Routing\Route), Object(Illuminate\Http\Request))
+#23 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(764): Illuminate\Routing\Router->runRoute(Object(Illuminate\Http\Request), Object(Illuminate\Routing\Route))
+#24 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(753): Illuminate\Routing\Router->dispatchToRoute(Object(Illuminate\Http\Request))
+#25 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(200): Illuminate\Routing\Router->dispatch(Object(Illuminate\Http\Request))
+#26 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(180): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}(Object(Illuminate\Http\Request))
+#27 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#28 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#29 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(Object(Illuminate\Http\Request), Object(Closure))
+#30 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#31 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#32 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\TrimStrings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#33 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#34 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\ValidatePostSize->handle(Object(Illuminate\Http\Request), Object(Closure))
+#35 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#36 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(Object(Illuminate\Http\Request), Object(Closure))
+#37 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\HandleCors.php(61): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#38 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\HandleCors->handle(Object(Illuminate\Http\Request), Object(Closure))
+#39 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#40 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\TrustProxies->handle(Object(Illuminate\Http\Request), Object(Closure))
+#41 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#42 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(Object(Illuminate\Http\Request), Object(Closure))
+#43 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#44 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\ValidatePathEncoding->handle(Object(Illuminate\Http\Request), Object(Closure))
+#45 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(137): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#46 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(175): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#47 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#48 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#49 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase->call('DELETE', '/api/profile', Array, Array, Array, Array, '{"password":"pa...')
+#50 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(501): Illuminate\Foundation\Testing\TestCase->json('DELETE', '/api/profile', Array, Array, 0)
+#51 C:\Users\lucman\Desktop\mtx_nov\backend\tests\Feature\UserDeletionTest.php(35): Illuminate\Foundation\Testing\TestCase->deleteJson('/api/profile', Array)
+#52 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(1657): Tests\Feature\UserDeletionTest->test_user_can_delete_account()
+#53 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(515): PHPUnit\Framework\TestCase->runTest()
+#54 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestRunner\TestRunner.php(87): PHPUnit\Framework\TestCase->runBare()
+#55 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(361): PHPUnit\Framework\TestRunner->run(Object(Tests\Feature\UserDeletionTest))
+#56 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestCase->run()
+#57 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#58 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#59 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\TextUI\TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#60 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\TextUI\Application.php(211): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#61 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\phpunit(104): PHPUnit\TextUI\Application->run(Array)
+#62 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[HY000]: General error: 1 no such column: users.deleted_at (Connection: sqlite, SQL: select * from "users" where "id" = 1 and "users"."deleted_at" is null limit 1) in C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php:824
+Stack trace:
+#0 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(778): Illuminate\Database\Connection->runQueryCallback('select * from "...', Array, Object(Closure))
+#1 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(397): Illuminate\Database\Connection->run('select * from "...', Array, Object(Closure))
+#2 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3188): Illuminate\Database\Connection->select('select * from "...', Array, true)
+#3 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3173): Illuminate\Database\Query\Builder->runSelect()
+#4 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3763): Illuminate\Database\Query\Builder->Illuminate\Database\Query\{closure}()
+#5 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3172): Illuminate\Database\Query\Builder->onceWithColumns(Array, Object(Closure))
+#6 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php(902): Illuminate\Database\Query\Builder->get(Array)
+#7 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php(884): Illuminate\Database\Eloquent\Builder->getModels(Array)
+#8 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Concerns\BuildsQueries.php(366): Illuminate\Database\Eloquent\Builder->get(Array)
+#9 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Auth\EloquentUserProvider.php(58): Illuminate\Database\Eloquent\Builder->first()
+#10 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Auth\SessionGuard.php(286): Illuminate\Auth\EloquentUserProvider->retrieveById('1')
+#11 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Providers\Auth\Illuminate.php(56): Illuminate\Auth\SessionGuard->onceUsingId('1')
+#12 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\JWTAuth.php(65): Tymon\JWTAuth\Providers\Auth\Illuminate->byId('1')
+#13 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Http\Middleware\BaseMiddleware.php(68): Tymon\JWTAuth\JWTAuth->authenticate()
+#14 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Http\Middleware\Authenticate.php(30): Tymon\JWTAuth\Http\Middleware\BaseMiddleware->authenticate(Object(Illuminate\Http\Request))
+#15 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Tymon\JWTAuth\Http\Middleware\Authenticate->handle(Object(Illuminate\Http\Request), Object(Closure))
+#16 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#17 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Routing\Middleware\SubstituteBindings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#18 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(137): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#19 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(821): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#20 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(800): Illuminate\Routing\Router->runRouteWithinStack(Object(Illuminate\Routing\Route), Object(Illuminate\Http\Request))
+#21 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(764): Illuminate\Routing\Router->runRoute(Object(Illuminate\Http\Request), Object(Illuminate\Routing\Route))
+#22 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(753): Illuminate\Routing\Router->dispatchToRoute(Object(Illuminate\Http\Request))
+#23 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(200): Illuminate\Routing\Router->dispatch(Object(Illuminate\Http\Request))
+#24 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(180): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}(Object(Illuminate\Http\Request))
+#25 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#26 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#27 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(Object(Illuminate\Http\Request), Object(Closure))
+#28 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#29 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#30 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\TrimStrings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#31 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#32 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\ValidatePostSize->handle(Object(Illuminate\Http\Request), Object(Closure))
+#33 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#34 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(Object(Illuminate\Http\Request), Object(Closure))
+#35 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\HandleCors.php(61): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#36 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\HandleCors->handle(Object(Illuminate\Http\Request), Object(Closure))
+#37 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#38 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\TrustProxies->handle(Object(Illuminate\Http\Request), Object(Closure))
+#39 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#40 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(Object(Illuminate\Http\Request), Object(Closure))
+#41 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#42 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\ValidatePathEncoding->handle(Object(Illuminate\Http\Request), Object(Closure))
+#43 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(137): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#44 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(175): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#45 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#46 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#47 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase->call('DELETE', '/api/profile', Array, Array, Array, Array, '{"password":"pa...')
+#48 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(501): Illuminate\Foundation\Testing\TestCase->json('DELETE', '/api/profile', Array, Array, 0)
+#49 C:\Users\lucman\Desktop\mtx_nov\backend\tests\Feature\UserDeletionTest.php(35): Illuminate\Foundation\Testing\TestCase->deleteJson('/api/profile', Array)
+#50 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(1657): Tests\Feature\UserDeletionTest->test_user_can_delete_account()
+#51 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(515): PHPUnit\Framework\TestCase->runTest()
+#52 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestRunner\TestRunner.php(87): PHPUnit\Framework\TestCase->runBare()
+#53 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(361): PHPUnit\Framework\TestRunner->run(Object(Tests\Feature\UserDeletionTest))
+#54 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestCase->run()
+#55 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#56 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#57 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\TextUI\TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#58 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\TextUI\Application.php(211): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#59 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\phpunit(104): PHPUnit\TextUI\Application->run(Array)
+#60 {main}
+
+----------------------------------------------------------------------------------
+
+SQLSTATE[HY000]: General error: 1 no such column: users.deleted_at (Connection: sqlite, SQL: select * from "users" where "id" = 1 and "users"."deleted_at" is null limit 1)
+
+  at tests\Feature\UserDeletionTest.php:40
+     36Ôûò             'password' => 'password'
+     37Ôûò         ]);
+     38Ôûò 
+     39Ôûò         // 4. Assert response
+  Ô×£  40Ôûò         $response->assertStatus(200)
+     41Ôûò                  ->assertJson(['message' => 'Account deleted successfully']);
+     42Ôûò 
+     43Ôûò         // 5. Assert user is soft deleted in DB
+     44Ôûò         $this->assertSoftDeleted('users', [
+
+  ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ  
+   FAILED  Tests\FÔÇª   
+  Expected response status code [422] but received 500.
+Failed asserting that 500 is identical to 422.
+
+The following exception occurred during the last request:
+
+PDOException: SQLSTATE[HY000]: General error: 1 no such column: users.deleted_at in C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php:406
+Stack trace:
+#0 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(406): PDO->prepare('select * from "...')
+#1 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(811): Illuminate\Database\Connection->Illuminate\Database\{closure}('select * from "...', Array)
+#2 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(778): Illuminate\Database\Connection->runQueryCallback('select * from "...', Array, Object(Closure))
+#3 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(397): Illuminate\Database\Connection->run('select * from "...', Array, Object(Closure))
+#4 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3188): Illuminate\Database\Connection->select('select * from "...', Array, true)
+#5 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3173): Illuminate\Database\Query\Builder->runSelect()
+#6 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3763): Illuminate\Database\Query\Builder->Illuminate\Database\Query\{closure}()
+#7 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3172): Illuminate\Database\Query\Builder->onceWithColumns(Array, Object(Closure))
+#8 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php(902): Illuminate\Database\Query\Builder->get(Array)
+#9 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php(884): Illuminate\Database\Eloquent\Builder->getModels(Array)
+#10 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Concerns\BuildsQueries.php(366): Illuminate\Database\Eloquent\Builder->get(Array)
+#11 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Auth\EloquentUserProvider.php(58): Illuminate\Database\Eloquent\Builder->first()
+#12 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Auth\SessionGuard.php(286): Illuminate\Auth\EloquentUserProvider->retrieveById('1')
+#13 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Providers\Auth\Illuminate.php(56): Illuminate\Auth\SessionGuard->onceUsingId('1')
+#14 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\JWTAuth.php(65): Tymon\JWTAuth\Providers\Auth\Illuminate->byId('1')
+#15 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Http\Middleware\BaseMiddleware.php(68): Tymon\JWTAuth\JWTAuth->authenticate()
+#16 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Http\Middleware\Authenticate.php(30): Tymon\JWTAuth\Http\Middleware\BaseMiddleware->authenticate(Object(Illuminate\Http\Request))
+#17 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Tymon\JWTAuth\Http\Middleware\Authenticate->handle(Object(Illuminate\Http\Request), Object(Closure))
+#18 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#19 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Routing\Middleware\SubstituteBindings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#20 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(137): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#21 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(821): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#22 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(800): Illuminate\Routing\Router->runRouteWithinStack(Object(Illuminate\Routing\Route), Object(Illuminate\Http\Request))
+#23 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(764): Illuminate\Routing\Router->runRoute(Object(Illuminate\Http\Request), Object(Illuminate\Routing\Route))
+#24 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(753): Illuminate\Routing\Router->dispatchToRoute(Object(Illuminate\Http\Request))
+#25 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(200): Illuminate\Routing\Router->dispatch(Object(Illuminate\Http\Request))
+#26 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(180): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}(Object(Illuminate\Http\Request))
+#27 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#28 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#29 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(Object(Illuminate\Http\Request), Object(Closure))
+#30 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#31 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#32 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\TrimStrings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#33 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#34 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\ValidatePostSize->handle(Object(Illuminate\Http\Request), Object(Closure))
+#35 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#36 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(Object(Illuminate\Http\Request), Object(Closure))
+#37 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\HandleCors.php(61): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#38 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\HandleCors->handle(Object(Illuminate\Http\Request), Object(Closure))
+#39 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#40 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\TrustProxies->handle(Object(Illuminate\Http\Request), Object(Closure))
+#41 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#42 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(Object(Illuminate\Http\Request), Object(Closure))
+#43 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#44 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\ValidatePathEncoding->handle(Object(Illuminate\Http\Request), Object(Closure))
+#45 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(137): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#46 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(175): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#47 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#48 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#49 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase->call('DELETE', '/api/profile', Array, Array, Array, Array, '{"password":"wr...')
+#50 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(501): Illuminate\Foundation\Testing\TestCase->json('DELETE', '/api/profile', Array, Array, 0)
+#51 C:\Users\lucman\Desktop\mtx_nov\backend\tests\Feature\UserDeletionTest.php(65): Illuminate\Foundation\Testing\TestCase->deleteJson('/api/profile', Array)
+#52 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(1657): Tests\Feature\UserDeletionTest->test_user_cannot_delete_account_with_wrong_password()
+#53 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(515): PHPUnit\Framework\TestCase->runTest()
+#54 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestRunner\TestRunner.php(87): PHPUnit\Framework\TestCase->runBare()
+#55 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(361): PHPUnit\Framework\TestRunner->run(Object(Tests\Feature\UserDeletionTest))
+#56 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestCase->run()
+#57 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#58 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#59 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\TextUI\TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#60 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\TextUI\Application.php(211): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#61 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\phpunit(104): PHPUnit\TextUI\Application->run(Array)
+#62 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[HY000]: General error: 1 no such column: users.deleted_at (Connection: sqlite, SQL: select * from "users" where "id" = 1 and "users"."deleted_at" is null limit 1) in C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php:824
+Stack trace:
+#0 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(778): Illuminate\Database\Connection->runQueryCallback('select * from "...', Array, Object(Closure))
+#1 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Connection.php(397): Illuminate\Database\Connection->run('select * from "...', Array, Object(Closure))
+#2 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3188): Illuminate\Database\Connection->select('select * from "...', Array, true)
+#3 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3173): Illuminate\Database\Query\Builder->runSelect()
+#4 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3763): Illuminate\Database\Query\Builder->Illuminate\Database\Query\{closure}()
+#5 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(3172): Illuminate\Database\Query\Builder->onceWithColumns(Array, Object(Closure))
+#6 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php(902): Illuminate\Database\Query\Builder->get(Array)
+#7 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Builder.php(884): Illuminate\Database\Eloquent\Builder->getModels(Array)
+#8 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Database\Concerns\BuildsQueries.php(366): Illuminate\Database\Eloquent\Builder->get(Array)
+#9 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Auth\EloquentUserProvider.php(58): Illuminate\Database\Eloquent\Builder->first()
+#10 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Auth\SessionGuard.php(286): Illuminate\Auth\EloquentUserProvider->retrieveById('1')
+#11 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Providers\Auth\Illuminate.php(56): Illuminate\Auth\SessionGuard->onceUsingId('1')
+#12 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\JWTAuth.php(65): Tymon\JWTAuth\Providers\Auth\Illuminate->byId('1')
+#13 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Http\Middleware\BaseMiddleware.php(68): Tymon\JWTAuth\JWTAuth->authenticate()
+#14 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\tymon\jwt-auth\src\Http\Middleware\Authenticate.php(30): Tymon\JWTAuth\Http\Middleware\BaseMiddleware->authenticate(Object(Illuminate\Http\Request))
+#15 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Tymon\JWTAuth\Http\Middleware\Authenticate->handle(Object(Illuminate\Http\Request), Object(Closure))
+#16 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#17 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Routing\Middleware\SubstituteBindings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#18 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(137): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#19 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(821): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#20 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(800): Illuminate\Routing\Router->runRouteWithinStack(Object(Illuminate\Routing\Route), Object(Illuminate\Http\Request))
+#21 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(764): Illuminate\Routing\Router->runRoute(Object(Illuminate\Http\Request), Object(Illuminate\Routing\Route))
+#22 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Routing\Router.php(753): Illuminate\Routing\Router->dispatchToRoute(Object(Illuminate\Http\Request))
+#23 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(200): Illuminate\Routing\Router->dispatch(Object(Illuminate\Http\Request))
+#24 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(180): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}(Object(Illuminate\Http\Request))
+#25 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#26 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#27 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(Object(Illuminate\Http\Request), Object(Closure))
+#28 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#29 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#30 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\TrimStrings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#31 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#32 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\ValidatePostSize->handle(Object(Illuminate\Http\Request), Object(Closure))
+#33 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#34 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(Object(Illuminate\Http\Request), Object(Closure))
+#35 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\HandleCors.php(61): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#36 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\HandleCors->handle(Object(Illuminate\Http\Request), Object(Closure))
+#37 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#38 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\TrustProxies->handle(Object(Illuminate\Http\Request), Object(Closure))
+#39 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#40 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(Object(Illuminate\Http\Request), Object(Closure))
+#41 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#42 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(219): Illuminate\Http\Middleware\ValidatePathEncoding->handle(Object(Illuminate\Http\Request), Object(Closure))
+#43 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(137): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#44 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(175): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#45 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#46 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#47 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase->call('DELETE', '/api/profile', Array, Array, Array, Array, '{"password":"wr...')
+#48 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\laravel\framework\src\Illuminate\Foundation\Testing\Concerns\MakesHttpRequests.php(501): Illuminate\Foundation\Testing\TestCase->json('DELETE', '/api/profile', Array, Array, 0)
+#49 C:\Users\lucman\Desktop\mtx_nov\backend\tests\Feature\UserDeletionTest.php(65): Illuminate\Foundation\Testing\TestCase->deleteJson('/api/profile', Array)
+#50 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(1657): Tests\Feature\UserDeletionTest->test_user_cannot_delete_account_with_wrong_password()
+#51 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(515): PHPUnit\Framework\TestCase->runTest()
+#52 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestRunner\TestRunner.php(87): PHPUnit\Framework\TestCase->runBare()
+#53 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestCase.php(361): PHPUnit\Framework\TestRunner->run(Object(Tests\Feature\UserDeletionTest))
+#54 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestCase->run()
+#55 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#56 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\Framework\TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#57 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\TextUI\TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#58 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\src\TextUI\Application.php(211): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#59 C:\Users\lucman\Desktop\mtx_nov\backend\vendor\phpunit\phpunit\phpunit(104): PHPUnit\TextUI\Application->run(Array)
+#60 {main}
+
+----------------------------------------------------------------------------------
+
+SQLSTATE[HY000]: General error: 1 no such column: users.deleted_at (Connection: sqlite, SQL: select * from "users" where "id" = 1 and "users"."deleted_at" is null limit 1)
+
+  at tests\Feature\UserDeletionTest.php:69
+     65Ôûò         ])->deleteJson('/api/profile', [
+     66Ôûò             'password' => 'wrong-password'
+     67Ôûò         ]);
+     68Ôûò 
+  Ô×£  69Ôûò         $response->assertStatus(422);
+     70Ôûò     }
+     71Ôûò }
+     72Ôûò
+
+
+  Tests:    2 failed (2 assertions)
+  Duration: 1.32s
+

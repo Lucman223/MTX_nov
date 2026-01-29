@@ -39,7 +39,6 @@ const AdminClientes = () => {
             const data = Array.isArray(response.data) ? response.data : Object.values(response.data);
             setClientes(data);
         } catch (error) {
-            console.error('Error loading clientes:', error);
             toast.error(t('common.error'));
         } finally {
             setLoading(false);
@@ -54,7 +53,6 @@ const AdminClientes = () => {
             toast.success(t('admin_dashboard.clients.delete_success'));
             fetchClientes();
         } catch (error) {
-            console.error('Error deleting client:', error);
             toast.error(t('common.error'));
         }
     };
@@ -68,7 +66,7 @@ const AdminClientes = () => {
     }, []);
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: isMobile ? '1rem' : '2rem', paddingBottom: isMobile ? '80px' : '2rem' }}>
+        <div className="main-content-centered" style={{ paddingBottom: isMobile ? '80px' : '2rem' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
                 {/* Header */}
@@ -82,15 +80,8 @@ const AdminClientes = () => {
                     {!isMobile && (
                         <button
                             onClick={() => navigate('/admin')}
-                            style={{
-                                padding: '0.75rem 1.5rem',
-                                backgroundColor: 'white',
-                                border: '1px solid #d1d5db',
-                                borderRadius: '0.5rem',
-                                fontWeight: '600',
-                                color: colors.text,
-                                cursor: 'pointer'
-                            }}
+                            className="mtx-button"
+                            style={{ background: '#e5e7eb' }}
                         >
                             {t('common.back')}
                         </button>
@@ -99,7 +90,7 @@ const AdminClientes = () => {
 
                 {/* Desktop Table View */}
                 {!isMobile && (
-                    <div style={{ backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
+                    <div className="mtx-card" style={{ padding: 0, overflow: 'hidden' }}>
                         {loading ? (
                             <div style={{ padding: '3rem', textAlign: 'center', color: colors.subtext }}>
                                 {t('common.loading')}
@@ -147,15 +138,13 @@ const AdminClientes = () => {
                                                 <td style={{ padding: '1rem', textAlign: 'right' }}>
                                                     <button
                                                         onClick={() => handleDelete(cliente.id, cliente.name)}
+                                                        className="mtx-button"
                                                         style={{
-                                                            padding: '0.5rem 1rem',
+                                                            padding: '0.4rem 0.8rem',
                                                             backgroundColor: '#fef2f2',
                                                             color: colors.error,
-                                                            border: 'none',
-                                                            borderRadius: '0.375rem',
-                                                            fontWeight: '600',
-                                                            cursor: 'pointer',
-                                                            fontSize: '0.875rem'
+                                                            fontSize: '0.75rem',
+                                                            minWidth: 'auto'
                                                         }}
                                                     >
                                                         {t('admin_dashboard.clients.actions.delete')}
@@ -177,13 +166,7 @@ const AdminClientes = () => {
                         {!loading && clientes.length === 0 && <div className="text-center p-4">{t('admin_dashboard.clients.empty')}</div>}
 
                         {clientes.map((cliente) => (
-                            <div key={cliente.id} style={{
-                                backgroundColor: 'white',
-                                padding: '1rem',
-                                borderRadius: '0.5rem',
-                                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                                border: '1px solid #e5e7eb'
-                            }}>
+                            <div key={cliente.id} className="mtx-card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                         <div style={{

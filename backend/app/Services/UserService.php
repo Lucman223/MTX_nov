@@ -34,4 +34,23 @@ class UserService
 
         return $user;
     }
+    /**
+     * Delete user account with RGPD compliance (Soft Delete + Anonymization).
+     *
+     * @param User $user
+     * @return void
+     */
+    public function deleteUser(User $user): void
+    {
+        // Anonymize personal data
+        $user->name = 'Deleted User ' . $user->id;
+        $user->email = 'deleted_' . $user->id . '_' . time() . '@anon.com';
+        $user->telefono = null;
+        $user->foto_perfil = null;
+        $user->password = Hash::make(\Illuminate\Support\Str::random(32)); // Scramble password
+        $user->save();
+
+        // Soft delete the user
+        $user->delete();
+    }
 }

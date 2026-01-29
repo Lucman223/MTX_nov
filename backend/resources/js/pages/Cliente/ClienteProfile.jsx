@@ -168,9 +168,22 @@ const ClienteProfile = () => {
                     <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
                         <h3 style={{ fontSize: '1rem', color: 'var(--error-color)', marginBottom: '0.5rem' }}>{t('client_profile.danger_zone')}</h3>
                         <Button
-                            onClick={() => {
+                            onClick={async () => {
+                                const password = window.prompt(t('client_profile.enter_password_confirm'));
+                                if (!password) return;
+
                                 if (window.confirm(t('client_profile.delete_confirm'))) {
-                                    toast.error(t('client_profile.delete_contact'));
+                                    try {
+                                        await axios.delete('/api/profile', {
+                                            data: { password }
+                                        });
+                                        toast.success(t('client_profile.account_deleted'));
+                                        logout();
+                                        navigate('/');
+                                    } catch (error) {
+                                        console.error(error);
+                                        toast.error(error.response?.data?.message || t('client_profile.delete_error'));
+                                    }
                                 }
                             }}
                             variant="error"

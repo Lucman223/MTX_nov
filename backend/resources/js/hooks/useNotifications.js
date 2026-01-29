@@ -43,12 +43,10 @@ const useNotifications = (onNewTrip, onTripUpdate) => {
      */
     const listenToAvailableTrips = (callback) => {
         if (user?.rol === 'motorista' && window.Echo) {
-            console.log('Listening to channel: drivers');
             // [ES] Cambiado al canal público 'drivers' coincidiendo con el backend
             // [FR] Changé au canal public 'drivers' correspondant au backend
             window.Echo.channel('drivers')
                 .listen('ViajeSolicitado', (e) => {
-                    console.log('New trip requested:', e.viaje);
                     if (callback) callback(e.viaje);
                 });
         }
@@ -60,19 +58,15 @@ const useNotifications = (onNewTrip, onTripUpdate) => {
      */
     const listenToTripUpdates = (viajeId, callback) => {
         if (viajeId && window.Echo) {
-            console.log(`Listening to private: viaje.${viajeId}`);
             const channel = window.Echo.private(`viaje.${viajeId}`);
 
             channel.listen('ViajeActualizado', (e) => {
-                console.log('Trip updated:', e.viaje);
                 if (callback) callback(e.viaje);
             })
                 .listen('ViajeAceptado', (e) => {
-                    console.log('Trip accepted:', e.viaje);
                     if (callback) callback(e.viaje);
                 })
                 .listen('.location-updated', (e) => { // Note the dot prefix for broadcastAs aliases
-                    console.log('Location updated:', e);
                     if (callback.onLocationUpdate) callback.onLocationUpdate(e);
                     // Also support generic callback if it handles the object structure
                 });

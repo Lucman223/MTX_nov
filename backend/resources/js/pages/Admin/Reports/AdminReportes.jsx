@@ -23,7 +23,6 @@ const AdminReportes = () => {
                 setStats(statsRes.data);
                 setChartData(chartRes.data);
             } catch (err) {
-                console.error("Error loading reports", err);
                 toast.error(t('common.error'));
             } finally {
                 setLoading(false);
@@ -35,7 +34,7 @@ const AdminReportes = () => {
     if (loading) return <div className="text-center p-20">{t('common.loading')}</div>;
 
     return (
-        <div style={{ padding: '2rem', minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+        <div className="main-content-centered" style={{ minHeight: '100vh', paddingBottom: '3rem' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                     <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827' }}>
@@ -47,28 +46,28 @@ const AdminReportes = () => {
                 </div>
 
                 {/* KPIs Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
-                    <Card>
-                        <div style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: '500' }}>{t('admin_dashboard.stats.trips_total')}</div>
-                        <div style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem' }}>{stats?.viajesTotales || 0}</div>
-                        <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '0.5rem' }}>
-                            ↑ 12% {t('admin_dashboard.stats.vs_last_month')}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                    <Card style={{ borderLeft: '5px solid #2563eb' }}>
+                        <div style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('admin_dashboard.stats.trips_total')}</div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem' }}>{stats?.viajesTotales || 0}</div>
+                        <div style={{ fontSize: '0.875rem', color: '#10b981', fontWeight: '600', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <span style={{ fontSize: '1.1rem' }}>↑</span> 12% <span style={{ color: '#6b7280', fontWeight: 'normal' }}>{t('admin_dashboard.stats.vs_last_month')}</span>
                         </div>
                     </Card>
-                    <Card>
-                        <div style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: '500' }}>{t('admin_dashboard.stats.income')}</div>
-                        <div style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem' }}>{stats?.ingresosMes?.toLocaleString() || 0} CFA</div>
-                        <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '0.5rem' }}>
-                            ↑ 8% {t('admin_dashboard.stats.vs_last_month')}
+                    <Card style={{ borderLeft: '5px solid #f59e0b' }}>
+                        <div style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('admin_dashboard.stats.income')}</div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem' }}>{stats?.ingresosMes?.toLocaleString() || 0} CFA</div>
+                        <div style={{ fontSize: '0.875rem', color: '#10b981', fontWeight: '600', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <span style={{ fontSize: '1.1rem' }}>↑</span> 8% <span style={{ color: '#6b7280', fontWeight: 'normal' }}>{t('admin_dashboard.stats.vs_last_month')}</span>
                         </div>
                     </Card>
-                    <Card>
-                        <div style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: '500' }}>{t('admin_dashboard.stats.active_users')}</div>
-                        <div style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem' }}>{stats?.usuariosActivos || 0}</div>
+                    <Card style={{ borderLeft: '5px solid #7c3aed' }}>
+                        <div style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('admin_dashboard.stats.active_users')}</div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem' }}>{stats?.usuariosActivos || 0}</div>
                     </Card>
-                    <Card>
-                        <div style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: '500' }}>{t('admin_dashboard.stats.average_rating')}</div>
-                        <div style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#f59e0b', marginTop: '0.5rem' }}>★ {stats?.ratingPromedio || 0}</div>
+                    <Card style={{ borderLeft: '5px solid #f59e0b' }}>
+                        <div style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('admin_dashboard.stats.average_rating')}</div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#f59e0b', marginTop: '0.5rem' }}>★ {stats?.ratingPromedio || 0}</div>
                     </Card>
                 </div>
 

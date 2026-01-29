@@ -32,7 +32,6 @@ function LoginPage() {
 
     useEffect(() => {
         if (!loading && isAuthenticated && user) {
-            console.log('LoginPage: User authenticated, redirecting...', user.rol);
             if (user.rol === 'admin') {
                 navigate('/admin', { replace: true });
             } else if (user.rol === 'cliente') {
@@ -49,21 +48,13 @@ function LoginPage() {
         event.preventDefault();
         setError('');
 
-        // DEBUG: Alert debugging for mobile
-        alert('Intentando login a: ' + (window.axios?.defaults?.baseURL || 'No BaseURL'));
-
         try {
             await login(email, password);
         } catch (err) {
-            console.error(err);
-            // Show full error object
-            alert('Error Login: ' + JSON.stringify(err.message || err));
-            if (err.response) {
-                alert('Status: ' + err.response.status + ' Data: ' + JSON.stringify(err.response.data));
-            }
             setError(err.message || t('auth.login_error'));
         }
     };
+
 
     return (
         <div style={{
@@ -75,18 +66,20 @@ function LoginPage() {
             padding: '2rem',
             position: 'relative'
         }}>
+            <SEO
+                title={t('seo.login_title')}
+                description={t('seo.login_desc')}
+            />
             <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-                <SEO title={t('common.login')} />
                 <LanguageSwitcher />
             </div>
 
-            <div style={{
-                background: 'white',
-                borderRadius: '1.5rem',
+            <div className="mtx-card" style={{
+                maxWidth: '450px',
+                width: '100%',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
                 padding: '3rem',
-                maxWidth: '450px',
-                width: '100%'
+                border: 'none'
             }}>
                 {/* Logo y título */}
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -132,20 +125,11 @@ function LoginPage() {
                         <input
                             type="email"
                             id="email"
+                            className="mtx-input"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem',
-                                border: '2px solid #e5e7eb',
-                                borderRadius: '0.5rem',
-                                fontSize: '1rem',
-                                transition: 'border-color 0.2s',
-                                outline: 'none'
-                            }}
-                            onFocus={(e) => e.target.style.borderColor = colors.primary}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -164,50 +148,19 @@ function LoginPage() {
                         <input
                             type="password"
                             id="password"
+                            className="mtx-input"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem',
-                                border: '2px solid #e5e7eb',
-                                borderRadius: '0.5rem',
-                                fontSize: '1rem',
-                                transition: 'border-color 0.2s',
-                                outline: 'none'
-                            }}
-                            onFocus={(e) => e.target.style.borderColor = colors.primary}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                            style={{ width: '100%' }}
                         />
                     </div>
 
                     <button
                         type="submit"
+                        className="mtx-button mtx-button-primary"
                         disabled={loading}
-                        style={{
-                            width: '100%',
-                            padding: '1rem',
-                            background: colors.primary,
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '0.75rem',
-                            fontSize: '1.05rem',
-                            fontWeight: 'bold',
-                            cursor: loading ? 'not-allowed' : 'pointer',
-                            opacity: loading ? 0.6 : 1,
-                            transition: 'all 0.2s',
-                            boxShadow: `0 4px 12px ${colors.primary}40`
-                        }}
-                        onMouseOver={(e) => {
-                            if (!loading) {
-                                e.target.style.transform = 'translateY(-2px)';
-                                e.target.style.boxShadow = `0 6px 16px ${colors.primary}50`;
-                            }
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.transform = 'translateY(0)';
-                            e.target.style.boxShadow = `0 4px 12px ${colors.primary}40`;
-                        }}
+                        style={{ width: '100%' }}
                     >
                         {loading ? t('auth.logging_in') : t('common.login')}
                     </button>

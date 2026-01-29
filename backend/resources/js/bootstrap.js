@@ -2,7 +2,8 @@ import axios from 'axios';
 window.axios = axios;
 
 // Set config for production
-window.axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'https://mtxnov-production.up.railway.app';
+// Set config for local demo
+window.axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 import Echo from 'laravel-echo';

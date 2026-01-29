@@ -29,7 +29,6 @@ const AdminViajes = () => {
             const response = await axios.get('/api/admin/viajes');
             setViajes(response.data);
         } catch (error) {
-            console.error('Error loading viajes:', error);
             toast.error(t('common.error'));
         } finally {
             setLoading(false);
@@ -60,14 +59,15 @@ const AdminViajes = () => {
     }, []);
 
     return (
-        <div style={{ padding: isMobile ? '1rem' : '2rem', paddingBottom: isMobile ? '80px' : '2rem' }}>
+        <div className="main-content-centered" style={{ paddingBottom: isMobile ? '80px' : '2rem' }}>
             <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '1rem' : '0', marginBottom: '2rem' }}>
                 <h1 style={{ fontSize: isMobile ? '1.5rem' : '1.875rem', fontWeight: 'bold' }}>{isMobile ? t('admin_dashboard.viajes.title_mobile') : t('admin_dashboard.viajes.title')}</h1>
                 <div style={{ display: 'flex', gap: '1rem', width: isMobile ? '100%' : 'auto', flexWrap: 'wrap' }}>
                     <select
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
-                        style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #d1d5db', flex: isMobile ? 1 : 'initial' }}
+                        className="mtx-input"
+                        style={{ flex: isMobile ? 1 : 'initial', width: 'auto' }}
                     >
                         <option value="all">{t('admin_dashboard.viajes.filter_all')}</option>
                         <option value="solicitado">{t('status.solicitado')}</option>
@@ -78,7 +78,8 @@ const AdminViajes = () => {
                     {!isMobile && (
                         <button
                             onClick={() => navigate('/admin')}
-                            style={{ padding: '0.5rem 1rem', background: '#e5e7eb', borderRadius: '0.5rem', fontWeight: '600' }}
+                            className="mtx-button"
+                            style={{ background: '#e5e7eb' }}
                         >
                             {t('common.back')}
                         </button>
@@ -92,7 +93,7 @@ const AdminViajes = () => {
                 <>
                     {/* Desktop Table View */}
                     {!isMobile && (
-                        <div style={{ overflowX: 'auto', backgroundColor: 'white', borderRadius: '0.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                        <div className="mtx-card" style={{ overflowX: 'auto', padding: 0 }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                 <thead style={{ backgroundColor: '#f9fafb' }}>
                                     <tr>
@@ -133,15 +134,9 @@ const AdminViajes = () => {
 
                     {/* Mobile Card View */}
                     {isMobile && (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
                             {filteredViajes.map((viaje) => (
-                                <div key={viaje.id} style={{
-                                    backgroundColor: 'white',
-                                    padding: '1rem',
-                                    borderRadius: '0.5rem',
-                                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                                    border: '1px solid #e5e7eb'
-                                }}>
+                                <div key={viaje.id} className="mtx-card">
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                                         <span style={{ fontWeight: 'bold', color: '#374151' }}>#{viaje.id}</span>
                                         <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${statusColors[viaje.estado] || 'bg-gray-100 text-gray-800'}`}>

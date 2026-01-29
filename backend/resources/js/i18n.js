@@ -4,7 +4,6 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import es from './locales/es.json';
 import fr from './locales/fr.json';
 import en from './locales/en.json';
-import ar from './locales/ar.json';
 
 i18n
     .use(LanguageDetector)
@@ -13,8 +12,7 @@ i18n
         resources: {
             es: { translation: es },
             fr: { translation: fr },
-            en: { translation: en },
-            ar: { translation: ar }
+            en: { translation: en }
         },
         fallbackLng: "es",
         load: 'languageOnly', // Ignora variantes regionales como es-ES
@@ -27,12 +25,11 @@ i18n
         }
     });
 
-// Handle RTL direction change
+// Handle metadata update on language change
 i18n.on('languageChanged', (lng) => {
-    const isRtl = lng === 'ar';
-    document.dir = isRtl ? 'rtl' : 'ltr';
+    document.dir = 'ltr';
     document.documentElement.lang = lng;
-    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+    document.documentElement.dir = 'ltr';
 });
 
 export default i18n;

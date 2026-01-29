@@ -107,9 +107,6 @@
         "terms_and_privacy": "Términos de Servicio y la Política de Privacidad",
         "rgpd_notice": "Tus datos están protegidos según la normativa vigente."
     },
-    "seo": {
-        "default_description": "Transporte fiable y rápido en Bamako. Moto taxis seguros."
-    },
     "nav": {
         "admin_title": "MotoTX Admin",
         "dashboard": "Dashboard",
@@ -339,15 +336,40 @@
         "register_as": "Registrarse como {{role}}",
         "footer_desc": "Plataforma de Gestión de Forfaits para Mototaxi en Bamako",
         "footer_copyright": "© 2025 MotoTX - Desarrollado con ❤️ para mejorar el transporte en Mali",
-        "privacy_policy": "Política de Privacidad"
+        "privacy_policy": "Política de Privacidad",
+        "mission_title": "Nuestra Misión",
+        "mission_text": "En MotoTX, nuestra misión es transformar el transporte urbano en Bamako ofreciendo una solución segura, rápida y asequible para todos. Creemos en la tecnología al servicio de la movilidad maliense.",
+        "how_title": "¿Cómo funciona?",
+        "faq_title": "Preguntas Frecuentes",
+        "faq_q1": "¿El servicio está disponible las 24 horas?",
+        "faq_a1": "Sí, nuestros conductores están disponibles a cualquier hora, aunque la disponibilidad puede variar según la zona.",
+        "faq_q2": "¿Cómo puedo pagar?",
+        "faq_a2": "Aceptamos pagos a través de Orange Money y otras soluciones locales integradas.",
+        "contact_title": "Contáctanos",
+        "contact_send": "Enviar Mensaje",
+        "contact_name": "Tu Nombre",
+        "contact_message": "Tu Mensaje"
     },
     "plans": {
         "Diario": "Diario",
         "Semanal": "Semanal",
         "Mensual VIP": "Mensual VIP",
-        "desc_diario": "Acceso total por 24 horas",
-        "desc_semanal": "Ahorra con el plan semanal",
-        "desc_mensual": "Acceso premium y prioridad"
+        "pack_urbano": "Pack Urbano (5km)",
+        "pack_confort": "Pack Confort (10km)",
+        "pack_viajero": "Pack Viajero (15km)",
+        "pack_transversal": "Pack Transversal (Pro)",
+        "pack_urbano_desc": "Viajes por la ciudad con un radio de 5km",
+        "pack_confort_desc": "Ideal para trayectos medianos de hasta 10km",
+        "pack_viajero_desc": "Para recorrer todo Bamako hasta 15km",
+        "pack_transversal_desc": "Sin límites de distancia. Movilidad total.",
+        "Pack Urbano Bamako (5km)": "Pack Urbano (5km)",
+        "Pack Confort (10km)": "Pack Confort (10km)",
+        "Pack Viajero (15km)": "Pack Viajero (15km)",
+        "Pack Transversale (Pro)": "Pack Transversal (Pro)",
+        "Pack Urbano Bamako (5km)_desc": "Viajes por la ciudad con un radio de 5km",
+        "Pack Confort (10km)_desc": "Ideal para trayectos medianos de hasta 10km",
+        "Pack Viajero (15km)_desc": "Para recorrer todo Bamako hasta 15km",
+        "Pack Transversale (Pro)_desc": "Sin límites de distancia. Movilidad total."
     },
     "client_profile": {
         "personal_info": "Información Personal",
@@ -371,5 +393,17 @@
         "update_success": "Perfil actualizado",
         "update_error": "Error al actualizar",
         "loading_error": "Error al cargar datos"
+    },
+    "seo": {
+        "landing_title": "MotoTX - Transporte Seguro y Confiable en Bamako",
+        "landing_desc": "La plataforma de mototaxi premium en Bamako. Seguridad, rapidez y transparencia para todos tus viajes.",
+        "login_title": "Iniciar Sesión - MotoTX",
+        "login_desc": "Inicia sesión en tu cuenta de MotoTX para gestionar tus viajes o tu actividad como conductor.",
+        "register_title": "Únete a MotoTX - Registro",
+        "register_desc": "Regístrate como cliente o conductor y descubre una nueva forma de moverte por Bamako.",
+        "privacy_title": "Política de Privacidad - MotoTX",
+        "privacy_desc": "Conoce cómo protegemos tus datos personales de acuerdo con la ley de Mali.",
+        "terms_title": "Términos y Condiciones - MotoTX",
+        "terms_desc": "Las reglas y condiciones de uso de la plataforma MotoTX en Mali."
     }
 }

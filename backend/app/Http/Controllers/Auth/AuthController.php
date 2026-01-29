@@ -118,4 +118,27 @@ class AuthController extends Controller
             'user' => $updatedUser,
         ]);
     }
+    /**
+     * [ES] Elimina la cuenta del usuario actual (RGPD).
+     * [FR] Supprime le compte de l'utilisateur actuel (RGPD).
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = auth()->user();
+        
+        $this->userService->deleteUser($user);
+
+        auth()->logout();
+
+        return response()->json([
+            'message' => 'Account deleted successfully',
+        ]);
+    }
 }

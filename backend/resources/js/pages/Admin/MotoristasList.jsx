@@ -28,10 +28,10 @@ const MotoristasList = () => {
             } else if (response.data && response.data.data) {
                 setMotoristas(response.data.data.filter(u => u.rol === 'motorista'));
             }
-            setLoading(false);
         } catch (error) {
-            console.error("Error fetching motoristas", error);
             // Fallback mock data for demonstration
+            toast.error(t('admin_dashboard.motoristas.fetch_error'));
+        } finally {
             setMotoristas([
                 { id: 1, name: 'Amadou Koné', email: 'amadou@test.com', created_at: '2025-12-01', motorista_perfil: { estado_validacion: 'pendiente', marca_vehiculo: 'KTM 125' } },
                 { id: 2, name: 'Seydou Keita', email: 'seydou@test.com', created_at: '2025-12-02', motorista_perfil: { estado_validacion: 'aprobado', marca_vehiculo: 'Yamaha' } }
@@ -47,8 +47,7 @@ const MotoristasList = () => {
                 m.id === id ? { ...m, motorista_perfil: { ...m.motorista_perfil, estado_validacion: newStatus } } : m
             ));
         } catch (error) {
-            console.error("Error updating status", error);
-            alert(t('common.error'));
+            toast.error(t('common.error'));
         }
     };
 
@@ -63,11 +62,11 @@ const MotoristasList = () => {
     if (loading) return <div className="text-center p-10">{t('common.loading')}</div>;
 
     return (
-        <div>
+        <div className="main-content-centered">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('admin_dashboard.motoristas.title')}</h2>
 
             {!isMobile && (
-                <div className="bg-white shadow-md rounded-lg overflow-hidden">
+                <div className="mtx-card" style={{ padding: 0, overflow: 'hidden' }}>
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
@@ -135,15 +134,9 @@ const MotoristasList = () => {
             )}
 
             {isMobile && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
                     {motoristas.map((motorista) => (
-                        <div key={motorista.id} style={{
-                            backgroundColor: 'white',
-                            padding: '1rem',
-                            borderRadius: '0.5rem',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                            border: '1px solid #e5e7eb'
-                        }}>
+                        <div key={motorista.id} className="mtx-card">
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                                 <div>
                                     <div style={{ fontWeight: 'bold', color: '#1f2937' }}>{motorista.name}</div>
@@ -173,11 +166,12 @@ const MotoristasList = () => {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                                 {motorista.motorista_perfil?.estado_validacion !== 'aprobado' && (
                                     <button
                                         onClick={() => handleStatusChange(motorista.id, 'aprobado')}
-                                        style={{ flex: 1, padding: '0.5rem', backgroundColor: '#dcfce7', color: '#166534', border: '1px solid #bbf7d0', borderRadius: '0.375rem', fontWeight: '600' }}
+                                        className="mtx-button mtx-button-primary"
+                                        style={{ flex: 1, padding: '0.5rem', background: '#dcfce7', color: '#166534', borderRadius: '0.5rem' }}
                                     >
                                         ✓ {t('admin_dashboard.motoristas.actions.approve')}
                                     </button>
@@ -185,7 +179,8 @@ const MotoristasList = () => {
                                 {motorista.motorista_perfil?.estado_validacion !== 'rechazado' && (
                                     <button
                                         onClick={() => handleStatusChange(motorista.id, 'rechazado')}
-                                        style={{ flex: 1, padding: '0.5rem', backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca', borderRadius: '0.375rem', fontWeight: '600' }}
+                                        className="mtx-button"
+                                        style={{ flex: 1, padding: '0.5rem', backgroundColor: '#fee2e2', color: '#991b1b', borderRadius: '0.5rem' }}
                                     >
                                         ✕ {t('admin_dashboard.motoristas.actions.reject')}
                                     </button>

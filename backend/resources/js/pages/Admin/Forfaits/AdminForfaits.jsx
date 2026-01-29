@@ -105,7 +105,7 @@ const AdminForfaits = () => {
     }, []);
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: isMobile ? '1rem' : '2rem', paddingBottom: isMobile ? '80px' : '2rem' }}>
+        <div className="main-content-centered" style={{ paddingBottom: isMobile ? '80px' : '2rem' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                 <div style={{
                     display: 'flex',
@@ -122,15 +122,8 @@ const AdminForfaits = () => {
                         {!isMobile && (
                             <button
                                 onClick={() => navigate('/admin')}
-                                style={{
-                                    padding: '0.75rem 1.5rem',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '0.5rem',
-                                    backgroundColor: 'white',
-                                    color: '#374151',
-                                    fontWeight: '600',
-                                    cursor: 'pointer'
-                                }}
+                                className="mtx-button"
+                                style={{ border: '1px solid #d1d5db', background: 'white' }}
                             >
                                 {t('common.back')}
                             </button>
@@ -141,18 +134,7 @@ const AdminForfaits = () => {
                                 setFormData({ nombre: '', descripcion: '', precio: '', dias_validez: '', viajes_incluidos: '', estado: 'activo' });
                                 setModalOpen(true);
                             }}
-                            style={{
-                                padding: '0.75rem 1.5rem',
-                                backgroundColor: colors.primary,
-                                color: 'white',
-                                borderRadius: '0.5rem',
-                                border: 'none',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                boxShadow: `0 4px 6px ${colors.primary}40`,
-                                flex: isMobile ? 1 : 'initial',
-                                textAlign: 'center'
-                            }}
+                            className="mtx-button mtx-button-primary"
                         >
                             {t('admin_dashboard.forfaits.new_btn')}
                         </button>
@@ -162,9 +144,9 @@ const AdminForfaits = () => {
                 {loading ? (
                     <div style={{ textAlign: 'center', padding: '3rem', color: '#6b7280' }}>{t('common.loading')}</div>
                 ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
                         {(Array.isArray(forfaits) ? forfaits : Object.values(forfaits || {})).map((forfait) => (
-                            <div key={forfait.id} style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #e5e7eb' }}>
+                            <div key={forfait.id} className="mtx-card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
                                     <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#111827' }}>
                                         {t(`plans.${forfait.nombre}`, forfait.nombre)}
@@ -193,13 +175,15 @@ const AdminForfaits = () => {
                                 <div style={{ display: 'flex', gap: '0.75rem' }}>
                                     <button
                                         onClick={() => handleEdit(forfait)}
-                                        style={{ flex: 1, padding: '0.5rem', backgroundColor: '#eff6ff', color: colors.primary, borderRadius: '0.375rem', border: 'none', fontWeight: '600', cursor: 'pointer' }}
+                                        className="mtx-button"
+                                        style={{ flex: 1, padding: '0.5rem', background: '#eff6ff', color: colors.primary }}
                                     >
                                         {t('common.edit')}
                                     </button>
                                     <button
                                         onClick={() => handleDelete(forfait.id, forfait.nombre)}
-                                        style={{ flex: 1, padding: '0.5rem', backgroundColor: '#fef2f2', color: colors.error, borderRadius: '0.375rem', border: 'none', fontWeight: '600', cursor: 'pointer' }}
+                                        className="mtx-button"
+                                        style={{ flex: 1, padding: '0.5rem', background: '#fef2f2', color: colors.error }}
                                     >
                                         {t('admin_dashboard.clients.actions.delete')}
                                     </button>
@@ -212,45 +196,45 @@ const AdminForfaits = () => {
 
             {modalOpen && (
                 <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 50 }}>
-                    <div style={{ backgroundColor: 'white', borderRadius: '1rem', padding: '2rem', width: '100%', maxWidth: '500px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+                    <div className="mtx-card" style={{ width: '100%', maxWidth: '500px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
                             {editingForfait ? t('admin_dashboard.forfaits.modal.title_edit') : t('admin_dashboard.forfaits.modal.title_create')}
                         </h2>
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_name')}</label>
-                                <input required type="text" value={formData.nombre} onChange={e => setFormData({ ...formData, nombre: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
+                                <label className="form-label">{t('admin_dashboard.forfaits.modal.label_name')}</label>
+                                <input required type="text" className="mtx-input" value={formData.nombre} onChange={e => setFormData({ ...formData, nombre: e.target.value })} />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_description')}</label>
-                                <textarea value={formData.descripcion} onChange={e => setFormData({ ...formData, descripcion: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
+                                <label className="form-label">{t('admin_dashboard.forfaits.modal.label_description')}</label>
+                                <textarea className="mtx-input" value={formData.descripcion} onChange={e => setFormData({ ...formData, descripcion: e.target.value })} style={{ resize: 'none' }} />
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_price')}</label>
-                                    <input required type="number" value={formData.precio} onChange={e => setFormData({ ...formData, precio: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
+                                    <label className="form-label">{t('admin_dashboard.forfaits.modal.label_price')}</label>
+                                    <input required type="number" className="mtx-input" value={formData.precio} onChange={e => setFormData({ ...formData, precio: e.target.value })} />
                                 </div>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_trips')}</label>
-                                    <input required type="number" value={formData.viajes_incluidos} onChange={e => setFormData({ ...formData, viajes_incluidos: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
+                                    <label className="form-label">{t('admin_dashboard.forfaits.modal.label_trips')}</label>
+                                    <input required type="number" className="mtx-input" value={formData.viajes_incluidos} onChange={e => setFormData({ ...formData, viajes_incluidos: e.target.value })} />
                                 </div>
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_days')}</label>
-                                    <input required type="number" value={formData.dias_validez} onChange={e => setFormData({ ...formData, dias_validez: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }} />
+                                    <label className="form-label">{t('admin_dashboard.forfaits.modal.label_days')}</label>
+                                    <input required type="number" className="mtx-input" value={formData.dias_validez} onChange={e => setFormData({ ...formData, dias_validez: e.target.value })} />
                                 </div>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>{t('admin_dashboard.forfaits.modal.label_status')}</label>
-                                    <select value={formData.estado} onChange={e => setFormData({ ...formData, estado: e.target.value })} style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }}>
+                                    <label className="form-label">{t('admin_dashboard.forfaits.modal.label_status')}</label>
+                                    <select className="mtx-input" value={formData.estado} onChange={e => setFormData({ ...formData, estado: e.target.value })}>
                                         <option value="activo">{t('status.aprobado')}</option>
                                         <option value="inactivo">{t('status.rechazado')}</option>
                                     </select>
                                 </div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-                                <button type="button" onClick={() => setModalOpen(false)} style={{ padding: '0.5rem 1rem', borderRadius: '0.375rem', border: 'none', backgroundColor: '#e5e7eb', cursor: 'pointer' }}>{t('admin_dashboard.forfaits.modal.cancel')}</button>
-                                <button type="submit" style={{ padding: '0.5rem 1rem', borderRadius: '0.375rem', border: 'none', backgroundColor: colors.primary, color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>{t('admin_dashboard.forfaits.modal.save')}</button>
+                                <button type="button" onClick={() => setModalOpen(false)} className="mtx-button" style={{ background: '#e5e7eb' }}>{t('admin_dashboard.forfaits.modal.cancel')}</button>
+                                <button type="submit" className="mtx-button mtx-button-primary">{t('admin_dashboard.forfaits.modal.save')}</button>
                             </div>
                         </form>
                     </div>

@@ -16,3 +16,7 @@ Route::group(['middleware' => ['jwt.auth', 'motorista']], function () {
     Route::get('/motorista/transacciones', [MotoristaController::class, 'getTransactions']);
     Route::put('/motorista/perfil', [MotoristaController::class, 'updateMotoristaProfile']);
 });
+
+Route::group(['middleware' => ['jwt.auth']], function () {
+    Route::delete('/profile', [\App\Http\Controllers\Auth\AuthController::class, 'deleteAccount']);
+});

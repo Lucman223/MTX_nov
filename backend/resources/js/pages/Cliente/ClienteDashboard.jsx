@@ -249,7 +249,6 @@ const ClienteDashboard = () => {
     const forfaits = user?.cliente_forfaits || [];
     const viajesDisponibles = forfaits.reduce((acc, curr) => acc + (parseInt(curr.viajes_restantes) || 0), 0);
 
-    console.log('UserData:', user, 'Forfaits:', forfaits, 'Balance:', viajesDisponibles);
 
     // Simplified: No longer need isMobile state as we use CSS Media Queries
 

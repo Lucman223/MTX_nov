@@ -20,10 +20,10 @@ class ForfaitSeeder extends Seeder
 
         // Create Plans with Distance Restrictions
         $plans = [
-            ['name' => 'Pack Urbano Bamako (5km)', 'viajes' => 5, 'precio' => 2500, 'days' => 15, 'dist' => 5],
-            ['name' => 'Pack Confort (10km)', 'viajes' => 10, 'precio' => 5000, 'days' => 30, 'dist' => 10],
-            ['name' => 'Pack Viajero (15km)', 'viajes' => 20, 'precio' => 9000, 'days' => 45, 'dist' => 15],
-            ['name' => 'Pack Transversale (Pro)', 'viajes' => 50, 'precio' => 22000, 'days' => 60, 'dist' => 0], // 0 = Sin límite
+            ['name' => 'pack_urbano', 'viajes' => 5, 'precio' => 2500, 'days' => 15, 'dist' => 5],
+            ['name' => 'pack_confort', 'viajes' => 10, 'precio' => 5000, 'days' => 30, 'dist' => 10],
+            ['name' => 'pack_viajero', 'viajes' => 20, 'precio' => 9000, 'days' => 45, 'dist' => 15],
+            ['name' => 'pack_transversal', 'viajes' => 50, 'precio' => 22000, 'days' => 60, 'dist' => 0], // 0 = Sin límite
         ];
 
         foreach ($plans as $p) {

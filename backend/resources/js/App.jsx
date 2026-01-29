@@ -9,6 +9,7 @@ import LandingPage from './pages/Public/LandingPage.jsx';
 import LoginPage from './pages/Public/LoginPage.jsx';
 import RegisterPage from './pages/Public/RegisterPage.jsx';
 import PrivacyPolicy from './pages/Public/PrivacyPolicy.jsx';
+import TermsOfService from './pages/Public/TermsOfService.jsx';
 
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
@@ -80,6 +81,8 @@ function AppContent() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/cgu" element={<TermsOfService />} />
 
                 {/* Protected Admin Routes with Layout */}
                 <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
