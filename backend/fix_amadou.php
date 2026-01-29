@@ -11,7 +11,7 @@ if (!$user) {
     $user = User::create([
         'name' => 'Amadou Koné',
         'email' => 'amadou@test.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
         'rol' => 'motorista'
     ]);
 }

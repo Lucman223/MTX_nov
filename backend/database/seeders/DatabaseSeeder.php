@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $moto = User::create([
             'name' => 'Motorista Pruebas',
             'email' => 'moto@mototx.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+            'password' => 'password123',
             'rol' => 'motorista',
             'telefono' => '333444555',
         ]);
