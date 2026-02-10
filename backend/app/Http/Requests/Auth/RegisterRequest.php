@@ -28,6 +28,7 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:8|confirmed',
             'rol' => ['required', Rule::in(['cliente', 'motorista', 'admin'])],
             'telefono' => 'nullable|string|max:20',
+            'documento_identidad' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ];
     }
 }

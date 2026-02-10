@@ -9,12 +9,18 @@ class UserService
 {
     public function createUser(array $data): User
     {
+        $documentoPath = null;
+        if (isset($data['documento_identidad']) && $data['documento_identidad'] instanceof \Illuminate\Http\UploadedFile) {
+            $documentoPath = $data['documento_identidad']->store('documents/identidad', 'public');
+        }
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
             'rol' => $data['rol'],
             'telefono' => $data['telefono'] ?? null,
+            'documento_identidad_path' => $documentoPath,
         ]);
     }
 

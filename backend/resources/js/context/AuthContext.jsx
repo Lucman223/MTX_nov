@@ -129,8 +129,14 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         try {
             await axios.post('/api/auth/register', data);
+
             // After successful registration, login automatically
-            return await login(data.email, data.password);
+            // If data is FormData, we need to extract email and password or just use the original values if they were separate
+            // But usually, register is called with an object that we will now convert to FormData in the component
+            const email = data instanceof FormData ? data.get('email') : data.email;
+            const password = data instanceof FormData ? data.get('password') : data.password;
+
+            return await login(email, password);
         } catch (error) {
             throw new Error(error.response?.data?.message || 'Registration failed');
         } finally {

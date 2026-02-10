@@ -100,7 +100,11 @@
         "accept_terms_error": "Vous devez accepter les conditions générales pour continuer",
         "i_accept": "J'accepte les",
         "terms_and_privacy": "Conditions d'utilisation et Politique de confidentialité",
-        "rgpd_notice": "Vos données sont protégées selon la réglementation en vigueur."
+        "rgpd_notice": "Vos données sont protégées selon la réglementation en vigueur.",
+        "identity_document": "Document d'Identité (DNI, NINA, Passeport)",
+        "upload_id_helper": "Téléchargez une photo claire de votre document pour vérifier votre compte.",
+        "file_too_large": "Fichier trop volumineux (max 2MB)",
+        "invalid_file_type": "Format invalide (seuls PDF, JPG, PNG sont acceptés)"
     },
     "nav": {
         "admin_title": "MotoTX Admin",
@@ -289,9 +293,11 @@
         "rechazado": "Rejeté"
     },
     "landing": {
-        "hero_title": "Votre Solution de Transport à Bamako",
-        "hero_subtitle": "Nous connectons clients et chauffeurs de confiance. Trajets rapides, sûrs et économiques.",
+        "debug_test": "VERSION FRANÇAISE ACTIVE",
+        "hero_title": "MotoTX: Le Service de Mototaxi Leader et Sûr à Bamako",
+        "hero_subtitle": "La plateforme intelligente qui connecte des milliers de Maliens à des conducteurs vérifiés. Rapide, économique et soutenu par Orange Money.",
         "get_started": "Commencer Maintenant →",
+        "view_plans": "Voir les Forfaits",
         "why_title": "Pourquoi choisir MotoTX ?",
         "why_subtitle": "La meilleure expérience de transport à Bamako",
         "feature_fast_title": "Rapide et Fiable",
@@ -327,7 +333,14 @@
         "contact_title": "Contactez-nous",
         "contact_send": "Envoyer le Message",
         "contact_name": "Votre Nom",
-        "contact_message": "Votre Message"
+        "contact_message": "Votre Message",
+        "contact_subtitle": "Où que vous soyez, nous sommes là pour vous aider.",
+        "safety_guaranteed": "Sûreté Garantie",
+        "local_availability": "Disponibilité Locale",
+        "premium_service": "Service Premium",
+        "terms_conditions": "Termes et Conditions",
+        "faq_title_short": "FAQ",
+        "cgu": "CGU"
     },
     "plans": {
         "Diario": "Journalier",
@@ -370,12 +383,24 @@
         "price": "Prix",
         "no_history": "Aucun historique disponible.",
         "update_success": "Profil mis à jour",
-        "update_error": "Erreur de mise à jour",
-        "loading_error": "Erreur de chargement des données"
+        "update_error": "Erreur lors de la mise à jour",
+        "loading_error": "Erreur lors du chargement des données",
+        "enter_password_confirm": "Veuillez entrer votre mot de passe pour confirmer :",
+        "default_plan_name": "Plan Standard",
+        "account_deleted": "Compte supprimé avec succès",
+        "delete_error": "Erreur lors de la suppression du compte"
+    },
+    "profile": {
+        "preferences": "Préférences",
+        "notifications": "Notifications",
+        "test_notification": "Tester la Notification",
+        "browser_no_notifications": "Le navigateur ne supporte pas les notifications",
+        "notification_test_body": "Notifications actives et fonctionnelles !",
+        "notification_thanks": "Merci d'avoir activé les notifications !"
     },
     "seo": {
-        "landing_title": "MotoTX - Transport Sûr et Fiable à Bamako",
-        "landing_desc": "La plateforme de mototaxi premium à Bamako. Sécurité, rapidité et transparence pour tous vos trajets.",
+        "landing_title": "MotoTX: Mototaxi Sûr à Bamako | Transport Leader au Mali",
+        "landing_desc": "Réservez votre mototaxi à Bamako avec MotoTX. Sécurité garantie, suivi en temps réel et les meilleurs prix avec nos Forfaits exclusifs.",
         "login_title": "Connexion - MotoTX",
         "login_desc": "Connectez-vous à votre compte MotoTX pour gérer vos trajets ou vos activités de conducteur.",
         "register_title": "Rejoignez MotoTX - Inscription",
@@ -384,5 +409,48 @@
         "privacy_desc": "Découvrez comment nous protégeons vos données personnelles conformément à la loi malienne.",
         "terms_title": "Conditions Générales - MotoTX",
         "terms_desc": "Les règles et conditions d'utilisation de la plateforme MotoTX au Mali."
+    },
+    "privacy": {
+        "title": "Politique de Confidentialité",
+        "last_updated": "Dernière mise à jour",
+        "section1_title": "1. Cadre Légal (Mali)",
+        "section1_content": "MotoTX s'engage à traiter vos données personnelles conformément à la Loi n°2013-015 du 21 mai 2013 portant protection des données à caractère personnel en République du Mali. Le traitement de vos données a fait l'objet d'une déclaration auprès de l'Autorité de Protection des Données à Caractère Personnel (APDP).",
+        "section2_title": "2. Collecte des Données",
+        "section2_content": "MotoTX collecte les données suivantes pour assurer le fonctionnement du service :",
+        "section2_item1": "Informations d'identité (Nom, Email, Téléphone).",
+        "section2_item2": "Données de géolocalisation en temps réel (essentielles pour la mise en relation et la sécurité).",
+        "section2_item3": "Détails du véhicule (pour les conducteurs).",
+        "section2_item4": "Historique des transactions et des trajets.",
+        "section3_title": "3. Utilisation des Données",
+        "section3_content": "Vos données sont traitées pour :",
+        "section3_item1": "La mise en relation technique entre conducteurs et clients.",
+        "section3_item2": "Le calcul des itinéraires et la sécurité des passagers.",
+        "section3_item3": "La gestion comptable des forfaits et des paiements.",
+        "section3_item4": "Le respect des obligations légales maliennes.",
+        "section4_title": "4. Vos Droits",
+        "section4_content1": "Conformément à la loi malienne, vous disposez d'un droit d'accès, de rectification et d'opposition pour motifs légitimes au traitement de vos données.",
+        "section4_content2": "Pour exercer ces droits, vous pouvez nous contacter à :",
+        "section5_title": "5. Conservation et Sécurité",
+        "section5_content": "Les données sont conservées pendant la durée de vie de votre compte plus les délais de prescription légaux. Nous utilisons des protocoles de chiffrement pour garantir l'intégrité de vos informations sur nos serveurs."
+    },
+    "terms": {
+        "title": "Conditions Générales d'Utilisation",
+        "last_updated": "Dernière mise à jour",
+        "section1_title": "1. Objet du Service",
+        "section1_content": "MotoTX est une plateforme technologique facilitant la mise en relation entre des conducteurs de mototaxis indépendants et des clients en République du Mali. MotoTX n'est pas une entreprise de transport mais un intermédiaire technique.",
+        "section2_title": "2. Conditions d'Accès",
+        "section2_content": "L'utilisateur doit être âgé d'au moins 18 ans. Les conducteurs doivent posséder un permis de conduire valide et les documents du véhicule conformes à la réglementation malienne en vigueur.",
+        "section3_title": "3. Engagements du Conducteur",
+        "section3_content": "Le conducteur s'engage à :",
+        "section3_item1": "Fournir un casque au passager.",
+        "section3_item2": "Respecter scrupuleusement le code de la route.",
+        "section3_item3": "Maintenir son véhicule dans un état de propreté et de sécurité optimal.",
+        "section3_item4": "Se comporter avec courtoisie envers les clients.",
+        "section4_title": "4. Tarification et Paiements",
+        "section4_content": "Les prix sont fixés selon les forfaits prépayés ou les tarifs en vigueur affichés sur l'application. Tout trajet initié via la plateforme doit être finalisé selon les modalités de paiement choisies.",
+        "section5_title": "5. Responsabilité",
+        "section5_content": "La responsabilité de MotoTX est limitée au fonctionnement technique de l'application. En cas d'accident, la responsabilité civile du conducteur est engagée conformément au droit malien.",
+        "section6_title": "6. Litiges",
+        "section6_content": "Les présentes CGU sont régies par le droit malien. Tout litige non résolu à l'amiable sera porté devant les tribunaux compétents de Bamako."
     }
 }
