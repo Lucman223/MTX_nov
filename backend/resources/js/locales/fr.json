@@ -104,7 +104,8 @@
         "identity_document": "Document d'Identité (DNI, NINA, Passeport)",
         "upload_id_helper": "Téléchargez une photo claire de votre document pour vérifier votre compte.",
         "file_too_large": "Fichier trop volumineux (max 2MB)",
-        "invalid_file_type": "Format invalide (seuls PDF, JPG, PNG sont acceptés)"
+        "invalid_file_type": "Format invalide (seuls PDF, JPG, PNG sont acceptés)",
+        "identity_document_required": "Le document d'identité est obligatoire"
     },
     "nav": {
         "admin_title": "MotoTX Admin",

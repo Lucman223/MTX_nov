@@ -157,7 +157,8 @@
         "identity_document": "Identity Document (DNI, NINA, Passport)",
         "upload_id_helper": "Upload a clear photo of your document to verify your account.",
         "file_too_large": "File is too large (max 2MB)",
-        "invalid_file_type": "Invalid format (only PDF, JPG, PNG are allowed)"
+        "invalid_file_type": "Invalid format (only PDF, JPG, PNG are allowed)",
+        "identity_document_required": "Identity document is required"
     },
     "seo": {
         "landing_title": "MotoTX: Safe Mototaxi in Bamako | Leading Transport in Mali",
