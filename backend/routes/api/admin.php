@@ -12,4 +12,5 @@ Route::group(['middleware' => ['jwt.auth', 'admin'], 'prefix' => 'admin'], funct
     Route::get('/transacciones', [AdminController::class, 'getAllTransacciones']);
     Route::get('/statistics', [AdminController::class, 'getStatistics']);
     Route::get('/chart-data', [AdminController::class, 'getChartData']);
+    Route::get('/reports/export', [\App\Http\Controllers\Admin\AdminReportController::class, 'exportMonthlyReport']);
 });

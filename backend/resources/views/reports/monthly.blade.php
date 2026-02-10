@@ -1,148 +1,85 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Reporte Mensual - MotoTX</title>
+    <meta charset="utf-8">
+    <title>{{ $title }}</title>
     <style>
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #333;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #2563eb;
-            padding-bottom: 20px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2563eb;
-        }
-        .meta {
-            color: #666;
-            font-size: 14px;
-        }
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .metric-card {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            text-align: center;
-        }
-        .metric-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #1e293b;
-        }
-        .metric-label {
-            font-size: 14px;
-            text-transform: uppercase;
-            color: #64748b;
-            letter-spacing: 1px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        th, td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-            background-color: #f8fafc;
-            color: #475569;
-            font-weight: 600;
-        }
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 12px;
-            color: #94a3b8;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 20px;
-        }
-        @media print {
-            body { padding: 0; }
-            .no-print { display: none; }
-            .metric-card { border: 1px solid #000; }
-        }
-        .btn-print {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+        body { font-family: 'Helvetica', 'Arial', sans-serif; color: #333; line-height: 1.6; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 10px; }
+        .logo { font-size: 24px; font-weight: bold; color: #2563eb; }
+        .date { font-size: 14px; color: #666; }
+        .section-title { font-size: 18px; font-weight: bold; margin-top: 20px; border-left: 4px solid #10b981; padding-left: 10px; }
+        .stats-grid { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        .stats-grid td { width: 50%; padding: 15px; border: 1px solid #eee; }
+        .stat-label { font-size: 12px; color: #666; text-transform: uppercase; font-weight: bold; }
+        .stat-value { font-size: 20px; font-weight: bold; color: #111827; }
+        .footer { position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 10px; color: #999; border-top: 1px solid #eee; padding-top: 10px; }
+        .status-table { width: 100%; margin-top: 15px; border-collapse: collapse; }
+        .status-table th, .status-table td { padding: 10px; border: 1px solid #eee; text-align: left; }
+        .status-table th { background-color: #f9fafb; font-size: 12px; }
     </style>
 </head>
 <body>
-    <div class="no-print" style="text-align: right;">
-        <button onclick="window.print()" class="btn-print">🖨️ Imprimir / Guardar como PDF</button>
-    </div>
-
     <div class="header">
-        <div class="logo">MotoTX Bamako</div>
-        <h1>Reporte Mensual de Operaciones</h1>
-        <div class="meta">Periodo: {{ $month }}/{{ $year }} | Generado el: {{ now()->format('d/m/Y H:i') }}</div>
+        <div class="logo">MotoTX 🛵🇲🇱</div>
+        <div style="font-size: 20px; margin-top: 5px;">Reporte de Operaciones Mensuales</div>
+        <div class="date">Generado el: {{ $date }}</div>
     </div>
 
-    <div class="metrics-grid">
-        <div class="metric-card">
-            <div class="metric-value">{{ number_format($ingresos, 0, ',', '.') }} CFA</div>
-            <div class="metric-label">Ingresos Totales</div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-value">{{ $totalViajes }}</div>
-            <div class="metric-label">Viajes Solicitados</div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-value">{{ $completedViajes }}</div>
-            <div class="metric-label">Viajes Completados</div>
-        </div>
-    </div>
+    <div class="section-title">Resumen de Indicadores Clave (KPIs)</div>
+    <table class="stats-grid">
+        <tr>
+            <td>
+                <div class="stat-label">Ingresos del Mes</div>
+                <div class="stat-value">{{ number_format($ingresosMes) }} CFA</div>
+            </td>
+            <td>
+                <div class="stat-label">Viajes Completados</div>
+                <div class="stat-value">{{ $viajesMes }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="stat-label">Motoristas Aprobados</div>
+                <div class="stat-value">{{ $totalMotoristas }}</div>
+            </td>
+            <td>
+                <div class="stat-label">Usuarios en la Plataforma</div>
+                <div class="stat-value">{{ $usuariosActivos }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="stat-label">Calificación Promedio</div>
+                <div class="stat-value">{{ $ratingPromedio }} ⭐</div>
+            </td>
+            <td>
+                <div class="stat-label">Estado de la Plataforma</div>
+                <div class="stat-value" style="color: #10b981;">Activa</div>
+            </td>
+        </tr>
+    </table>
 
-    <h3>🏆 Top 5 Motoristas del Mes</h3>
-    <table>
+    <div class="section-title">Distribución de Viajes por Estado</div>
+    <table class="status-table">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Motorista</th>
-                <th>Viajes Completados</th>
+                <th>Estado</th>
+                <th>Total de Viajes</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($topDrivers as $index => $driver)
+            @foreach($viajesPorEstado as $estado => $total)
             <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $driver->motorista->name ?? 'Usuario Eliminado' }}</td>
-                <td><strong>{{ $driver->total }}</strong></td>
+                <td style="text-transform: capitalize;">{{ $estado }}</td>
+                <td>{{ $total }}</td>
             </tr>
             @endforeach
-            @if(count($topDrivers) === 0)
-            <tr>
-                <td colspan="3" style="text-align: center; padding: 20px;">No hay datos suficientes para este periodo.</td>
-            </tr>
-            @endif
         </tbody>
     </table>
 
     <div class="footer">
-        © {{ date('Y') }} MotoTX Technologies SARL. Documento Confidencial.
+        © {{ date('Y') }} MotoTX Mali - Bamako. Todos los derechos reservados.
     </div>
 </body>
 </html>
