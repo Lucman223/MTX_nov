@@ -47,7 +47,6 @@ const MotoristaTransactions = () => {
             const profileRes = await axios.get('/api/motorista/perfil');
             setBalance(profileRes.data.billetera || 0);
         } catch (error) {
-            console.error('Error fetching financial data:', error);
         } finally {
             setLoading(false);
         }

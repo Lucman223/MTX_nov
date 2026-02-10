@@ -31,6 +31,30 @@ const AdminReportes = () => {
         fetchReports();
     }, []);
 
+    const handleExportPDF = async () => {
+        try {
+            toast.promise(
+                axios.get('/api/admin/reports/export', { responseType: 'blob' }),
+                {
+                    loading: t('common.loading') || 'Generando PDF...',
+                    success: (response) => {
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `MotoTX_Reporte_${new Date().toISOString().split('T')[0]}.pdf`);
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        return 'PDF descargado correctamente';
+                    },
+                    error: t('common.error') || 'Error al descargar PDF'
+                }
+            );
+        } catch (err) {
+            toast.error(t('common.error'));
+        }
+    };
+
     if (loading) return <div className="text-center p-20">{t('common.loading')}</div>;
 
     return (
@@ -90,8 +114,8 @@ const AdminReportes = () => {
                 </Card>
 
                 <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-                    <Button disabled variant="ghost" style={{ opacity: 0.6 }}>
-                        📥 {t('admin_dashboard.actions.export_pdf')} {t('admin_dashboard.actions.coming_soon')}
+                    <Button onClick={handleExportPDF} variant="primary">
+                        📥 {t('admin_dashboard.actions.export_pdf')}
                     </Button>
                 </div>
             </div>

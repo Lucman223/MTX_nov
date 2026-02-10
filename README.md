@@ -120,7 +120,7 @@ php artisan tinker
 ```php
 User::create([
     'name' => 'Admin',
-    'email' => 'admin@test.com',
+    'email' => 'admin@mototx.com',
     'password' => Hash::make('password'),
     'rol' => 'admin',
     'telefono' => '00000000'
@@ -131,7 +131,7 @@ User::create([
 ```php
 $client = User::create([
     'name' => 'Cliente Test',
-    'email' => 'client@test.com',
+    'email' => 'cliente@mototx.com',
     'password' => Hash::make('password'),
     'rol' => 'cliente',
     'telefono' => '11111111'
@@ -169,18 +169,18 @@ Este script simula un ciclo completo:
 ### Testing Manual en Navegador
 
 1. **Como Admin** (http://localhost:8000):
-   - Login con `admin@test.com` / `password`
+   - Login con `admin@mototx.com` / `password`
    - Ir a "Gestión de Motoristas"
    - Aprobar motoristas pendientes
 
 2. **Como Cliente**:
-   - Login con `client@test.com` / `password`
+   - Login con `cliente@mototx.com` / `password`
    - Hacer clic en el mapa para seleccionar origen y destino
    - Solicitar viaje
    - Ver el marcador "Tu Moto 🏍️" moviéndose en tiempo real
 
 3. **Como Motorista**:
-   - Login con `amadou@test.com` / `password`
+   - Login con `moto@mototx.com` / `password123`
    - Aceptar solicitud de viaje
    - Cambiar estado a "En curso" → "Completado"
    - El navegador pedirá permisos de ubicación

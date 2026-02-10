@@ -57,7 +57,6 @@ const AdminDashboard = () => {
             setStats(statsRes.data);
             setChartData(chartRes.data);
         } catch (error) {
-            console.error('Error fetching statistics:', error);
             // Optional: set dummy stats or error state
         } finally {
             setLoading(false);

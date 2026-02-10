@@ -26,3 +26,47 @@
 .accessibility-dyslexic * {
     font-family: var(--font-dyslexic) !important;
 }
+
+/* Landing Page Styles */
+html {
+    scroll-behavior: smooth;
+}
+
+.mtx-nav-link {
+    text-decoration: none;
+    color: #4b5563;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.mtx-nav-link:hover {
+    color: var(--primary-color, #2563eb);
+}
+
+.mtx-footer-link {
+    color: white;
+    opacity: 0.7;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.mtx-footer-link:hover {
+    opacity: 1;
+}
+
+/* Enhancements for Landing Cards */
+.mtx-card {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mtx-card:hover {
+    transform: translateY(-10px);
+}
+
+/* Responsive Utilities for Landing */
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
+}

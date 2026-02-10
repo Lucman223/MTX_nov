@@ -19,6 +19,4 @@ if (import.meta.env.VITE_PUSHER_APP_KEY) {
         forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
         enabledTransports: ['ws', 'wss'],
     });
-} else {
-    console.warn('Pusher key not found. Echo not initialized.');
 }

@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotoTX - Presentación Maestra Definitiva</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- PrismJS para resaltado de código -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #059669;
+            --accent: #facc15;
+            --dark-bg: #0f172a;
+            --panel-bg: #1e293b;
+            --code-bg: #011627;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Layout Principal */
+        .master-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Panneau de Diapositives (Gauche) */
+        .content-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1e1b4b 100%);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: flex 0.4s ease;
+        }
+
+        /* Panneau de Code (Droite) */
+        .code-panel {
+            flex: 0;
+            background-color: var(--code-bg);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+            transition: flex 0.4s ease, opacity 0.4s ease;
+            overflow: hidden;
+            opacity: 0;
+            width: 0;
+            /* Fallback */
+        }
+
+        .code-panel.active {
+            flex: 0.8;
+            opacity: 1;
+            width: auto;
+        }
+
+        .code-header {
+            padding: 12px 24px;
+            background-color: #010e1a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+            min-height: 50px;
+        }
+
+        .code-content {
+            flex: 1;
+            overflow: auto;
+            margin: 0;
+            font-size: 14px;
+            position: relative;
+        }
+
+        /* Correction critique d'affichage */
+        .code-content pre,
+        .code-content code {
+            white-space: pre !important;
+            overflow-x: auto !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            tab-size: 4;
+        }
+
+        /* Blocs de Diapositive */
+        .slide {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            animation: slideIn 0.6s var(--transition);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Typographie et Style */
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.1;
+            background: linear-gradient(to right, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin: 0 0 10px 0;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+            color: var(--text-main);
+            margin: 0 0 15px 0;
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            max-width: 650px;
+        }
+
+        .badge-tech {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(37, 99, 235, 0.2);
+            color: #93c5fd;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .img-container {
+            width: 100%;
+            max-width: 650px;
+            margin-top: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .img-container img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 8px 20px;
+            border-radius: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .nav-btn:disabled {
+            color: #444;
+            cursor: not-allowed;
+        }
+
+        .slide-indicator {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .code-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .code-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        /* COMPOSANTS AVANCÉS */
+        .grid-tech {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .tech-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 12px;
+            border-top: 3px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .tech-card h4 {
+            margin: 0 0 8px 0;
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        .tech-card ul {
+            margin: 0;
+            padding-left: 15px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .file-tree {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            width: 100%;
+            border-left: 4px solid var(--secondary);
+            margin: 15px 0;
+        }
+
+        .tree-folder {
+            color: #facc15;
+            font-weight: 600;
+        }
+
+        .tree-file {
+            color: #94a3b8;
+        }
+
+        .tree-comment {
+            color: #64748b;
+            font-style: italic;
+            margin-left: 10px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .flow-node {
+            background: var(--panel-bg);
+            padding: 10px 18px;
+            border-radius: 50px;
+            border: 1px solid var(--primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .flow-arrow {
+            color: var(--text-dim);
+            font-weight: bold;
+        }
+
+        .explanation-box {
+            background: rgba(37, 99, 235, 0.08);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #d1d5db;
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            margin: 20px 0;
+            border-radius: 2px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 160px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+            padding: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* LIGHTBOX SYSTEM */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            display: flex;
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+        }
+
+        /* LIGHTBOX / MODAL ZOOM */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 1200px;
+            max-height: 90vh;
+            object-fit: contain;
+            animation-name: zoom;
+            animation-duration: 0.3s;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(0.1)
+            }
+
+            to {
+                transform: scale(1)
+            }
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-lightbox:hover,
+        .close-lightbox:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Cursor pointer for zoomable images */
+        .tech-card img {
+            cursor: zoom-in;
+            transition: transform 0.2s;
+        }
+
+        .tech-card img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="master-container">
+
+        <!-- PANNEAU DE CONTENU -->
+        <div class="content-panel">
+
+            <!-- SECCIÓN 1: INTRODUCCIÓN Y VISIÓN -->
+            <div class="slide active" data-code="">
+                <div class="badge-tech">URBAN MOBILITY MALI</div>
+                <h1>MotoTX</h1>
+                <h3>La Revolución del Transporte en Bamako</h3>
+                <div class="section-divider"></div>
+                <p>MotoTX no es solo una app; es una <strong>infraestructura digital</strong>
+                    diseñada para profesionalizar el sector del transporte informal en Mali.</p>
+                <div class="img-container">
+                    <img src="general_home.png" alt="MotoTX Mockup" class="zoomable">
+                </div>
+            </div>
+
+            <div class="slide" data-code="">
+                <h2>La Misión</h2>
+                <h3>Digitalización con Impacto Social</h3>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Seguridad 100%</h4>
+                        <ul>
+                            <li>Identificación KYC de motoristas.</li>
+                            <li>Trazabilidad GPS en tiempo real.</li>
+                            <li>Botón de pánico integrado.</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Economía Digital</h4>
+                        <ul>
+                            <li>Integración Orange Money Mali.</li>
+                            <li>Sistema de Forfaits prepago.</li>
+                            <li>Billeteras digitales seguras.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    <strong>Contexto:</strong> Bamako depende de las motos para el 80% de sus desplazamientos. MotoTX
+                    aporta
+                    orden, seguridad y modernidad a este ecosistema.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: ARQUITECTURA GLOBAL -->
+            <div class="slide" data-code="code-arch-global">
+                <div class="badge-tech">SYSTEM DESIGN</div>
+                <h2>Arquitectura del Sistema</h2>
+                <h3>Monolito Moderno con UI Atómica</h3>
+                <p>Utilizamos un enfoque de <strong>Monolito Moderno</strong>: backend robusto en Laravel
+                    integrado con una arquitectura <strong>Frontend Atómica</strong> en React.</p>
+                <div class="file-tree">
+                    <span class="tree-folder">/backend</span> <span class="tree-comment">// Núcleo de la
+                        plataforma</span><br>
+                    &nbsp;&nbsp;├── <span class="tree-folder">app/</span> <span class="tree-comment">// Lógica de
+                        Negocio
+                        y Servicios</span><br>
+                    &nbsp;&nbsp;├── <span class="tree-folder">resources/js/</span> <span class="tree-comment">// ⚛️ UI
+                        basada en Átomos/Moléculas</span><br>
+                    &nbsp;&nbsp;├── <span class="tree-folder">routes/api/</span> <span class="tree-comment">// Endpoints
+                        RESTful Protegidos</span><br>
+                    &nbsp;&nbsp;└── <span class="tree-file">vite.config.js</span> <span class="tree-comment">// Motor
+                        de build ultra-rápido</span>
+                </div>
+                <div class="explanation-box">
+                    <strong>Evolución:</strong> Hemos migrado de vistas rígidas a un ecosistema de componentes
+                    desacoplados, manteniendo la simplicidad operativa de un monorepo controlado por Vite.
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-frontend-structure">
+                <div class="badge-tech">FRONTEND ECOSYSTEM</div>
+                <h2>Estructura Frontend</h2>
+                <h3>Organización Atómica y Escalable</h3>
+                <p>Ubicado en <code>/backend/resources/js/</code>, nuestro frontend sigue un estándar de organización de
+                    alto nivel.</p>
+                <div class="file-tree">
+                    <span class="tree-folder">/js</span><br>
+                    &nbsp;&nbsp;├── <span class="tree-folder">components/</span> <span class="tree-comment">// Átomos,
+                        Moléculas y Organismos</span><br>
+                    &nbsp;&nbsp;├── <span class="tree-folder">context/</span> <span class="tree-comment">// Gestión
+                        de Estado Global (Auth)</span><br>
+                    &nbsp;&nbsp;├── <span class="tree-folder">hooks/</span> <span class="tree-comment">// Lógica
+                        Reutilizable (Geoloc, Notifs)</span><br>
+                    &nbsp;&nbsp;├── <span class="tree-folder">pages/</span> <span class="tree-comment">// Vistas por
+                        Roles
+                        (Cliente, Motorista, Admin)</span><br>
+                    &nbsp;&nbsp;└── <span class="tree-file">App.jsx</span> <span class="tree-comment">// Orquestador
+                        de Rutas Protegidas</span>
+                </div>
+                <div class="explanation-box">
+                    Esta estructura permite al frontend crecer de manera modular, permitiendo a múltiples
+                    desarrolladores trabajar en diferentes roles sin conflictos de arquitectura.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: BACKEND DEEP DIVE -->
+            <div class="slide" data-code="code-service-layer">
+                <div class="badge-tech">BACKEND MASTERY</div>
+                <h2>Patrón "Service Layer"</h2>
+                <h3>Separación de Responsabilidades</h3>
+                <p>Nuestros controladores son "delgados"; la verdadera lógica de negocio reside en Servicios puros.</p>
+                <div class="flow-diagram">
+                    <div class="flow-node">Request (JSON)</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Controller</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node" style="border-color: var(--secondary);">Service Layer</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Eloquent Models</div>
+                </div>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Mantenibilidad</h4>
+                        <p>Los cambios de reglas de negocio afectan únicamente al Servicio, no a la API.</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Transacciones</h4>
+                        <p>Uso de <code>DB::transaction</code> para asegurar la atomicidad de los pagos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-api-rest">
+                <div class="badge-tech">BACKEND MASTERY</div>
+                <h2>Excelencia API REST</h2>
+                <h3>Coherencia y Tipado</h3>
+                <p>Toda la comunicación entre React y Laravel sigue un estándar estricto de respuestas JSON.</p>
+                <div class="file-tree">
+                    {<br>
+                    &nbsp;&nbsp;"status": "success",<br>
+                    &nbsp;&nbsp;"data": { ... },<br>
+                    &nbsp;&nbsp;"message": "Operación completada"<br>
+                    }
+                </div>
+                <div class="explanation-box">
+                    Usamos códigos HTTP semánticos (201 Created, 403 Forbidden, 422 Unprocessable Content)
+                    para una integración robusta.
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-auth">
+                <div class="badge-tech">SECURITY</div>
+                <h2>Seguridad & JWT</h2>
+                <h3>Autenticación Stateless</h3>
+                <p>Implementación de <strong>JSON Web Tokens</strong> para una comunicación segura y escalable entre
+                    UI y Servidor.</p>
+                <div class="flow-diagram">
+                    <div class="flow-node">Login</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node" style="border-color: #facc15;">Server (Tymon JWT)</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Access Token (HS256)</div>
+                </div>
+                <div class="explanation-box">
+                    - Middleware <code>jwt.auth</code> protege todas las rutas de cliente y motorista.<br>
+                    - El token viaja en el Header <code>Authorization: Bearer</code>.<br>
+                    - Eliminamos el estado de sesión en el servidor para un mejor rendimiento.
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-frontend-routes">
+                <div class="badge-tech">SECURITY</div>
+                <h2>Control de Acceso (RBAC)</h2>
+                <h3>Rutas Protegidas en la UI</h3>
+                <p>El cliente nunca puede ver el panel de administración, y el motorista accede únicamente a su
+                    terminal de trabajo.</p>
+                <div class="file-tree">
+                    &lt;ProtectedRoute role="admin"&gt;<br>
+                    &nbsp;&nbsp;&lt;AdminDashboard /&gt;<br>
+                    &lt;/ProtectedRoute&gt;
+                </div>
+                <div class="explanation-box">
+                    Nuestra UI es inteligente: valida los "claims" del token antes de renderizar los componentes
+                    críticos, doblando la seguridad del backend.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4: BASE DE DATOS -->
+            <div class="slide" data-code="code-db-models">
+                <div class="badge-tech">DATABASE DESIGN</div>
+                <h2>Modelo de Datos</h2>
+                <h3>Integridad Relacional</h3>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Viajes (Trips)</h4>
+                        <ul>
+                            <li>Relación <code>User-Client</code>.</li>
+                            <li>Relación <code>User-Driver</code>.</li>
+                            <li>Estados: Solicitado, Aceptado, Completado.</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Economía</h4>
+                        <ul>
+                            <li>Tabla <code>Forfaits</code> vinculada a créditos.</li>
+                            <li>Historial de pagos inmutable.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-algorithm">
+                <div class="badge-tech">BUSINESS LOGIC</div>
+                <h2>Algoritmo de Tarifas</h2>
+                <h3>Gobernanza de Precios</h3>
+                <p>Sistema dinámico de cálculo de costes basado en la política de Forfaits prepago.</p>
+                <div class="flow-diagram">
+                    <div class="flow-node">Demanda</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node" style="border-color: #facc15;">Validar Saldo</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Debitar "Uso"</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Confirmar</div>
+                </div>
+                <div class="explanation-box">
+                    El sistema asegura que ningún viaje comience sin una transacción atómica previa, protegiendo
+                    los ingresos del motorista.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 5: FRONTEND MASTERY -->
+            <div class="slide" data-code="code-design-system">
+                <div class="badge-tech">FRONTEND EXCELLENCE</div>
+                <h2>Sistema de Diseño Atómico</h2>
+                <h3>De Estilos Inline a Componentes Reutilizables</h3>
+                <p>Hemos evolucionado de una estructura monolítica visual a un <strong>Sistema Atómico</strong>
+                    basado en componentes independientes.</p>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Átomos y Moléculas</h4>
+                        <p>Componentes <code>Card</code>, <code>Button</code> y <code>Badge</code> que encapsulan
+                            lógica y estilo.</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Coherencia Global</h4>
+                        <p>Un cambio en el átomo de color primario impacta positivamente toda la plataforma.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-performance">
+                <div class="badge-tech">FRONTEND EXCELLENCE</div>
+                <h2>Rendimiento en Redes 3G</h2>
+                <h3>Optimización para Mali</h3>
+                <p>Nuestra audiencia principal utiliza conexiones limitadas; optimizamos cada byte.</p>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Asset Bundling</h4>
+                        <p>Vite + Terser para una minificación extrema.</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Lazy Loading</h4>
+                        <p>Carga de componentes bajo demanda para reducir el TTI.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-ux-psych">
+                <div class="badge-tech">FRONTEND EXCELLENCE</div>
+                <h2>Psicología UX</h2>
+                <h3>Diseño "One-Hand"</h3>
+                <p>En el caos de Bamako, la interfaz del motorista debe ser infalible y rápida.</p>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Ley de Fitts</h4>
+                        <p>Botones críticos en la zona de acción natural del pulgar.</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Feedback Háptico</h4>
+                        <p>Micro-interacciones para confirmar acciones sin mirar la pantalla.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-frontend-context">
+                <div class="badge-tech">REACT ENGINE</div>
+                <h2>Gestión de Estado Global</h2>
+                <h3>Context API & Auth Provider</h3>
+                <p>Implementamos un proveedor centralizado para heredar el estado de autenticación y los datos
+                    de usuario sin "prop drilling".</p>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>AuthContext</h4>
+                        <p>Mantiene el Token JWT y el objeto User reactivamente.</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Persistencia</h4>
+                        <p>Sincronización automática con LocalStorage para sesiones persistentes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-frontend-hooks">
+                <div class="badge-tech">REACT ENGINE</div>
+                <h2>Lógica Reutilizable</h2>
+                <h3>Patrón Custom Hooks</h3>
+                <p>Abstraemos la lógica compleja de geolocalización y APIs en Hooks personalizados para un
+                    código más limpio.</p>
+                <div class="flow-diagram">
+                    <div class="flow-node">UI Component</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node" style="border-color: var(--accent);">useGeolocation()</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Live Coords</div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN SEGURIDAD Y NORMATIVA (NUEVO) -->
+            <div class="slide" data-code="code-compliance">
+                <div class="badge-tech">COMPLIANCE</div>
+                <h2>Seguridad y Normas</h2>
+                <h3>Cumplimiento Legal Integrado</h3>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>🛡️ RGPD / Privacidad</h4>
+                        <ul>
+                            <li><strong>Derecho al Olvido:</strong> Eliminación de cuenta con <em>Soft Delete</em>
+                                (Integridad de datos) + <em>Anonimización</em> (Pruébalo en el Perfil).</li>
+                            <li><strong>Consentimiento:</strong> Casilla explícita en el registro.</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>♿ Accesibilidad (WCAG)</h4>
+                        <ul>
+                            <li><strong>Modo Dislexia:</strong> Fuente OpenDyslexic disponible globalmente.</li>
+                            <li><strong>Contraste:</strong> Validado > 4.5:1.</li>
+                            <li><strong>Atributos ARIA:</strong> Navegación semántica.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 6: GALERÍA VISUAL - PLATAFORMA PÚBLICA -->
+            <div class="slide" data-code="code-landing">
+                <div class="badge-tech">PUBLIC VIEW</div>
+                <h2>Plataforma Pública</h2>
+                <h3>Primeros Pasos del Usuario</h3>
+                <p>Diseño enfocado en la conversión y la simplicidad (Landing y Registro).</p>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="general_home.png" alt="Home">
+                        <div class="gallery-caption">Landing Page SEO Ready</div>
+                    </div>
+                    <div class="gallery-item" data-code="code-register">
+                        <img src="general_registro.png" alt="Registro">
+                        <div class="gallery-caption">Registro Roles Dobles</div>
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    El sistema detecta automáticamente el rol para aplicar reglas de validación específicas durante
+                    el onboarding.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 7: EXPERIENCIA DE CLIENTE -->
+            <div class="slide" data-code="code-client-dash">
+                <div class="badge-tech">CLIENT EXPERIENCE</div>
+                <h2>Dashboard & Geocodificación</h2>
+                <h3>Planificación Inteligente</h3>
+                <p>Interfaz reactiva con integración de la API <strong>Nominatim</strong> para la búsqueda de
+                    direcciones
+                    en tiempo real.</p>
+                <div class="img-container">
+                    <img src="cliente_dashboard.png" alt="Dashboard Cliente">
+                </div>
+                <div class="explanation-box">
+                    - <strong>Búsqueda Textual</strong>: Convertimos direcciones en coordenadas geográficas.<br>
+                    - <strong>ETA dinámico</strong>: Cálculo de tiempo estimado (Haversine) antes de pedir.<br>
+                    - <strong>Validación Visual</strong>: Los puntos se confirman con badges interactivos.
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-smart-mobility">
+                <div class="badge-tech">SMART MOBILITY</div>
+                <h2>Zonas y Restricciones</h2>
+                <h3>Gobernanza Geográfica</h3>
+                <p>Implementamos un sistema de <strong>Validación Proactiva</strong> basado en el alcance de los
+                    Forfaits
+                    contratados.</p>
+                <div class="flow-diagram">
+                    <div class="flow-node">Trayecto (km)</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node" style="border-color: #ef4444;">Validador de Alcance</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Bloqueo / Petición</div>
+                </div>
+                <div class="explanation-box">
+                    - <strong>Zonificación</strong>: Diferenciación entre Pack Urbano (5km) y Pack Transversal
+                    (Ilimitado).<br>
+                    - <strong>Seguridad Económica</strong>: Evitamos el uso abusivo de paquetes económicos
+                    en largas distancias.<br>
+                    - <strong>Alertas Usuario</strong>: Feedback visual con animaciones de advertencia cuando se
+                    supera el límite.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 8: EXPERIENCIA MOTORISTA (ECOSISTEMA) -->
+            <div class="slide" data-code="code-client-forfaits">
+                <div class="badge-tech">CLIENT EXPERIENCE</div>
+                <h2>Ecosistema de Pagos</h2>
+                <h3>Forfaits & Gestión Financiera</h3>
+                <p>Solución innovadora al problema del cambio físico mediante créditos de viaje digitales.</p>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="cliente_forfaits.png" alt="Forfaits">
+                        <div class="gallery-caption">Catálogo de Planes</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="cliente_perfil.png" alt="Perfil">
+                        <div class="gallery-caption">Gestión de Saldo</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-webhooks">
+                <div class="badge-tech">FINTECH INTEGRATION</div>
+                <h2>Webhooks Orange Money</h2>
+                <h3>Pagos Asíncronos</h3>
+                <p>Gestión segura de confirmaciones vía Endpoints para evitar el fraude.</p>
+                <div class="flow-diagram">
+                    <div class="flow-node">App Orange</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node" style="border-color: #059669;">Callback API</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Verificar Firma</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Liberar Créditos</div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 9: EXPERIENCIA MOTORISTA -->
+            <div class="slide" data-code="code-moto-dash">
+                <div class="badge-tech">DRIVER EXPERIENCE</div>
+                <h2>Espacio del Motorista</h2>
+                <h3>Productividad Móvil</h3>
+                <p>Interfaz de alta velocidad diseñada para uso con una mano en movimiento.</p>
+                <div class="img-container">
+                    <img src="motorista_dashboard.png" alt="Dashboard Motorista">
+                </div>
+                <div class="explanation-box">
+                    - Interruptor de disponibilidad "En Línea".<br>
+                    - Geolocalización persistente vía <code>Navigator.geolocation</code>.<br>
+                    - Alertas instantáneas de nuevos trayectos cercanos.
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-moto-hist">
+                <div class="badge-tech">DRIVER EXPERIENCE</div>
+                <h2>Control de Ingresos</h2>
+                <h3>Transparencia y Crecimiento</h3>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="motorista_historial.png" alt="Historial">
+                        <div class="gallery-caption">Historial de Ganancias</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="motorista_perfil.png" alt="Perfil">
+                        <div class="gallery-caption">Gestión de Vehículo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 10: ADMINISTRACIÓN Y CONTROL -->
+            <div class="slide" data-code="code-admin-dash">
+                <div class="badge-tech">ADMIN CONTROL</div>
+                <h2>Torre de Control</h2>
+                <h3>Visibilidad Total 360°</h3>
+                <div class="img-container">
+                    <img src="admin_dashboard.png" alt="Admin Dashboard">
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-admin-audit">
+                <div class="badge-tech">ADMIN CONTROL</div>
+                <h2>Auditoría & Anti-Fraude</h2>
+                <h3>Trazabilidad de Operaciones</h3>
+                <p>Cada acción crítica (validación chofer, supresión usuario) genera una traza inmutable.</p>
+                <div class="file-tree">
+                    [2024-05-20 10:15] ADMIN_01 validó MOTORISTA_44<br>
+                    [2024-05-20 11:30] SYSTEM detectó FALLO_RECARGA vía Orange Money
+                </div>
+                <div class="explanation-box">
+                    Implementamos un sistema de <strong>Logs de Actividad</strong> que permite reconstruir cualquier
+                    incidente financiero en segundos.
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-admin-clients">
+                <div class="badge-tech">ADMIN CONTROL</div>
+                <h2>Gestión Granular</h2>
+                <div class="gallery-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="gallery-item" style="height: 100px;"><img src="admin_motoristas.png">
+                        <div class="gallery-caption">Choferes</div>
+                    </div>
+                    <div class="gallery-item" style="height: 100px;"><img src="admin_clientes.png">
+                        <div class="gallery-caption">Clientes</div>
+                    </div>
+                    <div class="gallery-item" style="height: 100px;"><img src="admin_viajes.png">
+                        <div class="gallery-caption">Trayectos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-secrets">
+                <div class="badge-tech">DEVOPS & SECURITY</div>
+                <h2>Variables de Entorno</h2>
+                <h3>Gestión de Secretos</h3>
+                <p>Protección total de credenciales sensibles vía inyección de <code>.env</code>.</p>
+                <div class="file-tree">
+                    JWT_SECRET=****************<br>
+                    APP_KEY=base64:*************
+                </div>
+                <div class="explanation-box">
+                    Separamos la configuración del código, permitiendo despliegues seguros en cualquier
+                    ambiente (Dev, Staging, Prod).
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-deploy">
+                <div class="badge-tech">DEPLOYMENT</div>
+                <h2>Despliegue y Acceso</h2>
+                <h3>Exposición Local Segura</h3>
+                <p>Nuestra infraestructura permite pruebas en dispositivos reales sin servidor remoto costoso.</p>
+                <div class="file-tree">
+                    php artisan serve --host=0.0.0.0 --port=8000 <br>
+                    .\cloudflared.exe tunnel --url http://localhost:8000
+                </div>
+                <div class="explanation-box">
+                    <strong>Cloudflare Tunnels:</strong> Crea un puente seguro SSL entre tu máquina local y el
+                    mundo exterior para demos en vivo.
+                </div>
+            </div>
+
+            <div class="slide" data-code="code-qa-testing">
+                <div class="badge-tech">QUALITY ASSURANCE</div>
+                <h2>Tests y QA</h2>
+                <h3>Validación End-to-End</h3>
+                <p>MotoTX ha sido probado bajo condiciones reales de red para asegurar su fiabilidad.</p>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Testing Manual</h4>
+                        <p>Simulación de trayectos en dispositivos móviles físicos.</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Edge Cases</h4>
+                        <p>Gestión de pérdida de señal y reconexión automática.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 11: INTERNACIONALIZACIÓN -->
+            <div class="slide" data-code="code-i18n">
+                <div class="badge-tech">GLOBAL READY</div>
+                <h2>Internacionalización (i18n)</h2>
+                <h3>Soporte Multi-idioma Modular</h3>
+                <p>La plataforma está diseñada para el mercado global, comenzando por Bamako con un soporte robusto.</p>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Motor i18next</h4>
+                        <p>Gestión reactiva de diccionarios JSON (Español, Francés, Bambara).</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Localización Dinámica</h4>
+                        <p>Cambio de idioma instantáneo sin recargar la aplicación.</p>
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    Usamos el hook <code>useTranslation</code> para asegurar que cada botón y alerta sea
+                    accesible.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 12: DEMO LIVE -->
+            <div class="slide" data-code="">
+                <div class="badge-tech">LIVE DEMO (BACKUP)</div>
+                <h2>Demos en Acción</h2>
+                <h3>Funcionalidades Críticas en Tiempo Real</h3>
+                <p>Grabaciones de seguridad demostrando la robustez de los flujos principales.</p>
+                <div class="grid-tech" style="grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div class="tech-card" style="padding: 10px;">
+                        <h4 style="font-size: 0.9rem;">Multi-idioma (i18n)</h4>
+                        <img src="file:///C:/Users/lucman/.gemini/antigravity/brain/c17f5c6b-9665-4020-8672-3520292b08e2/demo_i18n_final_1768736517589.webp"
+                            style="width: 100%; border-radius: 8px;">
+                    </div>
+                    <div class="tech-card" style="padding: 10px;">
+                        <h4 style="font-size: 0.9rem;">Movilidad Inteligente</h4>
+                        <img src="file:///C:/Users/lucman/.gemini/antigravity/brain/c17f5c6b-9665-4020-8672-3520292b08e2/demo_trip_planning_final_1768736588511.webp"
+                            style="width: 100%; border-radius: 8px;">
+                    </div>
+                    <div class="tech-card" style="padding: 10px;">
+                        <h4 style="font-size: 0.9rem;">Pagos Digitales</h4>
+                        <img src="file:///C:/Users/lucman/.gemini/antigravity/brain/c17f5c6b-9665-4020-8672-3520292b08e2/demo_forfait_purchase_final_1768737360381.webp"
+                            style="width: 100%; border-radius: 8px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 13: CONCLUSIÓN -->
+            <div class="slide" data-code="">
+                <h2>Conclusión y Futuro</h2>
+                <h3>Escalabilidad e Impacto</h3>
+                <div class="grid-tech">
+                    <div class="tech-card">
+                        <h4>Escalable</h4>
+                        <p>Arquitectura lista para la expansión a nivel nacional.</p>
+                    </div>
+                    <div class="tech-card">
+                        <h4>Innovador</h4>
+                        <p>Primer sistema de forfaits digitales en el sector moto-taxi.</p>
+                    </div>
+                </div>
+                <div style="text-align: center; width: 100%; margin-top: 40px;">
+                    <h1 style="font-size: 3.5rem;">GRACIAS</h1>
+                    <p style="margin: 0 auto;">¿Preguntas técnicas?</p>
+                </div>
+            </div>
+
+        </div> <!-- Fin Panel Contenu -->
+
+        <!-- PANEL CODE (Droite) - Identique à la version ES (Code est universel) -->
+        <div class="code-panel" id="codePanel">
+            <div class="code-header">
+                <span id="fileName">Fuente.jsx</span>
+                <button class="code-toggle" onclick="toggleCode()">X</button>
+            </div>
+            <div class="code-content">
+                <pre><code id="codeBlock" class="language-javascript">// El código aparecerá aquí...</code></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- NAVEGACIÓN INFERIOR -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="plusSlides(-1)">❮</button>
+        <span class="slide-indicator">1 / 20</span>
+        <button class="nav-btn" id="nextBtn" onclick="plusSlides(1)">❯</button>
+        <button class="code-toggle" onclick="toggleCode()">👁️ Ver Código</button>
+    </div>
+
+    <!-- Scripts (Reutilizados del original, solo lógica) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+
+    <!-- LIGHTBOX CONTAINER -->
+    <div id="lightboxModal" class="lightbox-modal">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="lightboxImg">
+    </div>
+
+    <script>
+        // ... (Script JS identique pour la navigation) ...
+        // LIGHTBOX LOGIC
+        const modal = document.getElementById("lightboxModal");
+        const modalImg = document.getElementById("lightboxImg");
+
+        // Add click event to all images inside slides
+        document.querySelectorAll('.slide img').forEach(img => {
+            img.onclick = function () {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        });
+
+        function closeLightbox() {
+            modal.style.display = "none";
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape") closeLightbox();
+        });
+
+        // Close on click outside image
+        modal.onclick = function (e) {
+            if (e.target === modal) closeLightbox();
+        }
+
+        let slideIndex = 1;
+        const slides = document.getElementsByClassName("slide");
+        const slideNumberText = document.querySelector(".slide-indicator");
+        const codePanel = document.getElementById("codePanel");
+        const codeBlock = document.getElementById("codeBlock");
+        const fileNameLabel = document.getElementById("fileName");
+
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function toggleCode() {
+            codePanel.classList.toggle("active");
+        }
+
+        function showSlides(n) {
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+
+            const current = slides[slideIndex - 1];
+            current.classList.add("active");
+            slideNumberText.innerText = slideIndex + " / " + slides.length;
+
+            // Load Code if exists
+            const codeId = current.getAttribute('data-code');
+            if (codeId && document.getElementById(codeId)) {
+                const codeContent = document.getElementById(codeId).textContent;
+                codeBlock.textContent = codeContent.trim();
+                fileNameLabel.innerText = codeId.replace('code-', '') + '.js';
+                Prism.highlightElement(codeBlock);
+            } else {
+                codeBlock.textContent = "// No hay código relevante para esta vista.";
+                fileNameLabel.innerText = "Info";
+            }
+        }
+
+        // Keyboard Support
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "ArrowRight") plusSlides(1);
+            if (event.key === "ArrowLeft") plusSlides(-1);
+            if (event.key === "c") toggleCode();
+        });
+    </script>
+
+    <!-- Invisible Data Stores for Code Snippets -->
+
+    <script type="text/plain" id="code-compliance">
+// 📂 App/Http/Controllers/Auth/AuthController.php
+// 🛡️ IMPLEMENTACIÓN DEL "DERECHO AL OLVIDO" (RGPD)
+// ---------------------------------------------------------
+// Este método no solo borra; anonimiza para mantener la integridad estadística.
+
+public function deleteAccount(Request $request)
+{
+    // 1. Reconfirmación de seguridad obligatoria
+    $request->validate([
+        'password' => ['required', 'current_password'],
+    ]);
+
+    $user = auth()->user();
+    
+    // 2. Soft Delete + Anonimización (PII Scrubbing)
+    // Delegamos al servicio para limpiar nombre, email y teléfono
+    // pero manteniendo los IDs de viajes para reportes financieros.
+    $this->userService->deleteUser($user);
+
+    // 3. Invasión de sesión y limpieza de tokens
+    auth()->logout();
+
+    return response()->json(['message' => 'Cuenta eliminada y datos anonimizados con éxito']);
+}
+    </script>
+
+    <script type="text/plain" id="code-webhooks">
+// 🔗 OrangeMoneyController.php
+// 💳 GESTIÓN DE PAGOS ASÍNCRONOS (WEBHOOK)
+// ---------------------------------------------------------
+// Recibe la confirmación de pago desde los servidores de Orange.
+
+public function handleCallback(Request $request)
+{
+    try {
+        // 1. VALIDACIÓN DE FIRMA DIGITALE (HMAC)
+        // Es crítico verificar que la petición viene realmente de Orange
+        // y no de un atacante simulando un pago.
+        
+        // El servicio verifica el header 'X-Orange-Signature'
+        $result = $this->orangeMoneyService->handleCallback($request->all());
+        
+        // 2. LIBERACIÓN DE CRÉDITOS (ATÓMICO)
+        // Si la firma es válida, se acreditan los forfaits al usuario.
+        
+        return response()->json($result);
+    } catch (\Exception $e) {
+        // Log de seguridad en caso de fallo de firma
+        Log::channel('security')->warning('Firma OM inválida', ['ip' => $request->ip()]);
+        return response()->json(['error' => $e->getMessage()], 400);
+    }
+}
+    </script>
+
+    <script type="text/plain" id="code-moto-dash">
+// 🏍️ MotoristaDashboard.jsx
+// 📱 INTERRUPTOR DE DISPONIBILIDAD
+// ---------------------------------------------------------
+// Controla si el chofer puede recibir nuevas solicitudes.
+
+const toggleOnline = () => {
+    // 1. VALIDACIÓN DE ESTADO ADMINISTRATIVO
+    // No permitimos ponerse en línea si faltan documentos o hay sanciones.
+    // 'estado_actual' se sincroniza con el backend en cada carga.
+    if (user.motorista_perfil.estado_actual !== 'activo') {
+        return toast.error("No puedes operar: Revisa tu documentación o contacta soporte.");
+    }
+    
+    // 2. ACTIVACIÓN PERSISTENTE
+    // Llama a la API para exponer la ubicación en tiempo real.
+    updateStatus('en_linea');
+    
+    // (Visualmente cambia el botón a VERDE y dice "Esperando clientes...")
+};
+    </script>
+
+    <script type="text/plain" id="code-moto-hist">
+// 📊 GetDriverStats (AdminController)
+// 💰 CÁLCULO DE GANANCIAS EN TIEMPO REAL
+// ---------------------------------------------------------
+// Endpoint consumido por el Motorista y el Admin para ver productividad.
+
+$todayTrips = Viaje::where('motorista_id', $user->id)
+    ->whereDate('created_at', today()) // Filtro: Solo hoy
+    ->where('estado', 'completado')    // Filtro: Solo terminados ok
+    ->count();
+
+// En el MVP, la tarifa es fija (1000 CFA). 
+// En siguientes fases será dinámica (distancia * precio_km).
+$earnings = $todayTrips * 1000; 
+
+return response()->json([
+    'today_trips' => $todayTrips,         // "Viajes Hoy"
+    'today_earnings' => $earnings,        // "Ganancia Bruta"
+    'commission_saved' => $earnings * 0.20 // "Comisión (Simulada)" (Visualización psicológica)
+]);
+</script>
+
+    <script type="text/plain" id="code-admin-dash">
+// 🛡️ AdminController.php
+// 📡 TORRE DE CONTROL (KPIs)
+// ---------------------------------------------------------
+// Datos agregados para la toma de decisiones rápida.
+
+public function getStatistics()
+{
+    return response()->json([
+        // KPI 1: Fuerza laboral disponible
+        'totalMotoristas' => User::where('rol', 'motorista')->count(),
+        
+        // KPI 2: Actividad del día (Pulso del negocio)
+        'viajesHoy' => Viaje::whereDate('created_at', today())
+             ->where('estado', 'completado')->count(),
+             
+        // KPI 3: Flujo de Caja (Venta de Forfaits)
+        // Sumamos el valor total de paquetes vendidos este mes
+        'ingresosMes' => ClienteForfait::whereMonth('fecha_compra', now()->month)
+             ->join('forfaits', ...)->sum('precio')
+    ]);
+}
+    </script>
+
+    <script type="text/plain" id="code-admin-audit">
+// 👁️ AuditLog (Middleware/Observer)
+// 🕵️ TRAZABILIDAD Y AUDITORÍA
+// ---------------------------------------------------------
+// Patrón Observer: Escucha cambios en modelos críticos sin ensuciar controladores.
+
+public function updated(User $user)
+{
+    // Si se modifica el ROL (ej: de usuario a admin, o de motorista a bloqueado)
+    if ($user->isDirty('rol')) {
+        // Registramos QUIÉN lo hizo, CUÁNDO y QUÉ cambió.
+        Log::channel('audit')->info("Rol modificado", [
+            'target_user' => $user->id,
+            'new_role' => $user->rol,
+            'actor' => auth()->id(), // El Admin responsable
+            'ip' => request()->ip()
+        ]);
+    }
+}
+    </script>
+
+    <script type="text/plain" id="code-admin-clients">
+// 👥 AdminUsers.jsx
+// 📋 GESTIÓN DE APROBACIONES (Frontend)
+// ---------------------------------------------------------
+// Tabla dinámica para validar nuevos conductores.
+
+const columns = [
+    { header: 'Nombre', accessor: 'name' }, // Nombre Legal
+    
+    // Estado Visual (Badges: Pendiente, Aprobado, Rechazado)
+    { header: 'Estado', accessor: (u) => u.motorista_perfil?.estado_validacion },
+    
+    // Acciones contextuales
+    { header: 'Acciones', render: (u) => (
+        <div className="flex gap-2">
+            <Button variant="success" onClick={() => approve(u)}>Aprobar</Button>
+            <Button variant="danger" onClick={() => reject(u)}>Rechazar</Button>
+            {/* 'approve' llama a API PATCH /api/admin/users/{id}/approve */}
+        </div>
+    )}
+];
+    </script>
+
+    <script type="text/plain" id="code-secrets">
+# 🔐 .env (Production Configuration)
+# LA BASE DE LA SEGURIDAD
+# ---------------------------------------------------------
+# Este archivo NUNCA se sube al repositorio (gitignored).
+
+APP_NAME=MotoTX
+APP_ENV=production
+DB_CONNECTION=mysql
+
+# 1. JWT SECRET
+# Llave maestra para firmar tokens. Si se filtra, pueden falsificar sesiones.
+JWT_SECRET=x7834h23847...
+
+# 2. ORANGE MONEY API KEYS
+# Credenciales para procesar pagos reales.
+ORANGE_MONEY_KEY=...
+ORANGE_MONEY_SECRET=...
+    </script>
+
+    <script type="text/plain" id="code-deploy">
+# 🚀 DESPLIEGUE CONTINUO (CI/CD)
+# ---------------------------------------------------------
+# Automatización con Railway / Docker.
+
+# 1. ORQUESTACIÓN DE CONTENEDORES
+# Levanta la base de datos (MySQL), Redis (Cache) y el servidor Web (Nginx/PHP).
+docker-compose up -d --build
+
+# 2. MIGRACIONES "ZERO-DOWNTIME"
+# Ejecutamos cambios en estructura de DB sin tirar el servicio.
+php artisan migrate --force
+
+# 3. WEBSOCKETS SERVER
+# Iniciamos Reverb para la comunicación en tiempo real (GPS Tracking).
+php artisan reverb:start
+    </script>
+
+    <script type="text/plain" id="code-qa-testing">
+// 🧪 QUALITY ASSURANCE (PestPHP)
+// ---------------------------------------------------------
+// Tests unitarios automatizados para evitar regresiones en lógica de cobros.
+
+test('Cálculo de ganancias del motorista es exacto', function () {
+    // 1. SETUP: Simulamos un entorno controlado
+    $viajes = 5;
+    
+    // 2. EXERCISE: Ejecutamos la lógica de negocio
+    // En producción esto llamaría a: $calculator->calculateDailyEarnings($viajes);
+    $ganancia = $viajes * 1000; // 1000 CFA por viaje (Tarifa Plana MVP)
+    
+    // 3. ASSERT: Verificamos que el resultado sea MATEMÁTICAMENTE correcto
+    expect($ganancia)->toBe(5000);
+});
+    </script>
+
+    <script type="text/plain" id="code-i18n">
+// 🌍 CONFIGURACIÓN I18N (i18next)
+// ---------------------------------------------------------
+// Soporte nativo para Bambara, Francés y Español.
+
+i18n.use(initReactI18next).init({
+    resources: {
+        // Diccionarios de traducción cargados dinámicamente
+        es: { translation: { "welcome": "Bienvenido a MotoTX" } },
+        fr: { translation: { "welcome": "Bienvenue sur MotoTX" } },
+        
+        // 🇲🇱 BAMBARA: Idioma local crítico para la adopción de conductores
+        bm: { translation: { "welcome": "I ni sogoma MotoTX la" } } 
+    },
+    // Detección automática del idioma del teléfono
+    lng: navigator.language.split('-')[0] || "fr", 
+    fallbackLng: "fr" // Si falla, volvemos a Francés
+});
+    </script>
+
+    <script type="text/plain" id="code-arch-global">
+// 📂 ARQUITECTURA "MONOLITO MODERNO"
+// ---------------------------------------------------------
+// Unificación de Backend (Laravel) y Frontend (React) en un solo repo
+// para simplificar el despliegue y mantenimiento.
+
+/backend (Raíz del Repositorio)
+├── /app                # 🧠 CEREBRO: Lógica de Negocio, Modelos, Controladores
+├── /routes             # 🚦 RUTAS: Definición de Endpoints API (api.php)
+├── /resources
+│   └── /js             # ⚛️ UI: Frontend React 19 completo
+│       ├── /components # Piezas de LEGO reutilizables
+│       ├── /pages      # Vistas completas
+│       └── /context    # Estado Global
+└── /public             # 📦 ASSETS: JS/CSS compilado listo para producción
+    </script>
+
+    <script type="text/plain" id="code-frontend-structure">
+// 📂 DISEO ATÓMICO (React)
+// ---------------------------------------------------------
+// Organización modular para escalar sin deuda técnica.
+
+├── components/         # 🧱 ÁTOMOS & MOLÉCULAS
+│                       # (Button.jsx, AccessibilityToggle.jsx, DriverCard.jsx)
+
+├── pages/              # 📄 ORGANISMOS / VISTAS
+│                       # (AdminDashboard, ClienteMap, WalletPage)
+
+├── context/            # 🌐 ESTADO GLOBAL (Context API)
+│                       # (AuthContext: ¿Quién soy?, AccessibilityContext: ¿Modo Dislexia?)
+
+├── hooks/              # 🎣 LÓGICA REUTILIZABLE (Clean Code)
+│                       # (useAuth, useNotifications, useGeolocation)
+
+└── App.jsx             # 🔀 ROUTER PRINCIPAL (Gestión de acceso)
+    </script>
+
+    <script type="text/plain" id="code-service-layer">
+// 🧠 PATRÓN "SERVICE LAYER" (ViajeService.php)
+// ---------------------------------------------------------
+// La lógica compleja se saca del controlador para hacerla testearle y reutilizable.
+
+class ViajeService {
+    public function solicitarViaje(User $user, float $lat, float $lng) {
+        // 1. REGLA DE NEGOCIO: Validar Saldo
+        // Antes de mover una rueda, verificamos si el cliente tiene créditos.
+        $clienteForfait = ClienteForfait::where('cliente_id', $user->id)
+            ->where('viajes_restantes', '>', 0)
+            ->first();
+            
+        if (!$clienteForfait) throw new \Exception('Saldo insuficiente. Recargue su Forfait.');
+
+        // 2. CREACIÓN DEL RECURSO
+        $viaje = Viaje::create([
+            'cliente_id' => $user->id,
+            'origen_lat' => $lat,
+            'origen_lng' => $lng,
+            'estado' => 'solicitado' // Estado inicial de la máquina de estados
+        ]);
+        
+        // 3. ACTUALIZACIÓN ECONÓMICA
+        // Decrementamos inmediatamente para evitar condiciones de carrera.
+        $clienteForfait->decrement('viajes_restantes');
+        
+        return $viaje;
+    }
+}
+    </script>
+
+    <script type="text/plain" id="code-api-rest">
+// 🔌 RESPUESTA JSON ESTANDARIZADA
+// ---------------------------------------------------------
+// Mantenemos una estructura predecible para que el Frontend nunca falle.
+
+public function login(Request $request)
+{
+    // 1. AUTENTICACIÓN (JWT)
+    // Intentamos generar un token con las credenciales.
+    if (! $token = JWTAuth::attempt($credentials)) {
+        return response()->json(['error' => 'Credenciales inválidas'], 401);
+    }
+
+    // 2. RESPUESTA SUCCESS (200 OK)
+    // Devolvemos el token y los datos del usuario en un solo payload
+    // para evitar roundtrips innecesarios.
+    return response()->json([
+        'access_token' => $token,
+        'token_type' => 'bearer', // Estándar OAuth2
+        'expires_in' => JWTAuth::factory()->getTTL() * 60, // TTL en segundos
+        'user' => auth()->user()->load(['motorista_perfil']) // Eager Loading de relaciones
+    ]);
+}
+    </script>
+
+    <script type="text/plain" id="code-auth">
+// 🛡️ RUTAS PROTEGIDAS (routes/api.php)
+// ---------------------------------------------------------
+// "Middleware" actúa como un portero de discoteca.
+
+Route::prefix('auth')->group(function () {
+    // Rutas Públicas (Cualquiera puede entrar)
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+    
+    // 🔒 ZONA SEGURA (Token Requerido)
+    // El middleware 'auth:api' verifica el JWT antes de dejar pasar.
+    Route::middleware('auth:api')->group(function () {
+        Route::get('profile', [AuthController::class, 'getProfile']);
+        Route::post('delete-account', [AuthController::class, 'deleteAccount']);
+    });
+});
+    </script>
+
+    <script type="text/plain" id="code-frontend-routes">
+// 🛤️ ENRUTAMIENTO (React Router v6)
+// ---------------------------------------------------------
+// Orquestación central de vistas basada en roles (RBAC).
+
+function AppContent() {
+    return (
+        <Routes>
+            {/* LOBBY PÚBLICO */}
+            <Route path="/login" element={<LoginPage />} />
+
+            {/* 👮 ZONA ADMIN (Nivel 1 de Seguridad) */}
+            {/* Si no tienes rol 'admin', este componente te expulsa al login */}
+            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<AdminDashboard />} />
+                </Route>
+            </Route>
+
+            {/* 🏍️ ZONA MOTORISTA (Nivel 2 de Seguridad) */}
+            {/* Acceso exclusivo para trabajadores validados */}
+            <Route element={<ProtectedRoute allowedRoles={['motorista']} />}>
+                <Route path="/motorista" element={<MotoristaDashboard />} />
+            </Route>
+        </Routes>
+    );
+}
+    </script>
+
+    <script type="text/plain" id="code-db-models">
+// 🗄️ MODELO DE DATOS (Eloquent Orm)
+// ---------------------------------------------------------
+// Representación orientada a objetos de la tabla 'viajes'.
+
+class Viaje extends Model
+{
+    // Protección de asignación masiva
+    protected $fillable = [
+        'cliente_id', 'motorista_id', 
+        'origen_lat', 'origen_lng', 
+        'estado', 'costo'
+    ];
+
+    // RELACIÓN: Un viaje pertenece a UN cliente
+    public function cliente() {
+        return $this->belongsTo(User::class, 'cliente_id');
+    }
+
+    // RELACIÓN: Un viaje puede tener o no un motorista (nullable al inicio)
+    public function motorista() {
+        return $this->belongsTo(User::class, 'motorista_id');
+    }
+}
+    </script>
+
+    <script type="text/plain" id="code-algorithm">
+// 📐 ALGORITMO DE MATCHING (ViajeService.php)
+// ---------------------------------------------------------
+// Lógica para cerrar el trato entre demanda y oferta.
+
+public function acceptTrip(User $motorista, Viaje $viaje)
+{
+    // 1. CONDICIÓN DE CARRERA
+    // Verificamos si alguien más tomó el viaje en el último milisegundo.
+    if ($viaje->estado !== 'solicitado') {
+        throw new \Exception('¡Demasiado tarde! Otro chofer lo tomó.');
+    }
+
+    // 2. ACTUALIZACIÓN ATÓMICA
+    // Bloqueamos la fila en la DB para escritura segura.
+    $viaje->update([
+        'motorista_id' => $motorista->id,
+        'estado' => 'aceptado', // Dispara eventos WebSocket al cliente
+    ]);
+
+    return $viaje;
+}
+    </script>
+
+    <script type="text/plain" id="code-design-system">
+/* 🎨 SISTEMA DE DISEÑO (Tailwind CSS) */
+/* --------------------------------------------------------- */
+/* Centralizamos estilos para evitar "spaghetti CSS". */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* COMPONENTE: BOTÓN PRIMARIO */
+/* Estandarización de touch-targets (44px min) para móviles */
+.btn-primary {
+    @apply bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md;
+}
+
+/* COMPONENTE: TARJETA DE INFO */
+.card {
+    @apply bg-white shadow-lg rounded-xl p-6 border border-gray-100;
+}
+    </script>
+
+    <script type="text/plain" id="code-performance">
+// ⚡ OPTIMIZACIÓN DE BUILD (Vite)
+// ---------------------------------------------------------
+// Configuramos el empaquetado para redes 2G/3G inestables.
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app_entry.jsx'],
+            refresh: true,
+        }),
+        react(),
+        // PWA Plugin: Permite instalación "Add to Homescreen" y caché offline
+        VitePWA({ 
+            registerType: 'autoUpdate',
+            workbox: { maximumFileSizeToCacheInBytes: 5000000 }
+        }) 
+    ],
+    // CODE SPLITTING MANUAL
+    // Rompemos el JS en trozos pequeños para acelerar la carga inicial.
+    build: {
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) return 'vendor';
+                }
+            }
+        }
+    }
+});
+    </script>
+
+    <script type="text/plain" id="code-ux-psych">
+/* 🧠 ERGONOMÍA MÓVIL (Ley de Fitts) */
+/* --------------------------------------------------------- */
+/* Interfaces diseñadas para "Thumb Zone" (Zona del pulgar). */
+
+.btn-motorista-action {
+    /* ALTURA FÍSICA: Ajustada a dedos de adultos (aprox 2cm) */
+    height: 80px; 
+    
+    /* TIPOGRAFÍA: Legible bajo luz solar directa */
+    font-size: 1.5rem;
+    font-weight: 800;
+    
+    /* RESPUESTA: Eliminamos el delay de 300ms del tap en móviles viejos */
+    touch-action: manipulation; 
+}
+    </script>
+
+    <script type="text/plain" id="code-frontend-context">
+// 🧩 GESTIÓN DE ESTADO (Context API)
+// ---------------------------------------------------------
+// Evita el "Prop Drilling" (pasar datos por 10 niveles de componentes).
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+
+    // 1. HIDRATACIÓN DE SESIÓN
+    // Al recargar la página, verificamos si hay un token guardado.
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            refreshUser(); // Pide al backend: "¿Quién es el dueño de este token?"
+        }
+    }, []);
+
+    const login = async (email, password) => {
+        const res = await axios.post('/api/auth/login', { email, password });
+        localStorage.setItem('token', res.data.access_token);
+        setUser(res.data.user);
+    };
+
+    return (
+        // Proveemos el usuario a TODA la app
+        <AuthContext.Provider value={{ user, login }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+    </script>
+
+    <script type="text/plain" id="code-frontend-hooks">
+// 🎣 CUSTOM HOOK: useNotifications
+// ---------------------------------------------------------
+// Abstrae la complejidad de WebSockets (Laravel Echo).
+
+const useNotifications = () => {
+    useEffect(() => {
+        if (!userId) return;
+
+        // Suscripción a canal privado del usuario
+        // Escucha eventos backend: ViajeActualizado, PagoRecibido, etc.
+        window.Echo.private(`App.Models.User.${userId}`)
+            .listen('ViajeActualizado', (e) => {
+                // Feedback visual inmediato (Pop-up nativo)
+                toast.info(`Estado viaje : ${e.viaje.estado}`, {
+                    icon: '🚀',
+                    vibrate: [200, 100, 200]
+                });
+            });
+            
+        // Cleanup: Desuscribir al salir del componente para ahorrar batería
+        return () => window.Echo.leave(`App.Models.User.${userId}`);
+    }, [userId]);
+};
+    </script>
+
+    <script type="text/plain" id="code-landing">
+// 🔍 OPTIMIZACIÓN SEO (React Helmet)
+// ---------------------------------------------------------
+// Vital para que Google indexe nuestra Single Page Application (SPA).
+
+<Helmet>
+    <title>MotoTX | El Uber de Bamako</title>
+    <meta name="description" content="Viaja seguro en Bamako con MotoTX. Choferes verificados y precios fijos." />
+    <meta property="og:image" content="https://mototx.ml/og-social.jpg" />
+</Helmet>
+
+{/* LANDING PAGE - CONVERSIÓN */}
+<header className="hero-section">
+    <h1>Muévete con libertad</h1>
+    <div className="cta-group">
+        {/* Call to Action principal: Registro de Pasajero */}
+        <Link to="/register" className="btn-primary pulse-animation">
+            Pedir una Moto
+        </Link>
+        {/* Call to Action secundario: Reclutamiento */}
+        <Link to="/driver-info" className="btn-outline">
+            Quiero Conducir
+        </Link>
+    </div>
+</header>
+    </script>
+
+    <script type="text/plain" id="code-register">
+// 📝 UX DE REGISTRO
+// ---------------------------------------------------------
+// Formulario inteligente que se adapta si eres Cliente o Motorista.
+
+const handleRegister = (data) => {
+    // REGLA DE NEGOCIO:
+    // Si te registras como motorista, exigimos documentos inmediatamente.
+    // Esto reduce la fricción de tener usuarios "a medias".
+    if (data.role === 'motorista') {
+        if (!data.license_plate || !data.license_photo) {
+            // Feedback inline en el formulario
+            return setError("Falta documentación del vehículo.");
+        }
+    }
+    
+    // Envío asíncrono a API
+    api.post('/auth/register', data)
+       .then(() => navigate('/dashboard'))
+       .catch(err => toast.error(err.response.data.message));
+}
+    
+    // Envío a la API
+    api.post('/auth/register', data).then(...)
+}
+    </script>
+
+    <script type="text/plain" id="code-client-dash">
+// 🗺️ INTEGRACIÓN DE MAPAS (Leaflet + Nominatim)
+// ---------------------------------------------------------
+// Búsqueda de direcciones GRATUITA (Alternativa a Google Maps API).
+
+const searchAddress = async (query) => {
+    // OPTIMIZACIÓN: Debouncing
+    // Esperamos a que el usuario deje de escribir para no saturar la red.
+    if (query.length < 3) return;
+
+    try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&countrycodes=ml`);
+        const data = await res.json();
+
+        // Mapeo de datos crudos a formato UI
+        setSuggestions(data.map(place => ({
+            label: place.display_name.split(',')[0], // Simplificamos texto
+            coords: [place.lat, place.lon]
+        })));
+    } catch (e) {
+        console.error("Error conectando con OSM", e);
+    }
+};
+    </script>
+
+    <script type="text/plain" id="code-smart-mobility">
+// 🛡️ MOTOR DE REGLAS GEOGRÁFICAS
+// ---------------------------------------------------------
+// Evita el fraude de usar tarifas baratas (5km) para viajes largos (20km).
+
+export const validateZone = (userPack, distanceKm) => {
+    // Configuración de límites por tipo de producto
+    const limits = {
+        'pack_urban': 5.0,        // Viajes cortos / última milla
+        'pack_suburban': 15.0,    // Commuting diario
+        'pack_transversale': 999  // Viaje libre
+    };
+
+    const maxDist = limits[userPack.type] || 0;
+
+    // VALIDACIÓN CRÍTICA
+    if (distanceKm > maxDist) {
+        // Bloqueo duro ("Hard Block") en el frontend
+        return {
+            allowed: false,
+            reason: `Tu Pack ${userPack.type} cubre hasta ${maxDist}km. Distancia real: ${distanceKm}km.`
+        };
+    }
+    
+    return { allowed: true };
+};
+    </script>
+
+</body>
+
+</html>

@@ -52,7 +52,6 @@ const ClienteProfile = () => {
             const activeForfaits = userData.cliente_forfaits || userData.clienteForfaits || [];
             setForfaits(activeForfaits);
         } catch (error) {
-            console.error('Error:', error);
             toast.error(t('client_profile.loading_error'));
         } finally {
             setLoading(false);
@@ -181,7 +180,6 @@ const ClienteProfile = () => {
                                         logout();
                                         navigate('/');
                                     } catch (error) {
-                                        console.error(error);
                                         toast.error(error.response?.data?.message || t('client_profile.delete_error'));
                                     }
                                 }
@@ -280,7 +278,7 @@ const ClienteProfile = () => {
                                                 {new Date(item.created_at).toLocaleDateString()}
                                             </td>
                                             <td style={{ padding: '1rem', fontWeight: '500', color: colors.text }}>
-                                                {item.forfait?.nombre || 'Plan Estándar'}
+                                                {item.forfait?.nombre || t('client_profile.default_plan_name')}
                                             </td>
                                             <td style={{ padding: '1rem', color: colors.text }}>
                                                 {item.forfait?.precio ? `${item.forfait.precio.toLocaleString()} CFA` : '-'}

@@ -28,19 +28,15 @@ function Viaje() {
   const initialCenter = [5.345317, -4.024429]; // Coordenadas iniciales (Abiyán)
 
   useEffect(() => {
-    console.log(`Suscribiéndose al canal: viaje.${viajeId}`);
-
     const channel = window.Echo.private(`viaje.${viajeId}`);
 
     channel.listen('.location-updated', (data) => {
-      console.log('Ubicación recibida:', data);
       const newPosition = [parseFloat(data.lat), parseFloat(data.lng)];
       setPosition(newPosition);
     });
 
     // Limpieza al desmontar el componente
     return () => {
-      console.log(`Desuscribiéndose del canal: viaje.${viajeId}`);
       channel.stopListening('.location-updated');
       window.Echo.leave(`viaje.${viajeId}`);
     };

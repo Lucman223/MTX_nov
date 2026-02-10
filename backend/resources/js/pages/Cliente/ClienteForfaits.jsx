@@ -36,7 +36,6 @@ const ClienteForfaits = () => {
             const response = await axios.get('/api/forfaits/disponibles');
             setForfaits(response.data);
         } catch (error) {
-            console.error('Error fetching forfaits:', error);
             if (forfaits.length === 0) {
                 setForfaits([
                     { id: 1, nombre: t('plans.Prueba', 'Pack Prueba'), precio: 2500, viajes_incluidos: 5, descripcion: t('plans.Prueba_desc', 'Ideal para probar') },
@@ -74,7 +73,6 @@ const ClienteForfaits = () => {
             }
 
         } catch (error) {
-            console.error('Payment init error:', error);
             setStatusMessage({ type: 'error', text: error.response?.data?.error || t('client_forfaits.payment_error') });
             setProcessing(false);
         }
@@ -99,7 +97,6 @@ const ClienteForfaits = () => {
                     setStatusMessage({ type: 'error', text: t('client_forfaits.timeout_error') });
                 }
             } catch (error) {
-                console.error('Polling error', error);
             }
         }, 2000);
     };

@@ -235,7 +235,7 @@
             transition: 0.3s;
             cursor: pointer;
         }
-        }
+
 
         /* CUSTOM DIAGRAM STYLES (FROM BACKEND PRES) */
         .diagram-container {
@@ -536,7 +536,30 @@
             </div>
 
 
-            <!-- Slide 17 -->
+            <!-- Slide 17: Seguridad y Normativa (NUEVO) -->
+            <div class="slide-block" data-code="code-compliance">
+                <h2>Seguridad y Normativa</h2>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>🛡️ RGPD / Privacidad</h4>
+                        <ul>
+                            <li><strong>Derecho al Olvido:</strong> Eliminación de cuenta con <em>Soft Delete</em>
+                                (Integridad de datos) + <em>Anonimización</em> (Pruébalo en Perfil).</li>
+                            <li><strong>Consentimiento:</strong> Checkbox explícito en registro.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>♿ Accesibilidad (WCAG)</h4>
+                        <ul>
+                            <li><strong>Modo Dislexia:</strong> Fuente OpenDyslexic disponible globalmente.</li>
+                            <li><strong>Contraste:</strong> Validado > 4.5:1.</li>
+                            <li><strong>Atributos ARIA:</strong> Navegación semántica.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 18 -->
             <div class="slide-block">
                 <h2>5. Arquitectura Interna (Backend)</h2>
                 <p>¿Cómo funciona todo esto por detrás?</p>
@@ -800,6 +823,28 @@ backend/
 └── routes/
     └── api/
         └── viajes.php
+    </script>
+
+    <script type="text/plain" id="code-compliance">
+// 📂 App/Services/UserService.php
+// Implementación del "Derecho al Olvido" (RGPD)
+
+public function deleteUser(User $user): void
+{
+    // 1. Anonimización de Datos Personales (Irreversible)
+    $user->name = 'Deleted User ' . $user->id;
+    $user->email = 'deleted_' . $user->id . '_' . time() . '@anon.com';
+    $user->telefono = null;
+    $user->foto_perfil = null;
+    
+    // 2. Scramble Password para prevenir accesos futuros
+    $user->password = Hash::make(Str::random(32)); 
+    $user->save();
+
+    // 3. Soft Delete (Mantiene integridad de reportes financieros)
+    // El usuario "desaparece" pero sus viajes históricos persisten anónimos.
+    $user->delete(); 
+}
     </script>
 
     <script type="text/plain" id="code-routes">
@@ -1460,6 +1505,7 @@ php artisan serve --host=0.0.0.0 --port=8000
                 'code-moto-prof': 'MotoristaProfile.jsx',
                 'code-admin-dash': 'AdminDashboard.jsx',
                 'code-admin-clients': 'AdminClientes.jsx',
+                'code-compliance': 'UserService.php (RGPD Logic)',
             };
             return map[id] || 'Componente';
         }

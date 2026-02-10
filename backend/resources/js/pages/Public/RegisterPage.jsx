@@ -26,6 +26,7 @@ function RegisterPage() {
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [rol, setRol] = useState('cliente');
+    const [identityDocument, setIdentityDocument] = useState(null);
     const [aceptaTerminos, setAceptaTerminos] = useState(false);
     const [error, setError] = useState('');
 
@@ -59,6 +60,17 @@ function RegisterPage() {
         }
     }, [searchParams]);
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                toast.error(t('auth.file_too_large'));
+                return;
+            }
+            setIdentityDocument(file);
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError('');
@@ -73,19 +85,24 @@ function RegisterPage() {
             return;
         }
 
+        if (!identityDocument) {
+            setError(t('auth.identity_document_required') || 'Documento de identidad requerido');
+            toast.error(t('auth.identity_document_required') || 'Documento de identidad requerido');
+            return;
+        }
+
         try {
-            await register({
-                name,
-                email,
-                telefono,
-                password,
-                password_confirmation: passwordConfirmation,
-                rol
-            });
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('telefono', telefono);
+            formData.append('password', password);
+            formData.append('password_confirmation', passwordConfirmation);
+            formData.append('rol', rol);
+            formData.append('documento_identidad', identityDocument);
+
+            await register(formData);
             toast.success(t('auth.register_success') || 'Account created successfully!');
-            // Redirection is handled by the useEffect in LoginPage or App if we redirect to login/dashboard
-            // Since register calls login, and login updates AuthContext, redirection should happen automatically if App.jsx handles it.
-            // But let's be explicit if needed, or rely on AuthContext state change.
         } catch (err) {
             setError(err.message || t('auth.register_error'));
             toast.error(err.message || t('auth.register_error'));
@@ -196,7 +213,6 @@ function RegisterPage() {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                             disabled={loading}
-                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -220,7 +236,6 @@ function RegisterPage() {
                             onChange={(e) => setTelefono(e.target.value)}
                             required
                             disabled={loading}
-                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -244,7 +259,6 @@ function RegisterPage() {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             disabled={loading}
-                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -268,7 +282,6 @@ function RegisterPage() {
                             onChange={(e) => setPasswordConfirmation(e.target.value)}
                             required
                             disabled={loading}
-                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -323,6 +336,38 @@ function RegisterPage() {
                         </div>
                     </div>
 
+                    <div style={{ marginBottom: '1.25rem' }}>
+                        <label
+                            htmlFor="identity_document"
+                            style={{
+                                display: 'block',
+                                marginBottom: '0.25rem',
+                                fontWeight: '600',
+                                color: '#374151'
+                            }}
+                        >
+                            {t('auth.identity_document')}
+                        </label>
+                        <small style={{ display: 'block', color: '#6b7280', marginBottom: '0.5rem' }}>
+                            {t('auth.upload_id_helper')}
+                        </small>
+                        <input
+                            type="file"
+                            id="identity_document"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={handleFileChange}
+                            required
+                            disabled={loading}
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem',
+                                border: '2px dashed #e5e7eb',
+                                borderRadius: '0.75rem',
+                                cursor: 'pointer'
+                            }}
+                        />
+                    </div>
+
                     <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                         <input
                             type="checkbox"
@@ -340,9 +385,9 @@ function RegisterPage() {
 
                     <button
                         type="submit"
-                        className="mtx-button mtx-button-primary"
+                        className="mtx-button mtx-button-primary w-full"
                         disabled={loading}
-                        style={{ width: '100%', background: getRoleColor(), boxShadow: `0 4px 12px ${getRoleColor()}40` }}
+                        style={{ background: getRoleColor(), boxShadow: `0 4px 12px ${getRoleColor()}40` }}
                     >
                         {loading ? t('common.loading') : t('common.register')}
                     </button>
@@ -359,24 +404,13 @@ function RegisterPage() {
                     </p>
                     <Link
                         to="/login"
+                        className="mtx-button"
                         style={{
-                            display: 'inline-block',
-                            padding: '0.75rem 2rem',
+                            display: 'inline-flex',
                             background: 'white',
                             color: getRoleColor(),
                             border: `2px solid ${getRoleColor()}`,
-                            borderRadius: '0.75rem',
-                            textDecoration: 'none',
-                            fontWeight: '600',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.target.style.background = getRoleColor();
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.background = 'white';
-                            e.target.style.color = getRoleColor();
+                            width: 'auto'
                         }}
                     >
                         {t('common.login')}

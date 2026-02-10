@@ -69,7 +69,14 @@ const ClientActiveTrip = () => {
                     return;
                 }
 
-                setViaje(response.data);
+                const trip = response.data;
+                if (trip) {
+                    trip.origen_lat = parseFloat(trip.origen_lat);
+                    trip.origen_lng = parseFloat(trip.origen_lng);
+                    trip.destino_lat = parseFloat(trip.destino_lat);
+                    trip.destino_lng = parseFloat(trip.destino_lng);
+                }
+                setViaje(trip);
 
                 // Simulate driver position near origin for now
                 if (response.data.origen_lat && response.data.origen_lng) {
@@ -81,7 +88,6 @@ const ClientActiveTrip = () => {
 
                 setLoading(false);
             } catch (err) {
-                console.error("Error fetching trip:", err);
                 setError('Error al cargar la información del viaje.');
                 setLoading(false);
             }
@@ -118,7 +124,6 @@ const ClientActiveTrip = () => {
             setShowRating(false);
             navigate('/cliente/dashboard');
         } catch (err) {
-            console.error("Error submitting rating:", err);
             alert("Error al enviar la calificación. Intenta de nuevo.");
         }
     };
@@ -166,7 +171,7 @@ const ClientActiveTrip = () => {
             {/* Map */}
             <div className="flex-grow z-0">
                 <MapContainer
-                    center={[viaje.origen_lat, viaje.origen_lng]}
+                    center={[parseFloat(viaje.origen_lat), parseFloat(viaje.origen_lng)]}
                     zoom={14}
                     style={{ height: '100%', width: '100%' }}
                     zoomControl={false}
@@ -177,18 +182,18 @@ const ClientActiveTrip = () => {
                     />
 
                     {/* Origin Marker */}
-                    <Marker position={[viaje.origen_lat, viaje.origen_lng]} icon={ClientIcon}>
+                    <Marker position={[parseFloat(viaje.origen_lat), parseFloat(viaje.origen_lng)]} icon={ClientIcon}>
                         <Popup>Tú (Origen)</Popup>
                     </Marker>
 
                     {/* Destination Marker */}
-                    <Marker position={[viaje.destino_lat, viaje.destino_lng]}>
+                    <Marker position={[parseFloat(viaje.destino_lat), parseFloat(viaje.destino_lng)]}>
                         <Popup>Destino</Popup>
                     </Marker>
 
                     {/* Driver Marker (Simulated) */}
                     {motoristaPos && (
-                        <Marker position={motoristaPos} icon={MotoristaIcon}>
+                        <Marker position={[parseFloat(motoristaPos[0]), parseFloat(motoristaPos[1])]} icon={MotoristaIcon}>
                             <Popup>Motorista</Popup>
                         </Marker>
                     )}
@@ -196,8 +201,8 @@ const ClientActiveTrip = () => {
                     {/* Route Line (Simple straight line for now) */}
                     <Polyline
                         positions={[
-                            [viaje.origen_lat, viaje.origen_lng],
-                            [viaje.destino_lat, viaje.destino_lng]
+                            [parseFloat(viaje.origen_lat), parseFloat(viaje.origen_lng)],
+                            [parseFloat(viaje.destino_lat), parseFloat(viaje.destino_lng)]
                         ]}
                         color="blue"
                         weight={4}

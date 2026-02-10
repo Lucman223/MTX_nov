@@ -129,7 +129,6 @@ function LoginPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            style={{ width: '100%' }}
                         />
                     </div>
 
@@ -152,15 +151,13 @@ function LoginPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            style={{ width: '100%' }}
                         />
                     </div>
 
                     <button
                         type="submit"
-                        className="mtx-button mtx-button-primary"
+                        className="mtx-button mtx-button-primary w-full"
                         disabled={loading}
-                        style={{ width: '100%' }}
                     >
                         {loading ? t('auth.logging_in') : t('common.login')}
                     </button>
@@ -177,24 +174,13 @@ function LoginPage() {
                     </p>
                     <Link
                         to="/register"
+                        className="mtx-button"
                         style={{
-                            display: 'inline-block',
-                            padding: '0.75rem 2rem',
+                            display: 'inline-flex',
                             background: 'white',
                             color: colors.primary,
                             border: `2px solid ${colors.primary}`,
-                            borderRadius: '0.75rem',
-                            textDecoration: 'none',
-                            fontWeight: '600',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.target.style.background = colors.primary;
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseOut={(e) => {
-                            e.target.style.background = 'white';
-                            e.target.style.color = colors.primary;
+                            width: 'auto'
                         }}
                     >
                         {t('common.register')}

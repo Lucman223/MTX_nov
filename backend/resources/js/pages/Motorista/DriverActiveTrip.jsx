@@ -53,10 +53,16 @@ const DriverActiveTrip = () => {
                     return;
                 }
 
-                setViaje(response.data);
+                const trip = response.data;
+                if (trip) {
+                    trip.origen_lat = parseFloat(trip.origen_lat);
+                    trip.origen_lng = parseFloat(trip.origen_lng);
+                    trip.destino_lat = parseFloat(trip.destino_lat);
+                    trip.destino_lng = parseFloat(trip.destino_lng);
+                }
+                setViaje(trip);
                 setLoading(false);
             } catch (err) {
-                console.error("Error fetching trip:", err);
                 setError('Error al cargar la información del viaje.');
                 setLoading(false);
             }
@@ -91,7 +97,6 @@ const DriverActiveTrip = () => {
                 setViaje(prev => ({ ...prev, estado: newStatus }));
             }
         } catch (err) {
-            console.error("Error updating status:", err);
             alert("Error al actualizar el estado del viaje.");
         } finally {
             setUpdating(false);
@@ -133,7 +138,7 @@ const DriverActiveTrip = () => {
             {/* Map */}
             <div className="flex-grow z-0">
                 <MapContainer
-                    center={[viaje.origen_lat, viaje.origen_lng]}
+                    center={[parseFloat(viaje.origen_lat), parseFloat(viaje.origen_lng)]}
                     zoom={14}
                     style={{ height: '100%', width: '100%' }}
                     zoomControl={false}
@@ -144,19 +149,19 @@ const DriverActiveTrip = () => {
                     />
 
                     {/* Origin */}
-                    <Marker position={[viaje.origen_lat, viaje.origen_lng]}>
+                    <Marker position={[parseFloat(viaje.origen_lat), parseFloat(viaje.origen_lng)]}>
                         <Popup>Recoger Aquí</Popup>
                     </Marker>
 
                     {/* Destination */}
-                    <Marker position={[viaje.destino_lat, viaje.destino_lng]}>
+                    <Marker position={[parseFloat(viaje.destino_lat), parseFloat(viaje.destino_lng)]}>
                         <Popup>Destino Final</Popup>
                     </Marker>
 
                     <Polyline
                         positions={[
-                            [viaje.origen_lat, viaje.origen_lng],
-                            [viaje.destino_lat, viaje.destino_lng]
+                            [parseFloat(viaje.origen_lat), parseFloat(viaje.origen_lng)],
+                            [parseFloat(viaje.destino_lat), parseFloat(viaje.destino_lng)]
                         ]}
                         color="blue"
                         weight={5}

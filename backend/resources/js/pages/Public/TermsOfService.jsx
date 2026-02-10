@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
  * [FR] Conditions Générales d'Utilisation (CGU) de la plateforme MotoTX.
  */
 const TermsOfService = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
     return (
@@ -23,65 +23,65 @@ const TermsOfService = () => {
             <button
                 onClick={() => navigate(-1)}
                 className="mtx-button"
-                style={{ marginBottom: '2rem', background: '#f3f4f6' }}
+                style={{ marginBottom: '2rem', background: '#f3f4f6', color: '#4b5563' }}
             >
-                ← {t('common.back', 'Retour')}
+                ← {t('common.back')}
             </button>
 
             <div className="mtx-card" style={{ padding: '3rem' }}>
                 <h1 style={{ color: '#2563eb', marginBottom: '1.5rem', fontSize: '2.5rem', fontWeight: 'bold' }}>
-                    Conditions Générales d'Utilisation
+                    {t('terms.title')}
                 </h1>
 
                 <p style={{ marginBottom: '2rem', color: '#6b7280' }}>
-                    <strong>Dernière mise à jour :</strong> {new Date().toLocaleDateString('fr-FR')}
+                    <strong>{t('terms.last_updated')}:</strong> {new Date().toLocaleDateString(i18n.language === 'es' ? 'es-ES' : i18n.language === 'en' ? 'en-US' : 'fr-FR')}
                 </p>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>1. Objet du Service</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('terms.section1_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        MotoTX est une plateforme technologique facilitant la mise en relation entre des conducteurs de mototaxis indépendants et des clients en République du Mali. MotoTX n'est pas une entreprise de transport mais un intermédiaire technique.
+                        {t('terms.section1_content')}
                     </p>
                 </section>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>2. Conditions d'Accès</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('terms.section2_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        L'utilisateur doit être âgé d'au moins 18 ans. Les conducteurs doivent posséder un permis de conduire valide et les documents du véhicule conformes à la réglementation malienne en vigueur.
+                        {t('terms.section2_content')}
                     </p>
                 </section>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>3. Engagements du Conducteur</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('terms.section3_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        Le conducteur s'engage à :
+                        {t('terms.section3_content')}
                     </p>
                     <ul style={{ color: '#4b5563', lineHeight: '1.8', marginLeft: '1.5rem' }}>
-                        <li>Fournir un casque au passager.</li>
-                        <li>Respecter scrupuleusement le code de la route.</li>
-                        <li>Maintenir son véhicule dans un état de propreté et de sécurité optimal.</li>
-                        <li>Se comporter avec courtoisie envers les clients.</li>
+                        <li>{t('terms.section3_item1')}</li>
+                        <li>{t('terms.section3_item2')}</li>
+                        <li>{t('terms.section3_item3')}</li>
+                        <li>{t('terms.section3_item4')}</li>
                     </ul>
                 </section>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>4. Tarification et Paiements</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('terms.section4_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        Les prix sont fixés selon les forfaits prépayés ou les tarifs en vigueur affichés sur l'application. Tout trajet initié via la plateforme doit être finalisé selon les modalités de paiement choisies.
+                        {t('terms.section4_content')}
                     </p>
                 </section>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>5. Responsabilité</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('terms.section5_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        La responsabilité de MotoTX est limitée au fonctionnement technique de l'application. En cas d'accident, la responsabilité civile du conducteur est engagée conformément au droit malien.
+                        {t('terms.section5_content')}
                     </p>
                 </section>
 
                 <section>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>6. Litiges</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('terms.section6_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        Les présentes CGU sont régies par le droit malien. Tout litige non résolu à l'amiable sera porté devant les tribunaux compétents de Bamako.
+                        {t('terms.section6_content')}
                     </p>
                 </section>
             </div>

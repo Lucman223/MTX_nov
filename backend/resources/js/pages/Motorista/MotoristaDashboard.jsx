@@ -65,7 +65,12 @@ const MotoristaDashboard = () => {
 
             const activeRes = await axios.get('/api/viajes/actual');
             if (activeRes.data && activeRes.data.id) {
-                setCurrentTrip(activeRes.data);
+                const trip = activeRes.data;
+                trip.origen_lat = parseFloat(trip.origen_lat);
+                trip.origen_lng = parseFloat(trip.origen_lng);
+                trip.destino_lat = parseFloat(trip.destino_lat);
+                trip.destino_lng = parseFloat(trip.destino_lng);
+                setCurrentTrip(trip);
                 setViajes([]);
             } else {
                 setCurrentTrip(null);
@@ -122,7 +127,6 @@ const MotoristaDashboard = () => {
             toast.success(t('driver_dashboard.trip_accepted'));
             fetchData();
         } catch (error) {
-            console.error('Error accepting trip:', error);
             const msg = error.response?.data?.error || t('driver_dashboard.accept_error');
             if (msg.includes('not active')) {
                 toast.error(t('driver_dashboard.offline_error'));
@@ -139,13 +143,12 @@ const MotoristaDashboard = () => {
             setIsOnline(!isOnline);
             toast.success(newStatus === 'activo' ? t('driver_dashboard.online_msg') : t('driver_dashboard.offline_msg'));
         } catch (error) {
-            console.error('Error toggling status:', error);
             if (error.response && error.response.status === 403) {
                 toast.error(t('driver_dashboard.subscription_required'));
                 setTimeout(() => navigate('/motorista/suscripciones'), 1500);
                 return;
             }
-            alert('Error updating status: ' + (error.response?.data?.message || 'Check connection'));
+            toast.error(t('driver_dashboard.update_error') + ': ' + (error.response?.data?.message || 'Check connection'));
         }
     };
 
@@ -162,7 +165,6 @@ const MotoristaDashboard = () => {
             toast.success(t('driver_dashboard.status_updated', { status: newStatus }));
             fetchData();
         } catch (error) {
-            console.error('Error updating status:', error);
             toast.error(t('driver_dashboard.update_error'));
         }
     };
@@ -188,7 +190,6 @@ const MotoristaDashboard = () => {
             setComment('');
             fetchData();
         } catch (error) {
-            console.error('Error completing trip:', error);
             toast.error(t('driver_dashboard.rating_modal.error'));
         }
     };

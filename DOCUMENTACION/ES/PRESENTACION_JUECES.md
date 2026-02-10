@@ -59,14 +59,14 @@ MotoTX no es solo una app de transporte; es un **ecosistema profesionalizado**.
 
 #### 1. Frontend (La Cara Visible)
 *   **Lenguaje**: JavaScript (ES6+) con JSX.
-*   **Framework**: **React 18**. Usamos Hooks (`useState`, `useEffect`) para toda la lógica de estado.
-*   **Build Tool**: **Vite**. Permite un desarrollo ultra-rápido (HMR) y builds optimizados para producción.
+*   **Framework**: **React 19**. Usamos las últimas features del core para un rendimiento óptimo.
+*   **Infraestructura**: **Railway**. Plataforma de despliegue en la nube que garantiza alta disponibilidad y SSL automático.
 *   **Routing**: **React Router v6**. Maneja la navegación sin recargar la página (SPA), esencial para una experiencia "App-like".
 *   **Estado**: **Context API**. Gestionamos la sesión del usuario (`AuthContext`) de forma global sin necesidad de librerías pesadas como Redux.
 
 #### 2. Backend (El Motor)
 *   **Lenguaje**: PHP 8.2.
-*   **Framework**: **Laravel 10**. Elegido por su seguridad, robustez y elegancia (MVC puro).
+*   **Framework**: **Laravel 11**. Elegido por su seguridad, robustez y elegancia (MVC puro).
 *   **Base de Datos**: 
     *   **SQLite** (Demo/Dev): Para portabilidad inmediata.
     *   **MySQL 8.0** (Prod): Para escalabilidad masiva.
@@ -86,9 +86,10 @@ MotoTX no es solo una app de transporte; es un **ecosistema profesionalizado**.
 ### Seguridad y Compliance (Normativa)
 - **Roles y Permisos**: Middleware estricto (`MotoristaMiddleware`, `AdminMiddleware`). Nadie entra donde no debe.
 - **RGPD (Privacidad)**:
-    - Política de privacidad accesible.
-    - Funcionalidad de "Derecho al Olvido" (Eliminación de cuenta).
+    - Política de privacidad accesible (`/privacy`).
+    - **Derecho al Olvido (Implementado)**: Botón "Eliminar Cuenta" en el perfil seguro. Realiza un **Soft Delete** + **Anonimización** de datos personales (email, teléfono, nombre) para cumplir la ley sin romper integridad de reportes históricos.
 - **Accesibilidad (WCAG AA)**:
+    - **Modo Dislexia**: Toggle flotante para cambiar a fuente OpenDyslexic.
     - Contraste de colores verificado (>4.5:1).
     - Navegación por teclado y etiquetas ARIA para lectores de pantalla.
 
@@ -116,7 +117,7 @@ MotoTX no es solo una app de transporte; es un **ecosistema profesionalizado**.
 2.  **Ingreso para el Motorista**:
     *   ¿Cómo cobra si el cliente paga con Forfait (Virtual)?
     *   **Respuesta**: El sistema funciona con **Liquidación (Settlement)**. Cada viaje realizado con Forfait genera un saldo a favor del conductor en el sistema.
-    *   La plataforma paga a los conductores periódicamente (semanal/mensual) el valor de los viajes realizados, descontando la comisión (o sin comisión si pagan suscripción VIP).
+    *   La plataforma permite a los conductores realizar **Retiros Diarios** de sus ganancias a su cuenta de Orange Money, asegurando liquidez inmediata.
     *   *Nota:* En esta versión MVP no mostramos el módulo de "Payouts" (Pagos a conductores), pero es parte del Back-office administrativo.
 
 ---

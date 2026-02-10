@@ -16,6 +16,16 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
+// [PHASE 2] Helper to guarantee numeric coordinates in Map
+const safeParseCoord = (val, label = 'unknown') => {
+    const parsed = parseFloat(val);
+    if (isNaN(parsed)) {
+        console.error(`[MAP_COORD_ERROR] Failed to parse coordinate for ${label}:`, val);
+        return 0; // Fallback to 0 to prevent issues
+    }
+    return parsed;
+};
+
 const MapClickHandler = ({ puntoActivo, setOrigen, setDestino }) => {
     useMapEvents({
         click(e) {
@@ -57,17 +67,20 @@ const MapSelection = ({ origen, setOrigen, destino, setDestino, puntoActivo, mot
                 setOrigen={setOrigen}
                 setDestino={setDestino}
             />
-            {origen && (
-                <Marker position={origen}>
+            {console.log('[LOG_MAP_1] Rendering MapSelection with:', { origen, destino, motoristaPos })}
+            {origen && Array.isArray(origen) && origen.length >= 2 && (
+                <Marker position={[safeParseCoord(origen[0], 'map_origen_lat'), safeParseCoord(origen[1], 'map_origen_lng')]}>
                     <Popup>Punto de Origen</Popup>
                 </Marker>
             )}
-            {destino && (
-                <Marker position={destino}>
+            {destino && Array.isArray(destino) && destino.length >= 2 && (
+                <Marker position={[safeParseCoord(destino[0], 'map_destino_lat'), safeParseCoord(destino[1], 'map_destino_lng')]}>
                     <Popup>Punto de Destino</Popup>
                 </Marker>
             )}
-            {motoristaPos && <MotoristaMarker position={motoristaPos} />}
+            {motoristaPos && Array.isArray(motoristaPos) && motoristaPos.length >= 2 && (
+                <MotoristaMarker position={[safeParseCoord(motoristaPos[0], 'map_moto_lat'), safeParseCoord(motoristaPos[1], 'map_moto_lng')]} />
+            )}
         </MapContainer>
     );
 };
@@ -96,8 +109,15 @@ const MotoristaMarker = ({ position }) => {
 
     }, [position]);
 
+    console.log('[LOG_MAP_2] Rendering MotoristaMarker at:', currentPos);
     return (
-        <Marker position={currentPos} icon={MotoristaIcon}>
+        <Marker
+            position={[
+                safeParseCoord(currentPos[0], 'moto_marker_lat'),
+                safeParseCoord(currentPos[1], 'moto_marker_lng')
+            ]}
+            icon={MotoristaIcon}
+        >
             <Popup>🛵 Tu Moto</Popup>
         </Marker>
     );

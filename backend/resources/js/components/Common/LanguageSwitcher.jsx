@@ -24,7 +24,9 @@ const LanguageSwitcher = () => {
             {languages.map((lang) => (
                 <button
                     key={lang.code}
-                    onClick={() => i18n.changeLanguage(lang.code)}
+                    onClick={() => {
+                        i18n.changeLanguage(lang.code);
+                    }}
                     style={{
                         padding: '0.25rem 0.5rem',
                         borderRadius: '0.25rem',

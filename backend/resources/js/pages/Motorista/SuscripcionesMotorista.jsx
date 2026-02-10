@@ -39,7 +39,6 @@ const SuscripcionesMotorista = () => {
             setPlanes(planesRes.data);
             setCurrentStatus(statusRes.data);
         } catch (error) {
-            console.error('Error loading data:', error);
             toast.error(t('common.error'));
         } finally {
             setLoading(false);
@@ -61,7 +60,6 @@ const SuscripcionesMotorista = () => {
             toast.success(t('common.success'));
             fetchPlanesAndStatus(); // Refresh status
         } catch (error) {
-            console.error('Error subscribing:', error);
             toast.error(t('common.error'));
         } finally {
             setProcessing(null);

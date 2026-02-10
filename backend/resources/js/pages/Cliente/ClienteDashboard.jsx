@@ -23,6 +23,17 @@ import '../../../css/components.css';
  *
  * @component
  */
+
+// [PHASE 2] Helper to guarantee numeric coordinates
+const safeParseCoord = (val, label = 'unknown') => {
+    const parsed = parseFloat(val);
+    if (isNaN(parsed)) {
+        console.error(`[CRITICAL_COORD_ERROR] Failed to parse coordinate for ${label}:`, val);
+        return 0; // Fallback to 0 to prevent toFixed crash
+    }
+    return parsed;
+};
+
 const ClienteDashboard = () => {
     const { logout, user } = useAuth();
     const { t } = useTranslation();
@@ -51,18 +62,33 @@ const ClienteDashboard = () => {
         const checkTripStatus = async () => {
             try {
                 const response = await axios.get('/api/viajes/actual');
-                if (response.data) {
-                    setActiveTrip(response.data);
-                    // If trip is active, auto-set markers if not set
-                    if (!origen && response.data.origen_lat) {
-                        setOrigen([response.data.origen_lat, response.data.origen_lng]);
+                if (response.data && response.data.id) {
+                    const polledTrip = response.data;
+                    polledTrip.origen_lat = parseFloat(polledTrip.origen_lat);
+                    polledTrip.origen_lng = parseFloat(polledTrip.origen_lng);
+                    polledTrip.destino_lat = parseFloat(polledTrip.destino_lat);
+                    polledTrip.destino_lng = parseFloat(polledTrip.destino_lng);
+                    if (polledTrip.motorista?.motorista_perfil) {
+                        polledTrip.motorista.motorista_perfil.latitud_actual = parseFloat(polledTrip.motorista.motorista_perfil.latitud_actual);
+                        polledTrip.motorista.motorista_perfil.longitud_actual = parseFloat(polledTrip.motorista.motorista_perfil.longitud_actual);
                     }
-                    if (!destino && response.data.destino_lat) {
-                        setDestino([response.data.destino_lat, response.data.destino_lng]);
+
+                    console.log('Active trip loaded (polling processed):', polledTrip);
+                    setActiveTrip(polledTrip);
+
+                    // If trip is active, auto-set markers if not set
+                    if (!origen && polledTrip.origen_lat) {
+                        const newOrigen = [polledTrip.origen_lat, polledTrip.origen_lng];
+                        console.log('Auto-setting origen from active trip:', newOrigen);
+                        setOrigen(newOrigen);
+                    }
+                    if (!destino && polledTrip.destino_lat) {
+                        const newDestino = [polledTrip.destino_lat, polledTrip.destino_lng];
+                        console.log('Auto-setting destino from active trip:', newDestino);
+                        setDestino(newDestino);
                     }
                 }
             } catch (error) {
-                console.error("Error polling trip", error);
             }
         };
 
@@ -80,6 +106,14 @@ const ClienteDashboard = () => {
             const callbacks = (updatedTrip) => {
                 // If it's a full trip object (ViajeActualizado/ViajeAceptado)
                 if (updatedTrip && updatedTrip.id) {
+                    updatedTrip.origen_lat = parseFloat(updatedTrip.origen_lat);
+                    updatedTrip.origen_lng = parseFloat(updatedTrip.origen_lng);
+                    updatedTrip.destino_lat = parseFloat(updatedTrip.destino_lat);
+                    updatedTrip.destino_lng = parseFloat(updatedTrip.destino_lng);
+                    if (updatedTrip.motorista?.motorista_perfil) {
+                        updatedTrip.motorista.motorista_perfil.latitud_actual = parseFloat(updatedTrip.motorista.motorista_perfil.latitud_actual);
+                        updatedTrip.motorista.motorista_perfil.longitud_actual = parseFloat(updatedTrip.motorista.motorista_perfil.longitud_actual);
+                    }
                     setActiveTrip(updatedTrip);
                     toast.info(`Actualización: ${updatedTrip.estado}`);
                 }
@@ -97,8 +131,8 @@ const ClienteDashboard = () => {
                                 ...prev.motorista,
                                 motorista_perfil: {
                                     ...prev.motorista.motorista_perfil,
-                                    latitud_actual: data.lat,
-                                    longitud_actual: data.lng
+                                    latitud_actual: parseFloat(data.lat),
+                                    longitud_actual: parseFloat(data.lng)
                                 }
                             }
                         };
@@ -127,9 +161,16 @@ const ClienteDashboard = () => {
             });
 
             toast.success(t('auth.trip_requested_success', '¡Viaje solicitado con éxito!'));
-            setActiveTrip(response.data.data);
+            const trip = response.data.data;
+            if (trip) {
+                trip.origen_lat = parseFloat(trip.origen_lat);
+                trip.origen_lng = parseFloat(trip.origen_lng);
+                trip.destino_lat = parseFloat(trip.destino_lat);
+                trip.destino_lng = parseFloat(trip.destino_lng);
+            }
+            console.log('Setting activeTrip from request:', trip);
+            setActiveTrip(trip);
         } catch (error) {
-            console.error('Error al solicitar viaje:', error);
             const msg = error.response?.data?.error || error.response?.data?.message || t('common.error');
             toast.error(`${t('common.error')}: ${msg}`);
         }
@@ -158,7 +199,10 @@ const ClienteDashboard = () => {
         const distance = R * c;
         // Velocidad promedio en Bamako (moto): 25 km/h
         const time = Math.round((distance / 25) * 60);
-        return { distance: distance.toFixed(1), time: Math.max(2, time) };
+        console.log('[LOG_COORD_1] Calculating metrics for distance:', distance);
+        const metrics = { distance: (Number(distance) || 0).toFixed(1), time: Math.max(2, time) };
+        console.log('Metrics calculated:', metrics, 'from distance:', distance);
+        return metrics;
     };
 
     // Reverse Geocoding Function
@@ -168,20 +212,37 @@ const ClienteDashboard = () => {
         if (type === 'destino') setAddressDestino('Buscando...');
 
         try {
-            const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords[0]}&lon=${coords[1]}`);
+            const lat = parseFloat(coords[0]);
+            const lng = parseFloat(coords[1]);
+            const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
             if (res.data && res.data.display_name) {
                 // Keep it short: first 2 parts
                 const shortName = res.data.display_name.split(',').slice(0, 2).join(',');
                 if (type === 'origen') setAddressOrigen(shortName);
                 if (type === 'destino') setAddressDestino(shortName);
             } else {
-                if (type === 'origen') setAddressOrigen(`${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
-                if (type === 'destino') setAddressDestino(`${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
+                try {
+                    const safeLat = safeParseCoord(lat, 'addressOrigen_lat');
+                    const safeLng = safeParseCoord(lng, 'addressOrigen_lng');
+                    console.log('[LOG_COORD_2] Setting addressOrigen:', safeLat, safeLng);
+                    if (type === 'origen') setAddressOrigen(`${safeLat.toFixed(5)}, ${safeLng.toFixed(5)}`);
+                    if (type === 'destino') setAddressDestino(`${safeLat.toFixed(5)}, ${safeLng.toFixed(5)}`);
+                } catch (e) {
+                    console.error('[LOG_COORD_ERROR_A] toFixed failed in handleMapClick:', e);
+                }
             }
         } catch (error) {
-            console.error("Reverse geocoding failed", error);
-            if (type === 'origen') setAddressOrigen(`${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
-            if (type === 'destino') setAddressDestino(`${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
+            const lat = parseFloat(coords[0]);
+            const lng = parseFloat(coords[1]);
+            try {
+                const safeLat = safeParseCoord(lat, 'search_lat');
+                const safeLng = safeParseCoord(lng, 'search_lng');
+                console.log('[LOG_COORD_3] Setting address via search:', safeLat, safeLng);
+                if (type === 'origen') setAddressOrigen(`${safeLat.toFixed(5)}, ${safeLng.toFixed(5)}`);
+                if (type === 'destino') setAddressDestino(`${safeLat.toFixed(5)}, ${safeLng.toFixed(5)}`);
+            } catch (e) {
+                console.error('[LOG_COORD_ERROR_B] toFixed failed in handleAddressSearch:', e);
+            }
         }
     };
 
@@ -239,7 +300,6 @@ const ClienteDashboard = () => {
                 toast.error(t('client_dashboard.tap_map'));
             }
         } catch (err) {
-            console.error("Geocoding error", err);
             toast.error("Error al buscar dirección");
         } finally {
             setSearching(false);
@@ -355,7 +415,8 @@ const ClienteDashboard = () => {
                                 </div>
                                 {origen && (
                                     <div className="point-value-mini">
-                                        {origen[0].toFixed(5)}, {origen[1].toFixed(5)}
+                                        {console.log('[LOG_COORD_4] Rendering origen mini:', origen)}
+                                        {safeParseCoord(origen[0], 'origen_0').toFixed(5)}, {safeParseCoord(origen[1], 'origen_1').toFixed(5)}
                                     </div>
                                 )}
                             </div>
@@ -385,7 +446,8 @@ const ClienteDashboard = () => {
                                 </div>
                                 {destino && (
                                     <div className="point-value-mini">
-                                        {destino[0].toFixed(5)}, {destino[1].toFixed(5)}
+                                        {console.log('[LOG_COORD_5] Rendering destino mini:', destino)}
+                                        {safeParseCoord(destino[0], 'destino_0').toFixed(5)}, {safeParseCoord(destino[1], 'destino_1').toFixed(5)}
                                     </div>
                                 )}
                             </div>
@@ -473,7 +535,10 @@ const ClienteDashboard = () => {
                         setDestino={setDestino}
                         puntoActivo={puntoActivo}
                         motoristaPos={activeTrip?.motorista?.motorista_perfil ?
-                            [activeTrip.motorista.motorista_perfil.latitud_actual, activeTrip.motorista.motorista_perfil.longitud_actual]
+                            [
+                                parseFloat(activeTrip.motorista.motorista_perfil.latitud_actual),
+                                parseFloat(activeTrip.motorista.motorista_perfil.longitud_actual)
+                            ]
                             : null}
                     />
                 </div>

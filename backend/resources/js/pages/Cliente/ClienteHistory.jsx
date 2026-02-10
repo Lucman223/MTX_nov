@@ -17,6 +17,14 @@ import '../../../css/components.css';
  * [FR] Historique des trajets du client.
  *      Affiche tous les voyages effectués, leur statut, leur tarif et permet de noter ceux qui n'ont pas encore de note.
  */
+
+// [PHASE 2] Helper for safe numeric display
+const safeFixed = (val, digits = 4) => {
+    const parsed = parseFloat(val);
+    if (isNaN(parsed)) return '0.0000';
+    return parsed.toFixed(digits);
+};
+
 const ClienteHistory = () => {
     const { logout, user } = useAuth();
     const navigate = useNavigate();
@@ -37,7 +45,6 @@ const ClienteHistory = () => {
             const response = await axios.get('/api/viajes/historial');
             setViajes(response.data.data || []);
         } catch (error) {
-            console.error('Error fetching history:', error);
         } finally {
             setLoading(false);
         }
@@ -155,13 +162,13 @@ const ClienteHistory = () => {
                                     <div className="detail-item">
                                         <div className="detail-label">{t('client_dashboard.origin')}</div>
                                         <div className="detail-value" style={{ fontSize: '0.9rem' }}>
-                                            {viaje.origen || `${viaje.origen_lat?.toFixed(4)}, ${viaje.origen_lng?.toFixed(4)}`}
+                                            {viaje.origen || `${safeFixed(viaje.origen_lat)}, ${safeFixed(viaje.origen_lng)}`}
                                         </div>
                                     </div>
                                     <div className="detail-item">
                                         <div className="detail-label">{t('client_dashboard.destination')}</div>
                                         <div className="detail-value" style={{ fontSize: '0.9rem' }}>
-                                            {viaje.destino || `${viaje.destino_lat?.toFixed(4)}, ${viaje.destino_lng?.toFixed(4)}`}
+                                            {viaje.destino || `${safeFixed(viaje.destino_lat)}, ${safeFixed(viaje.destino_lng)}`}
                                         </div>
                                     </div>
                                 </div>

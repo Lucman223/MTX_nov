@@ -45,8 +45,7 @@ const MotoristaProfile = () => {
                 setMotoInfo(userData.motorista_perfil);
             }
         } catch (error) {
-            console.error('Error fetching profile:', error);
-            toast.error('Error al cargar el perfil');
+            toast.error(t('client_profile.loading_error'));
         } finally {
             setLoading(false);
         }
@@ -71,10 +70,9 @@ const MotoristaProfile = () => {
                 color_moto: motoInfo.color_moto
             });
 
-            toast.success('Perfil y vehículo actualizados correctamente');
+            toast.success(t('client_profile.update_success'));
         } catch (error) {
-            console.error(error);
-            toast.error('Error al actualizar');
+            toast.error(t('client_profile.update_error'));
         } finally {
             setSaving(false);
         }
@@ -160,13 +158,13 @@ const MotoristaProfile = () => {
                                         className="btn-sm"
                                         onClick={() => {
                                             if (!("Notification" in window)) {
-                                                alert("Navegador no soporta notificaciones");
+                                                alert(t('profile.browser_no_notifications'));
                                             } else if (Notification.permission === "granted") {
-                                                new Notification("MotoTX Prueva", { body: "¡Notificaciones activas y funcionando!" });
+                                                new Notification("MotoTX", { body: t('profile.notification_test_body') });
                                             } else if (Notification.permission !== "denied") {
                                                 Notification.requestPermission().then(permission => {
                                                     if (permission === "granted") {
-                                                        new Notification("MotoTX", { body: "¡Gracias por activar las notificaciones!" });
+                                                        new Notification("MotoTX", { body: t('profile.notification_thanks') });
                                                     }
                                                 });
                                             }

@@ -14,4 +14,5 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'forfaits'], function() 
     Route::post('/check-status', [ClienteForfaitController::class, 'checkStatus']);
 });
 
-// Backward compatibility or public access if needed (removed dirty closure)
+// Public access for Landing Page Showcase
+Route::get('/public', [ClienteForfaitController::class, 'index']);

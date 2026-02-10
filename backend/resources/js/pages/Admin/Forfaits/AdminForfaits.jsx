@@ -44,7 +44,6 @@ const AdminForfaits = () => {
             const response = await axios.get('/api/admin/forfaits');
             setForfaits(response.data);
         } catch (error) {
-            console.error('Error loading forfaits:', error);
             toast.error(t('common.error'));
         } finally {
             setLoading(false);
@@ -66,7 +65,6 @@ const AdminForfaits = () => {
             setFormData({ nombre: '', descripcion: '', precio: '', dias_validez: '', viajes_incluidos: '', estado: 'activo' });
             fetchForfaits();
         } catch (error) {
-            console.error('Error saving forfait:', error);
             toast.error(t('common.error'));
         }
     };
@@ -91,7 +89,6 @@ const AdminForfaits = () => {
             toast.success(t('common.success'));
             fetchForfaits();
         } catch (error) {
-            console.error('Error deleting forfait:', error);
             toast.error(t('common.error'));
         }
     };
@@ -203,26 +200,26 @@ const AdminForfaits = () => {
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <div>
                                 <label className="form-label">{t('admin_dashboard.forfaits.modal.label_name')}</label>
-                                <input required type="text" className="mtx-input" value={formData.nombre} onChange={e => setFormData({ ...formData, nombre: e.target.value })} />
+                                <input required type="text" className="mtx-input" value={formData.nombre} onChange={e => setFormData({ ...formData, nombre: e.target.value })} maxLength="50" />
                             </div>
                             <div>
                                 <label className="form-label">{t('admin_dashboard.forfaits.modal.label_description')}</label>
-                                <textarea className="mtx-input" value={formData.descripcion} onChange={e => setFormData({ ...formData, descripcion: e.target.value })} style={{ resize: 'none' }} />
+                                <textarea className="mtx-input" value={formData.descripcion} onChange={e => setFormData({ ...formData, descripcion: e.target.value })} style={{ resize: 'none' }} maxLength="255" />
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
                                     <label className="form-label">{t('admin_dashboard.forfaits.modal.label_price')}</label>
-                                    <input required type="number" className="mtx-input" value={formData.precio} onChange={e => setFormData({ ...formData, precio: e.target.value })} />
+                                    <input required type="number" className="mtx-input" value={formData.precio} onChange={e => setFormData({ ...formData, precio: e.target.value })} min="0" />
                                 </div>
                                 <div>
                                     <label className="form-label">{t('admin_dashboard.forfaits.modal.label_trips')}</label>
-                                    <input required type="number" className="mtx-input" value={formData.viajes_incluidos} onChange={e => setFormData({ ...formData, viajes_incluidos: e.target.value })} />
+                                    <input required type="number" className="mtx-input" value={formData.viajes_incluidos} onChange={e => setFormData({ ...formData, viajes_incluidos: e.target.value })} min="0" />
                                 </div>
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
                                     <label className="form-label">{t('admin_dashboard.forfaits.modal.label_days')}</label>
-                                    <input required type="number" className="mtx-input" value={formData.dias_validez} onChange={e => setFormData({ ...formData, dias_validez: e.target.value })} />
+                                    <input required type="number" className="mtx-input" value={formData.dias_validez} onChange={e => setFormData({ ...formData, dias_validez: e.target.value })} min="0" />
                                 </div>
                                 <div>
                                     <label className="form-label">{t('admin_dashboard.forfaits.modal.label_status')}</label>

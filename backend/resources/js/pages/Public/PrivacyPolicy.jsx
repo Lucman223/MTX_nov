@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
  * [FR] Page informative sur le traitement des données personnelles et la confidentialité.
  */
 const PrivacyPolicy = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
     return (
@@ -23,66 +23,66 @@ const PrivacyPolicy = () => {
             <button
                 onClick={() => navigate(-1)}
                 className="mtx-button"
-                style={{ marginBottom: '2rem', background: '#f3f4f6' }}
+                style={{ marginBottom: '2rem', background: '#f3f4f6', color: '#4b5563' }}
             >
-                ← {t('common.back', 'Retour')}
+                ← {t('common.back')}
             </button>
 
             <div className="mtx-card" style={{ padding: '3rem' }}>
                 <h1 style={{ color: '#2563eb', marginBottom: '1.5rem', fontSize: '2.5rem', fontWeight: 'bold' }}>
-                    Politique de Confidentialité
+                    {t('privacy.title')}
                 </h1>
 
                 <p style={{ marginBottom: '2rem', color: '#6b7280' }}>
-                    <strong>Dernière mise à jour :</strong> {new Date().toLocaleDateString('fr-FR')}
+                    <strong>{t('privacy.last_updated')}:</strong> {new Date().toLocaleDateString(i18n.language === 'es' ? 'es-ES' : i18n.language === 'en' ? 'en-US' : 'fr-FR')}
                 </p>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>1. Cadre Légal (Mali)</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('privacy.section1_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        MotoTX s'engage à traiter vos données personnelles conformément à la <strong>Loi n°2013-015 du 21 mai 2013 portant protection des données à caractère personnel en République du Mali</strong>. Le traitement de vos données a fait l'objet d'une déclaration auprès de l'Autorité de Protection des Données à Caractère Personnel (APDP).
+                        {t('privacy.section1_content')}
                     </p>
                 </section>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>2. Collecte des Données</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('privacy.section2_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        MotoTX collecte les données suivantes pour assurer le fonctionnement du service :
+                        {t('privacy.section2_content')}
                     </p>
                     <ul style={{ color: '#4b5563', lineHeight: '1.8', marginLeft: '1.5rem' }}>
-                        <li>Informations d'identité (Nom, Email, Téléphone).</li>
-                        <li>Données de géolocalisation en temps réel (essentielles pour la mise en relation et la sécurité).</li>
-                        <li>Détails du véhicule (pour les conducteurs).</li>
-                        <li>Historique des transactions et des trajets.</li>
+                        <li>{t('privacy.section2_item1')}</li>
+                        <li>{t('privacy.section2_item2')}</li>
+                        <li>{t('privacy.section2_item3')}</li>
+                        <li>{t('privacy.section2_item4')}</li>
                     </ul>
                 </section>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>3. Utilisation des Données</h2>
-                    <p style={{ color: '#4b5563', lineHeight: '1.8' }}>Vos données sont traitées pour :</p>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('privacy.section3_title')}</h2>
+                    <p style={{ color: '#4b5563', lineHeight: '1.8' }}>{t('privacy.section3_content')}</p>
                     <ul style={{ color: '#4b5563', lineHeight: '1.8', marginLeft: '1.5rem' }}>
-                        <li>La mise en relation technique entre conducteurs et clients.</li>
-                        <li>Le calcul des itinéraires et la sécurité des passagers.</li>
-                        <li>La gestion comptable des forfaits et des paiements.</li>
-                        <li>Le respect des obligations légales maliennes.</li>
+                        <li>{t('privacy.section3_item1')}</li>
+                        <li>{t('privacy.section3_item2')}</li>
+                        <li>{t('privacy.section3_item3')}</li>
+                        <li>{t('privacy.section3_item4')}</li>
                     </ul>
                 </section>
 
                 <section style={{ marginBottom: '2.5rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>4. Vos Droits</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('privacy.section4_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        Conformément à la loi malienne, vous disposez d'un droit d'accès, de rectification et d'opposition pour motifs légitimes au traitement de vos données.
+                        {t('privacy.section4_content1')}
                     </p>
                     <p style={{ marginTop: '1rem', color: '#4b5563', lineHeight: '1.8' }}>
-                        Pour exercer ces droits, vous pouvez nous contacter à :
+                        {t('privacy.section4_content2')}
                         <a href="mailto:privacy@mototx.ml" style={{ color: '#2563eb', fontWeight: '600', textDecoration: 'none' }}> privacy@mototx.ml</a>.
                     </p>
                 </section>
 
                 <section>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>5. Conservation et Sécurité</h2>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>{t('privacy.section5_title')}</h2>
                     <p style={{ color: '#4b5563', lineHeight: '1.8' }}>
-                        Les données sont conservées pendant la durée de vie de votre compte plus les délais de prescription légaux. Nous utilisons des protocoles de chiffrement pour garantir l'intégrité de vos informations sur nos serveurs.
+                        {t('privacy.section5_content')}
                     </p>
                 </section>
             </div>
