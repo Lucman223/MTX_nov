@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MotoTX - Plataforma de Gestión de Forfaits para Mototaxi
 
 Plataforma digital para la gestión de paquetes de viajes prepagados (forfaits) de mototaxi en Bamako, Mali.
@@ -313,3 +314,7 @@ Este proyecto es privado.
 ## 👨‍💻 Autor
 
 Desarrollado para la gestión de servicios de mototaxi en Bamako, Mali.
+=======
+# Projet.Final.LOGMANE.SIDIBE
+Projet de LOGMANE SIDIBE
+>>>>>>> a518def45683c2a1b238254ce80de2a2dfbd28a4
