@@ -268,13 +268,25 @@ const ClienteDashboard = () => {
         }
     }, [origen, destino, maxDistance]);
 
-    // [ES] Cambio automático a destino tras marcar origen
-    // [FR] Changement automatique vers destination après avoir marqué l'origine
+    // [ES] Cambio automático a destino TRAS marcar origen (solo si destino está vacío)
+    // [FR] Changement automatique vers destination APRÈS avoir marqué l'origine (unicamente si destination es vide)
     useEffect(() => {
-        if (origen && puntoActivo === 'origen') {
+        if (origen && !destino && puntoActivo === 'origen') {
             setPuntoActivo('destino');
         }
     }, [origen]);
+
+    const handleClearPoint = (type) => {
+        if (type === 'origen') {
+            setOrigen(null);
+            setAddressOrigen('');
+            setPuntoActivo('origen');
+        } else {
+            setDestino(null);
+            setAddressDestino('');
+            setPuntoActivo('destino');
+        }
+    };
 
     const handleAddressSearch = async (type) => {
         const query = type === 'origen' ? addressOrigen : addressDestino;
@@ -385,14 +397,54 @@ const ClienteDashboard = () => {
                             <span>📍</span> {t('client_dashboard.plan_trip')}
                         </h2>
 
-                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem', fontStyle: 'italic' }}>
+                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.25rem', fontStyle: 'italic' }}>
                             💡 {t('client_dashboard.tap_map_instruction')}
                         </p>
+
+                        {/* Mode Selector Toggles */}
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: '#f3f4f6', padding: '0.4rem', borderRadius: '1rem' }}>
+                            <button
+                                onClick={() => setPuntoActivo('origen')}
+                                style={{
+                                    flex: 1,
+                                    padding: '0.6rem',
+                                    borderRadius: '0.75rem',
+                                    border: 'none',
+                                    fontSize: '0.85rem',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    background: puntoActivo === 'origen' ? 'var(--primary-color)' : 'transparent',
+                                    color: puntoActivo === 'origen' ? 'white' : 'var(--text-muted)',
+                                    boxShadow: puntoActivo === 'origen' ? '0 4px 10px rgba(37, 99, 235, 0.2)' : 'none'
+                                }}
+                            >
+                                📍 {t('client_dashboard.origin')}
+                            </button>
+                            <button
+                                onClick={() => setPuntoActivo('destino')}
+                                style={{
+                                    flex: 1,
+                                    padding: '0.6rem',
+                                    borderRadius: '0.75rem',
+                                    border: 'none',
+                                    fontSize: '0.85rem',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    background: puntoActivo === 'destino' ? 'var(--accent-color)' : 'transparent',
+                                    color: puntoActivo === 'destino' ? 'white' : 'var(--text-muted)',
+                                    boxShadow: puntoActivo === 'destino' ? '0 4px 10px rgba(245, 158, 11, 0.2)' : 'none'
+                                }}
+                            >
+                                🚩 {t('client_dashboard.destination')}
+                            </button>
+                        </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                             <div className={`point-input-group ${puntoActivo === 'origen' ? 'active-origen' : ''}`}>
                                 <label className="point-label-origen">{t('client_dashboard.origin')}</label>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <div style={{ display: 'flex', gap: '0.5rem', position: 'relative' }}>
                                     <input
                                         type="text"
                                         placeholder={t('client_dashboard.tap_map')}
@@ -401,8 +453,29 @@ const ClienteDashboard = () => {
                                         onFocus={() => setPuntoActivo('origen')}
                                         onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('origen')}
                                         className="mtx-input"
-                                        style={{ flex: 1 }}
+                                        style={{ flex: 1, paddingRight: addressOrigen ? '2.5rem' : '0.75rem' }}
                                     />
+                                    {addressOrigen && (
+                                        <button
+                                            onClick={() => handleClearPoint('origen')}
+                                            style={{
+                                                position: 'absolute',
+                                                right: '4.5rem',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                background: 'none',
+                                                border: 'none',
+                                                color: '#9ca3af',
+                                                cursor: 'pointer',
+                                                fontSize: '1.1rem',
+                                                display: 'flex',
+                                                alignItems: 'center'
+                                            }}
+                                            title="Clear"
+                                        >
+                                            ✕
+                                        </button>
+                                    )}
                                     <Button
                                         onClick={() => handleAddressSearch('origen')}
                                         variant="ghost"
@@ -411,7 +484,7 @@ const ClienteDashboard = () => {
                                     >
                                         🔍
                                     </Button>
-                                    {origen && <span className="coord-badge">FIXED</span>}
+                                    {origen && <span className="coord-badge" style={{ backgroundColor: 'var(--primary-color)' }}>{t('common.done') || 'FIX'}</span>}
                                 </div>
                                 {origen && (
                                     <div className="point-value-mini">
@@ -423,7 +496,7 @@ const ClienteDashboard = () => {
 
                             <div className={`point-input-group ${puntoActivo === 'destino' ? 'active-destino' : ''}`}>
                                 <label className="point-label-destino">{t('client_dashboard.destination')}</label>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <div style={{ display: 'flex', gap: '0.5rem', position: 'relative' }}>
                                     <input
                                         type="text"
                                         placeholder={t('client_dashboard.tap_map')}
@@ -432,8 +505,29 @@ const ClienteDashboard = () => {
                                         onFocus={() => setPuntoActivo('destino')}
                                         onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('destino')}
                                         className="mtx-input"
-                                        style={{ flex: 1 }}
+                                        style={{ flex: 1, paddingRight: addressDestino ? '2.5rem' : '0.75rem' }}
                                     />
+                                    {addressDestino && (
+                                        <button
+                                            onClick={() => handleClearPoint('destino')}
+                                            style={{
+                                                position: 'absolute',
+                                                right: '4.5rem',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                background: 'none',
+                                                border: 'none',
+                                                color: '#9ca3af',
+                                                cursor: 'pointer',
+                                                fontSize: '1.1rem',
+                                                display: 'flex',
+                                                alignItems: 'center'
+                                            }}
+                                            title="Clear"
+                                        >
+                                            ✕
+                                        </button>
+                                    )}
                                     <Button
                                         onClick={() => handleAddressSearch('destino')}
                                         variant="ghost"
@@ -442,7 +536,7 @@ const ClienteDashboard = () => {
                                     >
                                         🔍
                                     </Button>
-                                    {destino && <span className="coord-badge">FIXED</span>}
+                                    {destino && <span className="coord-badge" style={{ backgroundColor: 'var(--accent-color)' }}>{t('common.done') || 'FIX'}</span>}
                                 </div>
                                 {destino && (
                                     <div className="point-value-mini">

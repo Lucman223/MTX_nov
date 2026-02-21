@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -62,6 +62,29 @@ const MapSelection = ({ origen, setOrigen, destino, setDestino, puntoActivo, mot
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
+
+            {/* Active Selection Indicator Overlay */}
+            <div style={{
+                position: 'absolute',
+                top: '1rem',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 1000,
+                background: 'rgba(255, 255, 255, 0.9)',
+                padding: '0.5rem 1rem',
+                borderRadius: '2rem',
+                fontSize: '0.75rem',
+                fontWeight: '800',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                color: puntoActivo === 'origen' ? 'var(--primary-color)' : 'var(--accent-color)',
+                border: `2px solid ${puntoActivo === 'origen' ? 'var(--primary-color)' : 'var(--accent-color)'}`,
+                pointerEvents: 'none',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+            }}>
+                {puntoActivo === 'origen' ? '📍 Seleccionando Origen' : '🚩 Seleccionando Destino'}
+            </div>
+
             <MapClickHandler
                 puntoActivo={puntoActivo}
                 setOrigen={setOrigen}
