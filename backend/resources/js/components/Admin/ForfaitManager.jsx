@@ -149,7 +149,7 @@ const ForfaitManager = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {forfaits.length > 0 ? forfaits.map(forfait => (
+                    {Array.isArray(forfaits) && forfaits.length > 0 ? forfaits.map(forfait => (
                         <tr key={forfait.id}>
                             <td style={styles.td}>{forfait.nombre}</td>
                             <td style={styles.td}>{forfait.precio}</td>

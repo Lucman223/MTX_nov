@@ -402,14 +402,14 @@ const MotoristaDashboard = () => {
                                 🔄 {t('common.refresh')}
                             </Button>
                         </div>
-                        {viajes.length === 0 ? (
+                        {(Array.isArray(viajes) && viajes.length === 0) ? (
                             <Card className="empty-state">
                                 <div className="empty-icon">🔍</div>
                                 <p className="empty-text">{t('driver_dashboard.no_requests')}</p>
                             </Card>
                         ) : (
                             <div className="requests-grid">
-                                {viajes.map((viaje) => (
+                                {Array.isArray(viajes) && viajes.map((viaje) => (
                                     <Card key={viaje.id} className="request-item-card">
                                         <div className="request-header">
                                             <div>

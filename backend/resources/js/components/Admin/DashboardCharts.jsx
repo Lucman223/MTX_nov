@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 const DashboardCharts = ({ data }) => {
     const { t } = useTranslation();
 
-    if (!data || data.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
         return <div className="p-4 text-center text-gray-500">{t('admin_dashboard.charts.no_data')}</div>;
     }
 

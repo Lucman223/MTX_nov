@@ -132,7 +132,7 @@ const SuscripcionesMotorista = () => {
                 </h2>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                    {planes.map(plan => (
+                    {Array.isArray(planes) && planes.map(plan => (
                         <Card key={plan.id} style={{
                             border: plan.es_vip ? '2px solid var(--accent-color)' : '1px solid var(--border-color)',
                             position: 'relative'

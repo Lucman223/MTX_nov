@@ -158,7 +158,7 @@ const MotoristaHistory = () => {
                     </Card>
                 ) : (
                     <div className="history-grid" style={{ display: 'grid', gap: '1.5rem' }}>
-                        {viajes.map((viaje) => (
+                        {Array.isArray(viajes) && viajes.map((viaje) => (
                             <Card key={viaje.id} className="history-item">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.5rem' }}>
                                     <div>

@@ -210,7 +210,7 @@ const ClienteProfile = () => {
                         </div>
                     ) : (
                         <div style={{ display: 'grid', gap: '1rem' }}>
-                            {forfaits.map((ff, index) => (
+                            {Array.isArray(forfaits) && forfaits.map((ff, index) => (
                                 <div key={index} style={{
                                     background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryHover})`,
                                     padding: '1.5rem',
@@ -272,7 +272,7 @@ const ClienteProfile = () => {
                                         </td>
                                     </tr>
                                 ) : (
-                                    forfaits.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((item, index) => (
+                                    Array.isArray(forfaits) && [...forfaits].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((item, index) => (
                                         <tr key={index} style={{ borderBottom: `1px solid ${colors.border}` }}>
                                             <td style={{ padding: '1rem', color: colors.text }}>
                                                 {new Date(item.created_at).toLocaleDateString()}
