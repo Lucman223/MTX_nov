@@ -43,9 +43,9 @@ const MotoristasList = () => {
     const handleStatusChange = async (id, newStatus) => {
         try {
             await axios.put(`/api/admin/motoristas/${id}/status`, { estado_validacion: newStatus });
-            setMotoristas(motoristas.map(m =>
+            setMotoristas(prev => Array.isArray(prev) ? prev.map(m =>
                 m.id === id ? { ...m, motorista_perfil: { ...m.motorista_perfil, estado_validacion: newStatus } } : m
-            ));
+            ) : []);
         } catch (error) {
             toast.error(t('common.error'));
         }
@@ -78,7 +78,7 @@ const MotoristasList = () => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {motoristas.map((motorista) => (
+                            {Array.isArray(motoristas) && motoristas.map((motorista) => (
                                 <tr key={motorista.id}>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
@@ -135,7 +135,7 @@ const MotoristasList = () => {
 
             {isMobile && (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                    {motoristas.map((motorista) => (
+                    {Array.isArray(motoristas) && motoristas.map((motorista) => (
                         <div key={motorista.id} className="mtx-card">
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                                 <div>

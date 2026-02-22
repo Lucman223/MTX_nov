@@ -22,7 +22,7 @@ const VitrinaForfaits = ({ colors }) => {
     }, []);
 
     if (loading) return null;
-    if (forfaits.length === 0) return null;
+    if (!Array.isArray(forfaits) || forfaits.length === 0) return null;
 
     return (
         <section id="vitrina" style={{ padding: '5rem 2rem', background: '#f3f4f6' }}>
@@ -41,7 +41,7 @@ const VitrinaForfaits = ({ colors }) => {
                 </p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-                    {forfaits.map((forfait) => (
+                    {Array.isArray(forfaits) && forfaits.map((forfait) => (
                         <div key={forfait.id} className="mtx-card" style={{
                             display: 'flex',
                             flexDirection: 'column',
