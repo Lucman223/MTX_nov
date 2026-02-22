@@ -30,6 +30,14 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 WORKDIR /var/www/html
 COPY . .
 
+# [ESTRUCTURA_INMORTAL] Forzar variables de entorno para evitar conflictos con .env
+ENV DB_CONNECTION=sqlite
+ENV DB_DATABASE=/var/www/html/database/database.sqlite
+ENV APP_ENV=production
+# APP_KEY y JWT_SECRET deben ser configuradas en el panel de Koyeb, pero ponemos valores por defecto para que no falle el arranque
+ENV APP_KEY=base64:7D69JvVrMN1vpkBJEourXwNVxyLh9R1nHpdJi6LlVyc=
+ENV JWT_SECRET=ovw9lBCDx2KYNPFH3w89BkdYNWDMUo7W0I8WnrXN9Ev1l8L7RB6SzAUaUjTt6sGX
+
 # 6. Instalar dependencias de PHP y JS
 ENV COMPOSER_ALLOW_SUPERUSER 1
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
