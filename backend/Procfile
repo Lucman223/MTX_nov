@@ -1,1 +1,1 @@
-web: php artisan migrate --force --seed && heroku-php-apache2 public/
+web: php artisan migrate --force --seed && concurrently "heroku-php-apache2 public/" "php artisan reverb:start --host=0.0.0.0 --port=8080"
