@@ -34,6 +34,8 @@ COPY . .
 ENV DB_CONNECTION=sqlite
 ENV DB_DATABASE=/var/www/html/database/database.sqlite
 ENV APP_ENV=production
+ENV APP_DEBUG=false
+ENV AUTH_GUARD=api
 # APP_KEY y JWT_SECRET deben ser configuradas en el panel de Koyeb, pero ponemos valores por defecto para que no falle el arranque
 ENV APP_KEY=base64:7D69JvVrMN1vpkBJEourXwNVxyLh9R1nHpdJi6LlVyc=
 ENV JWT_SECRET=ovw9lBCDx2KYNPFH3w89BkdYNWDMUo7W0I8WnrXN9Ev1l8L7RB6SzAUaUjTt6sGX
@@ -55,6 +57,10 @@ mkdir -p database\n\
 touch database/database.sqlite\n\
 chmod 777 database/database.sqlite\n\
 chmod 777 database\n\
+# Limpiar caches para forzar lectura de nuevas ENVs del contenedor\n\
+php artisan config:clear\n\
+php artisan cache:clear\n\
+# Migrar y sembrar\n\
 php artisan migrate --force --seed\n\
 # Iniciar Reverb en segundo plano y Apache en primer plano\n\
 php artisan reverb:start --host=0.0.0.0 --port=8080 &\n\
