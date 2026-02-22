@@ -10,13 +10,14 @@ import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
 if (import.meta.env.VITE_PUSHER_APP_KEY) {
+    const scheme = import.meta.env.VITE_PUSHER_SCHEME ?? 'https';
     window.Echo = new Echo({
         broadcaster: 'reverb',
         key: import.meta.env.VITE_PUSHER_APP_KEY,
         wsHost: import.meta.env.VITE_PUSHER_HOST ?? window.location.hostname,
         wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
         wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
-        forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
+        forceTLS: scheme === 'https',
         enabledTransports: ['ws', 'wss'],
     });
 }

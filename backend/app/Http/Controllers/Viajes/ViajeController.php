@@ -186,7 +186,8 @@ class ViajeController extends Controller
         if ($user->rol === 'motorista') {
             $currentTrip = Viaje::where('motorista_id', $user->id)
                                 ->whereIn('estado', ['aceptado', 'en_curso'])
-                                ->latest() // Prioritize newest
+                                ->with(['cliente']) // Added: Load client info for driver
+                                ->latest()
                                 ->first();
         } else {
             // Client: Return active trips OR completed trips that haven't been rated yet
@@ -199,7 +200,7 @@ class ViajeController extends Controller
                                           });
                                 })
                                 ->with(['motorista.motorista_perfil'])
-                                ->latest() // Prioritize newest
+                                ->latest()
                                 ->first();
         }
 

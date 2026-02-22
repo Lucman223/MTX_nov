@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/Common/SEO';
 import { Card, Button, Badge, Modal } from '../../components/Common/UIComponents';
 import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
+import TripPhaseTracker from '../../components/Viaje/TripPhaseTracker';
 import '../../../css/components.css';
 import { Star } from 'lucide-react';
 
@@ -46,6 +47,7 @@ const MotoristaDashboard = () => {
     const [ratingModalOpen, setRatingModalOpen] = useState(false);
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
+    const [lastFinishedTripId, setLastFinishedTripId] = useState(null);
 
     const fetchData = async () => {
         setLoading(true);
@@ -155,34 +157,36 @@ const MotoristaDashboard = () => {
     const handleUpdateStatus = async (newStatus) => {
         if (!currentTrip) return;
 
-        if (newStatus === 'completado') {
-            setRatingModalOpen(true);
+        try {
+            await axios.put(`/api/motorista/viajes/${currentTrip.id}/status`, { estado: newStatus });
+            toast.success(t('driver_dashboard.status_updated', { status: newStatus }));
+
+            if (newStatus === 'completado') {
+                // Keep a reference for the rating modal before fetchData clears currentTrip
+                setLastFinishedTripId(currentTrip.id);
+                setRatingModalOpen(true);
+            }
+
+            fetchData();
+        } catch (error) {
+            const errorMsg = error.response?.data?.error || error.response?.data?.message || t('driver_dashboard.update_error');
+            toast.error(errorMsg);
+        }
+    };
+
+    const submitRatingOnly = async () => {
+        const tripId = lastFinishedTripId || currentTrip?.id;
+        if (!tripId) {
+            setRatingModalOpen(false);
             return;
         }
 
         try {
-            await axios.put(`/api/motorista/viajes/${currentTrip.id}/status`, { estado: newStatus });
-            toast.success(t('driver_dashboard.status_updated', { status: newStatus }));
-            fetchData();
-        } catch (error) {
-            toast.error(t('driver_dashboard.update_error'));
-        }
-    };
-
-    const submitRatingAndComplete = async () => {
-        try {
-            await axios.put(`/api/motorista/viajes/${currentTrip.id}/status`, { estado: 'completado' });
-            // Submit Rating
-            // Note: We need a new endpoint for Driver -> Client rating, OR reuse existing one if adaptable.
-            // For now, let's assume `api/viajes/{id}/calificar` works for both, OR implement endpoint later.
-            // Based on migration, Calificacion table supports it.
-            // Let's hitting /api/viajes/:id/calificar assuming backend handles it or we'll add it.
-            // Currently backend `ViajeController` doesn't seem to have `rateClient`...
-            // Wait, we need to create `rateClient` endpoint in backend?
-            // Yes, user asked for full flow.
-            // Let's implement the UI first, and then I'll add the endpoint.
-
-            await axios.post(`/api/viajes/${currentTrip.id}/calificar`, { puntuacion: rating, comentario: comment, tipo: 'motorista_a_cliente' });
+            await axios.post(`/api/viajes/${tripId}/calificar`, {
+                puntuacion: rating,
+                comentario: comment,
+                tipo: 'motorista_a_cliente'
+            });
 
             toast.success(t('driver_dashboard.rating_modal.success'));
             setRatingModalOpen(false);
@@ -341,8 +345,11 @@ const MotoristaDashboard = () => {
 
                 {/* Active Trip */}
                 {currentTrip && (
-                    <Card className="active-trip-card">
+                    <Card accent className="active-trip-card">
                         <h2 className="card-title-active">🚀 {t('client_dashboard.trip_active')}</h2>
+
+                        <TripPhaseTracker estado={currentTrip.estado} />
+
                         <div className="trip-details-grid">
                             <div className="detail-item">
                                 <div className="detail-label">{t('client_dashboard.client')}</div>
@@ -350,7 +357,9 @@ const MotoristaDashboard = () => {
                             </div>
                             <div className="detail-item">
                                 <div className="detail-label">{t('client_dashboard.state')}</div>
-                                <div className="detail-value status-active">{t(`status.${currentTrip.estado}`)}</div>
+                                <div className="detail-value status-active" style={{ textTransform: 'capitalize' }}>
+                                    {t(`status.${currentTrip.estado}`)}
+                                </div>
                             </div>
                             <div className="detail-item col-span-2">
                                 <div className="detail-label">📍 {t('client_dashboard.origin')}</div>
@@ -459,11 +468,11 @@ const MotoristaDashboard = () => {
                             rows="3"
                         />
 
-                        <div className="flex gap-2">
-                            <Button onClick={() => setRatingModalOpen(false)} variant="outline" className="flex-1">
-                                {t('driver_dashboard.rating_modal.cancel')}
+                        <div className="flex justify-end gap-2 mt-4">
+                            <Button variant="ghost" onClick={() => setRatingModalOpen(false)}>
+                                {t('common.cancel')}
                             </Button>
-                            <Button onClick={submitRatingAndComplete} className="flex-1">
+                            <Button variant="primary" onClick={submitRatingOnly}>
                                 {t('driver_dashboard.rating_modal.submit')}
                             </Button>
                         </div>

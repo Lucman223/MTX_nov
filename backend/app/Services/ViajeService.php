@@ -65,7 +65,7 @@ class ViajeService
 
     public function updateTripStatus(User $motorista, Viaje $viaje, string $newStatus): Viaje
     {
-        if ($viaje->motorista_id !== $motorista->id) {
+        if ($viaje->motorista_id != $motorista->id) {
             throw new \Exception('Forbidden: You are not assigned to this trip');
         }
 
@@ -95,7 +95,7 @@ class ViajeService
                 \App\Models\Transaccion::create([
                     'usuario_id' => $motorista->id,
                     'monto' => $viaje->costo,
-                    'tipo' => 'ingreso_viaje',
+                    'tipo' => 'pago_viaje',
                     'estado' => 'completado',
                     'metodo_pago' => 'MotoTX Wallet',
                     'descripcion' => "Ganancia por viaje #{$viaje->id}",

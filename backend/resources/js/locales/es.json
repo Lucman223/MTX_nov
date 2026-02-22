@@ -151,7 +151,12 @@
         "tap_map_instruction": "También puedes tocar directamente en el mapa para marcar los puntos.",
         "request_trip": "Solicitar Viaje",
         "your_rating": "Tu Calificación",
-        "rate_trip": "Calificar Viaje"
+        "rate_trip": "Calificar Viaje",
+        "searching_driver": "Buscando motorista...",
+        "vehicle": "Vehículo",
+        "plate": "Matrícula",
+        "safety_code": "Código de Seguridad",
+        "waiting_for_assignment": "Esperando asignación de conductor..."
     },
     "client_forfaits": {
         "title": "Comprar Forfaits",

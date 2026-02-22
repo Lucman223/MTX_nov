@@ -145,7 +145,12 @@
         "tap_map_instruction": "Vous pouvez également toucher directement la carte pour marquer les points.",
         "request_trip": "Demander un Trajet",
         "your_rating": "Votre Note",
-        "rate_trip": "Noter le Trajet"
+        "rate_trip": "Noter le Trajet",
+        "searching_driver": "Recherche de chauffeur...",
+        "vehicle": "Véhicule",
+        "plate": "Immatriculation",
+        "safety_code": "Code de Sécurité",
+        "waiting_for_assignment": "En attente d'assignation..."
     },
     "client_forfaits": {
         "title": "Acheter des Forfaits",

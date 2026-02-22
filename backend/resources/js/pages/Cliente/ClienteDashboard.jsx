@@ -10,6 +10,8 @@ import useNotifications from '../../hooks/useNotifications';
 import { useTranslation } from 'react-i18next';
 import { Card, Button, Badge } from '../../components/Common/UIComponents';
 import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
+import TripPhaseTracker from '../../components/Viaje/TripPhaseTracker';
+import { Star } from 'lucide-react';
 import '../../../css/components.css';
 
 /**
@@ -43,6 +45,9 @@ const ClienteDashboard = () => {
     const [destino, setDestino] = useState(null);
     const [puntoActivo, setPuntoActivo] = useState('origen'); // 'origen' | 'destino'
     const [activeTrip, setActiveTrip] = useState(null);
+    const [rating, setRating] = useState(5);
+    const [comment, setComment] = useState('');
+    const [isSubmittingRating, setIsSubmittingRating] = useState(false);
 
     // Color system (Accessible)
     const colors = {
@@ -100,6 +105,26 @@ const ClienteDashboard = () => {
 
     // Real-time updates
     const { listenToTripUpdates } = useNotifications();
+
+    const submitRating = async () => {
+        if (!activeTrip) return;
+        setIsSubmittingRating(true);
+        try {
+            await axios.post(`/api/viajes/${activeTrip.id}/calificar`, {
+                puntuacion: rating,
+                comentario: comment,
+                tipo: 'cliente_a_motorista'
+            });
+            toast.success(t('driver_dashboard.rating_modal.success'));
+            setActiveTrip(null); // Close the journey mode after rating
+            setRating(5);
+            setComment('');
+        } catch (error) {
+            toast.error(t('driver_dashboard.rating_modal.error'));
+        } finally {
+            setIsSubmittingRating(false);
+        }
+    };
 
     useEffect(() => {
         if (activeTrip?.id) {
@@ -392,230 +417,408 @@ const ClienteDashboard = () => {
             <main className="main-content">
                 {/* Left Panel: Controls & Info */}
                 <div className="side-panel">
-                    <Card>
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span>📍</span> {t('client_dashboard.plan_trip')}
-                        </h2>
+                    {!activeTrip ? (
+                        <>
+                            <Card>
+                                <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <span>📍</span> {t('client_dashboard.plan_trip')}
+                                </h2>
 
-                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.25rem', fontStyle: 'italic' }}>
-                            💡 {t('client_dashboard.tap_map_instruction')}
-                        </p>
+                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.25rem', fontStyle: 'italic' }}>
+                                    💡 {t('client_dashboard.tap_map_instruction')}
+                                </p>
 
-                        {/* Mode Selector Toggles */}
-                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: '#f3f4f6', padding: '0.4rem', borderRadius: '1rem' }}>
-                            <button
-                                onClick={() => setPuntoActivo('origen')}
-                                style={{
-                                    flex: 1,
-                                    padding: '0.6rem',
-                                    borderRadius: '0.75rem',
-                                    border: 'none',
-                                    fontSize: '0.85rem',
-                                    fontWeight: '700',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    background: puntoActivo === 'origen' ? 'var(--primary-color)' : 'transparent',
-                                    color: puntoActivo === 'origen' ? 'white' : 'var(--text-muted)',
-                                    boxShadow: puntoActivo === 'origen' ? '0 4px 10px rgba(37, 99, 235, 0.2)' : 'none'
-                                }}
-                            >
-                                📍 {t('client_dashboard.origin')}
-                            </button>
-                            <button
-                                onClick={() => setPuntoActivo('destino')}
-                                style={{
-                                    flex: 1,
-                                    padding: '0.6rem',
-                                    borderRadius: '0.75rem',
-                                    border: 'none',
-                                    fontSize: '0.85rem',
-                                    fontWeight: '700',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    background: puntoActivo === 'destino' ? 'var(--accent-color)' : 'transparent',
-                                    color: puntoActivo === 'destino' ? 'white' : 'var(--text-muted)',
-                                    boxShadow: puntoActivo === 'destino' ? '0 4px 10px rgba(245, 158, 11, 0.2)' : 'none'
-                                }}
-                            >
-                                🚩 {t('client_dashboard.destination')}
-                            </button>
-                        </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                            <div className={`point-input-group ${puntoActivo === 'origen' ? 'active-origen' : ''}`}>
-                                <label className="point-label-origen">{t('client_dashboard.origin')}</label>
-                                <div style={{ display: 'flex', gap: '0.5rem', position: 'relative' }}>
-                                    <input
-                                        type="text"
-                                        placeholder={t('client_dashboard.tap_map')}
-                                        value={addressOrigen}
-                                        onChange={(e) => setAddressOrigen(e.target.value)}
-                                        onFocus={() => setPuntoActivo('origen')}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('origen')}
-                                        className="mtx-input"
-                                        style={{ flex: 1, paddingRight: addressOrigen ? '2.5rem' : '0.75rem' }}
-                                    />
-                                    {addressOrigen && (
-                                        <button
-                                            onClick={() => handleClearPoint('origen')}
-                                            style={{
-                                                position: 'absolute',
-                                                right: '4.5rem',
-                                                top: '50%',
-                                                transform: 'translateY(-50%)',
-                                                background: 'none',
-                                                border: 'none',
-                                                color: '#9ca3af',
-                                                cursor: 'pointer',
-                                                fontSize: '1.1rem',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}
-                                            title="Clear"
-                                        >
-                                            ✕
-                                        </button>
-                                    )}
-                                    <Button
-                                        onClick={() => handleAddressSearch('origen')}
-                                        variant="ghost"
-                                        className="search-mini-btn"
-                                        disabled={searching}
+                                {/* Mode Selector Toggles */}
+                                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: '#f3f4f6', padding: '0.4rem', borderRadius: '1rem' }}>
+                                    <button
+                                        onClick={() => setPuntoActivo('origen')}
+                                        style={{
+                                            flex: 1,
+                                            padding: '0.6rem',
+                                            borderRadius: '0.75rem',
+                                            border: 'none',
+                                            fontSize: '0.85rem',
+                                            fontWeight: '700',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            background: puntoActivo === 'origen' ? 'var(--primary-color)' : 'transparent',
+                                            color: puntoActivo === 'origen' ? 'white' : 'var(--text-muted)',
+                                            boxShadow: puntoActivo === 'origen' ? '0 4px 10px rgba(37, 99, 235, 0.2)' : 'none'
+                                        }}
                                     >
-                                        🔍
-                                    </Button>
-                                    {origen && <span className="coord-badge" style={{ backgroundColor: 'var(--primary-color)' }}>{t('common.done') || 'FIX'}</span>}
+                                        📍 {t('client_dashboard.origin')}
+                                    </button>
+                                    <button
+                                        onClick={() => setPuntoActivo('destino')}
+                                        style={{
+                                            flex: 1,
+                                            padding: '0.6rem',
+                                            borderRadius: '0.75rem',
+                                            border: 'none',
+                                            fontSize: '0.85rem',
+                                            fontWeight: '700',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            background: puntoActivo === 'destino' ? 'var(--accent-color)' : 'transparent',
+                                            color: puntoActivo === 'destino' ? 'white' : 'var(--text-muted)',
+                                            boxShadow: puntoActivo === 'destino' ? '0 4px 10px rgba(245, 158, 11, 0.2)' : 'none'
+                                        }}
+                                    >
+                                        🚩 {t('client_dashboard.destination')}
+                                    </button>
                                 </div>
-                                {origen && (
-                                    <div className="point-value-mini">
-                                        {console.log('[LOG_COORD_4] Rendering origen mini:', origen)}
-                                        {safeParseCoord(origen[0], 'origen_0').toFixed(5)}, {safeParseCoord(origen[1], 'origen_1').toFixed(5)}
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                                    <div className={`point-input-group ${puntoActivo === 'origen' ? 'active-origen' : ''}`}>
+                                        <label className="point-label-origen">{t('client_dashboard.origin')}</label>
+                                        <div style={{ display: 'flex', gap: '0.5rem', position: 'relative' }}>
+                                            <input
+                                                type="text"
+                                                placeholder={t('client_dashboard.tap_map')}
+                                                value={addressOrigen}
+                                                onChange={(e) => setAddressOrigen(e.target.value)}
+                                                onFocus={() => setPuntoActivo('origen')}
+                                                onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('origen')}
+                                                className="mtx-input"
+                                                style={{ flex: 1, paddingRight: addressOrigen ? '2.5rem' : '0.75rem' }}
+                                            />
+                                            {addressOrigen && (
+                                                <button
+                                                    onClick={() => handleClearPoint('origen')}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        right: '4.5rem',
+                                                        top: '50%',
+                                                        transform: 'translateY(-50%)',
+                                                        background: 'none',
+                                                        border: 'none',
+                                                        color: '#9ca3af',
+                                                        cursor: 'pointer',
+                                                        fontSize: '1.1rem',
+                                                        display: 'flex',
+                                                        alignItems: 'center'
+                                                    }}
+                                                    title="Clear"
+                                                >
+                                                    ✕
+                                                </button>
+                                            )}
+                                            <Button
+                                                onClick={() => handleAddressSearch('origen')}
+                                                variant="ghost"
+                                                className="search-mini-btn"
+                                                disabled={searching}
+                                            >
+                                                🔍
+                                            </Button>
+                                            {origen && <span className="coord-badge" style={{ backgroundColor: 'var(--primary-color)' }}>{t('common.done') || 'FIX'}</span>}
+                                        </div>
+                                        {origen && (
+                                            <div className="point-value-mini">
+                                                {console.log('[LOG_COORD_4] Rendering origen mini:', origen)}
+                                                {safeParseCoord(origen[0], 'origen_0').toFixed(5)}, {safeParseCoord(origen[1], 'origen_1').toFixed(5)}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className={`point-input-group ${puntoActivo === 'destino' ? 'active-destino' : ''}`}>
+                                        <label className="point-label-destino">{t('client_dashboard.destination')}</label>
+                                        <div style={{ display: 'flex', gap: '0.5rem', position: 'relative' }}>
+                                            <input
+                                                type="text"
+                                                placeholder={t('client_dashboard.tap_map')}
+                                                value={addressDestino}
+                                                onChange={(e) => setAddressDestino(e.target.value)}
+                                                onFocus={() => setPuntoActivo('destino')}
+                                                onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('destino')}
+                                                className="mtx-input"
+                                                style={{ flex: 1, paddingRight: addressDestino ? '2.5rem' : '0.75rem' }}
+                                            />
+                                            {addressDestino && (
+                                                <button
+                                                    onClick={() => handleClearPoint('destino')}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        right: '4.5rem',
+                                                        top: '50%',
+                                                        transform: 'translateY(-50%)',
+                                                        background: 'none',
+                                                        border: 'none',
+                                                        color: '#9ca3af',
+                                                        cursor: 'pointer',
+                                                        fontSize: '1.1rem',
+                                                        display: 'flex',
+                                                        alignItems: 'center'
+                                                    }}
+                                                    title="Clear"
+                                                >
+                                                    ✕
+                                                </button>
+                                            )}
+                                            <Button
+                                                onClick={() => handleAddressSearch('destino')}
+                                                variant="ghost"
+                                                className="search-mini-btn"
+                                                disabled={searching}
+                                            >
+                                                🔍
+                                            </Button>
+                                            {destino && <span className="coord-badge" style={{ backgroundColor: 'var(--accent-color)' }}>{t('common.done') || 'FIX'}</span>}
+                                        </div>
+                                        {destino && (
+                                            <div className="point-value-mini">
+                                                {console.log('[LOG_COORD_5] Rendering destino mini:', destino)}
+                                                {safeParseCoord(destino[0], 'destino_0').toFixed(5)}, {safeParseCoord(destino[1], 'destino_1').toFixed(5)}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {origen && destino && (
+                                    <div className={`estimated-fare-card ${distanciaExcedida ? 'limit-warning' : ''}`}>
+                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span className="fare-label">
+                                                {distanciaExcedida ? '⚠️ ' + t('client_dashboard.limit_exceeded') : t('client_dashboard.trip_details')}
+                                            </span>
+                                            <span className="fare-info-mini">
+                                                ⏱️ {tripMetrics.time} min | 📏 {tripMetrics.distance} km
+                                            </span>
+                                        </div>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <span className="fare-value" style={{ fontSize: '1.1rem', color: distanciaExcedida ? 'var(--error-color)' : 'var(--secondary-color)' }}>
+                                                {distanciaExcedida ? t('client_dashboard.invalid_trip') : '🎟️ 1 ' + t('client_dashboard.trip_cost')}
+                                            </span>
+                                            <div style={{ fontSize: '0.65rem', opacity: 0.7, color: 'white' }}>
+                                                {maxDistance > 0 ? `${t('client_dashboard.limit')}: ${maxDistance}km` : t('client_dashboard.forfait_applied')}
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
-                            </div>
 
-                            <div className={`point-input-group ${puntoActivo === 'destino' ? 'active-destino' : ''}`}>
-                                <label className="point-label-destino">{t('client_dashboard.destination')}</label>
-                                <div style={{ display: 'flex', gap: '0.5rem', position: 'relative' }}>
-                                    <input
-                                        type="text"
-                                        placeholder={t('client_dashboard.tap_map')}
-                                        value={addressDestino}
-                                        onChange={(e) => setAddressDestino(e.target.value)}
-                                        onFocus={() => setPuntoActivo('destino')}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('destino')}
-                                        className="mtx-input"
-                                        style={{ flex: 1, paddingRight: addressDestino ? '2.5rem' : '0.75rem' }}
-                                    />
-                                    {addressDestino && (
-                                        <button
-                                            onClick={() => handleClearPoint('destino')}
-                                            style={{
-                                                position: 'absolute',
-                                                right: '4.5rem',
-                                                top: '50%',
-                                                transform: 'translateY(-50%)',
-                                                background: 'none',
-                                                border: 'none',
-                                                color: '#9ca3af',
-                                                cursor: 'pointer',
-                                                fontSize: '1.1rem',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}
-                                            title="Clear"
-                                        >
-                                            ✕
-                                        </button>
-                                    )}
-                                    <Button
-                                        onClick={() => handleAddressSearch('destino')}
-                                        variant="ghost"
-                                        className="search-mini-btn"
-                                        disabled={searching}
-                                    >
-                                        🔍
-                                    </Button>
-                                    {destino && <span className="coord-badge" style={{ backgroundColor: 'var(--accent-color)' }}>{t('common.done') || 'FIX'}</span>}
-                                </div>
-                                {destino && (
-                                    <div className="point-value-mini">
-                                        {console.log('[LOG_COORD_5] Rendering destino mini:', destino)}
-                                        {safeParseCoord(destino[0], 'destino_0').toFixed(5)}, {safeParseCoord(destino[1], 'destino_1').toFixed(5)}
+                                {distanciaExcedida && (
+                                    <div className="limit-alert-box">
+                                        {t('client_dashboard.need_premium_pack')}
                                     </div>
                                 )}
-                            </div>
-                        </div>
 
-                        {origen && destino && (
-                            <div className={`estimated-fare-card ${distanciaExcedida ? 'limit-warning' : ''}`}>
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span className="fare-label">
-                                        {distanciaExcedida ? '⚠️ ' + t('client_dashboard.limit_exceeded') : t('client_dashboard.trip_details')}
-                                    </span>
-                                    <span className="fare-info-mini">
-                                        ⏱️ {tripMetrics.time} min | 📏 {tripMetrics.distance} km
-                                    </span>
+                                <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
+                                    <Button
+                                        onClick={handleSolicitarViaje}
+                                        variant="primary"
+                                        className="w-full"
+                                        disabled={!origen || !destino || distanciaExcedida}
+                                    >
+                                        {t('client_dashboard.request_now')}
+                                    </Button>
                                 </div>
-                                <div style={{ textAlign: 'right' }}>
-                                    <span className="fare-value" style={{ fontSize: '1.1rem', color: distanciaExcedida ? 'var(--error-color)' : 'var(--secondary-color)' }}>
-                                        {distanciaExcedida ? t('client_dashboard.invalid_trip') : '🎟️ 1 ' + t('client_dashboard.trip_cost')}
-                                    </span>
-                                    <div style={{ fontSize: '0.65rem', opacity: 0.7, color: 'white' }}>
-                                        {maxDistance > 0 ? `${t('client_dashboard.limit')}: ${maxDistance}km` : t('client_dashboard.forfait_applied')}
-                                    </div>
+                            </Card>
+
+                            <Card accent className="mt-6">
+                                <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', marginBottom: '1rem' }}>{t('client_dashboard.balance_title')}</h3>
+                                <div className="balance-value">
+                                    {viajesDisponibles}
                                 </div>
-                            </div>
-                        )}
+                                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                                    {viajesDisponibles > 0 ? t('client_dashboard.available_trips', { count: viajesDisponibles }) : t('client_dashboard.no_trips')}
+                                </p>
+                                <Button
+                                    onClick={() => navigate('/cliente/forfaits')}
+                                    variant="accent"
+                                    className="w-full"
+                                >
+                                    {t('client_dashboard.buy_forfait')}
+                                </Button>
+                            </Card>
+                        </>
+                    ) : (
+                        <div className="journey-mode-focused animate-in fade-in zoom-in duration-300">
+                            <Card className="active-trip-master-card" style={{ padding: '0', overflow: 'hidden' }}>
+                                {/* Header del Modo Trayecto */}
+                                <div style={{
+                                    background: 'var(--primary-color)',
+                                    color: 'white',
+                                    padding: '1.5rem',
+                                    textAlign: 'center'
+                                }}>
+                                    <h2 style={{ fontSize: '1.1rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                        {activeTrip.estado === 'solicitado' ? t('client_dashboard.searching_driver') : t('client_dashboard.trip_active')}
+                                    </h2>
+                                    <p style={{ fontSize: '0.8rem', opacity: 0.9 }}>ID: #{String(activeTrip.id).padStart(5, '0')}</p>
+                                </div>
 
-                        {distanciaExcedida && (
-                            <div className="limit-alert-box">
-                                {t('client_dashboard.need_premium_pack')}
-                            </div>
-                        )}
+                                {/* Trayecto en Curso vs Calificación */}
+                                <div style={{ padding: '1.25rem' }}>
+                                    {activeTrip.estado === 'completado' ? (
+                                        <div className="rating-view animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                                                <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎊</div>
+                                                <h3 style={{ fontWeight: '800', fontSize: '1.25rem' }}>{t('client_dashboard.trip_finished_title') || '¡Has llegado!'}</h3>
+                                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('client_dashboard.rate_driver_instruction') || '¿Cómo fue tu viaje con ' + (activeTrip.motorista?.name || 'el conductor') + '?'}</p>
+                                            </div>
 
-                        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <button
+                                                        key={star}
+                                                        onClick={() => setRating(star)}
+                                                        style={{ background: 'none', border: 'none', cursor: 'pointer', outline: 'none' }}
+                                                    >
+                                                        <Star
+                                                            size={36}
+                                                            fill={star <= rating ? "#f59e0b" : "none"}
+                                                            stroke={star <= rating ? "#f59e0b" : "#cbd5e1"}
+                                                            style={{ transition: 'transform 0.2s' }}
+                                                        />
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            <textarea
+                                                value={comment}
+                                                onChange={(e) => setComment(e.target.value)}
+                                                placeholder={t('driver_dashboard.rating_modal.placeholder')}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '0.75rem',
+                                                    borderRadius: '0.75rem',
+                                                    border: '1px solid #e2e8f0',
+                                                    marginBottom: '1.5rem',
+                                                    fontSize: '0.9rem',
+                                                    minHeight: '80px'
+                                                }}
+                                            />
+
+                                            <Button
+                                                variant="primary"
+                                                className="w-full"
+                                                onClick={submitRating}
+                                                disabled={isSubmittingRating}
+                                            >
+                                                {isSubmittingRating ? '...' : t('driver_dashboard.rating_modal.submit')}
+                                            </Button>
+
+                                            <Button
+                                                variant="ghost"
+                                                className="w-full mt-2"
+                                                onClick={() => setActiveTrip(null)}
+                                                style={{ fontSize: '0.8rem', opacity: 0.6 }}
+                                            >
+                                                {t('common.skip') || 'Omitir'}
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <TripPhaseTracker estado={activeTrip.estado} />
+
+                                            {activeTrip.motorista ? (
+                                                <div className="driver-profile-premium" style={{ marginTop: '1rem' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                                                        <div className="driver-avatar-circle" style={{
+                                                            width: '4rem',
+                                                            height: '4rem',
+                                                            borderRadius: '50%',
+                                                            background: '#e2e8f0',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            fontSize: '1.5rem',
+                                                            border: '3px solid white',
+                                                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                                                        }}>
+                                                            🏍️
+                                                        </div>
+                                                        <div style={{ flex: 1 }}>
+                                                            <div style={{ fontWeight: '800', fontSize: '1.2rem' }}>{activeTrip.motorista.name}</div>
+                                                            <div style={{ color: '#059669', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                                                                {activeTrip.estado === 'aceptado' ? '🚗 En camino a por ti' : '🚀 En viaje'}
+                                                            </div>
+                                                            <div style={{ display: 'flex', gap: '0.2rem', color: '#f59e0b', fontSize: '0.85rem' }}>
+                                                                ★★★★★ <span style={{ color: 'var(--text-muted)', fontWeight: 'normal' }}>(5.0)</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="vehicle-safety-grid" style={{
+                                                        display: 'grid',
+                                                        gridTemplateColumns: '1fr 1fr',
+                                                        gap: '1rem',
+                                                        background: '#f8fafc',
+                                                        padding: '1rem',
+                                                        borderRadius: '1rem',
+                                                        border: '1px solid #f1f5f9'
+                                                    }}>
+                                                        <div>
+                                                            <label style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 'bold' }}>{t('client_dashboard.vehicle')}</label>
+                                                            <div style={{ fontWeight: 'bold' }}>{activeTrip.motorista.motorista_perfil?.marca_vehiculo || 'MotoTX Standard'}</div>
+                                                        </div>
+                                                        <div>
+                                                            <label style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 'bold' }}>{t('client_dashboard.plate')}</label>
+                                                            <div style={{ fontWeight: 'bold', color: 'var(--primary-color)' }}>{activeTrip.motorista.motorista_perfil?.matricula || 'M-2234'}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="security-code-banner" style={{
+                                                        marginTop: '1.5rem',
+                                                        padding: '1rem',
+                                                        background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+                                                        borderRadius: '1rem',
+                                                        textAlign: 'center',
+                                                        border: '1px dashed #166534'
+                                                    }}>
+                                                        <div style={{ fontSize: '0.7rem', color: '#166534', fontWeight: 'bold', marginBottom: '0.25rem' }}>{t('client_dashboard.safety_code')}</div>
+                                                        <div style={{ fontSize: '1.75rem', fontWeight: '900', color: '#14532d', letterSpacing: '0.2em' }}>
+                                                            {String(activeTrip.id).padStart(4, '0').slice(-4)}
+                                                        </div>
+                                                    </div>
+
+                                                    <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
+                                                        <Button variant="outline" className="flex-1" style={{ borderColor: '#ef4444', color: '#ef4444' }}>
+                                                            🆘 SOS
+                                                        </Button>
+                                                        <Button variant="primary" className="flex-1">
+                                                            📞 {t('common.call') || 'Llamar'}
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div style={{
+                                                    padding: '2rem',
+                                                    textAlign: 'center',
+                                                    background: '#f8fafc',
+                                                    borderRadius: '1rem',
+                                                    marginTop: '1rem'
+                                                }}>
+                                                    <div className="searching-spinner" style={{
+                                                        width: '3rem',
+                                                        height: '3rem',
+                                                        border: '4px solid #e2e8f0',
+                                                        borderTopColor: 'var(--primary-color)',
+                                                        borderRadius: '50%',
+                                                        animation: 'mtx-spin 1s linear infinite',
+                                                        margin: '0 auto 1.5rem'
+                                                    }}></div>
+                                                    <p style={{ fontWeight: 'bold', color: '#64748b' }}>{t('client_dashboard.waiting_for_assignment')}</p>
+                                                    <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.5rem' }}>Notificando a conductores cercanos...</p>
+
+                                                    <style dangerouslySetInnerHTML={{
+                                                        __html: `
+                                                        @keyframes mtx-spin { to { transform: rotate(360deg); } }
+                                                    `}} />
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            </Card>
+
                             <Button
-                                onClick={handleSolicitarViaje}
-                                variant="primary"
-                                className="w-full"
-                                disabled={!origen || !destino || distanciaExcedida}
+                                onClick={() => setActiveTrip(null)}
+                                variant="ghost"
+                                className="w-full mt-4"
+                                style={{ fontSize: '0.8rem', opacity: 0.6 }}
                             >
-                                {t('client_dashboard.request_now')}
+                                {t('common.cancel_request') || 'Cancelar Solicitud'}
                             </Button>
-                        </div>
-                    </Card>
-
-                    {/* Forfaits Card */}
-                    <Card accent className="mt-6">
-                        <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', marginBottom: '1rem' }}>{t('client_dashboard.balance_title')}</h3>
-                        <div className="balance-value">
-                            {viajesDisponibles}
-                        </div>
-                        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                            {viajesDisponibles > 0 ? t('client_dashboard.available_trips', { count: viajesDisponibles }) : t('client_dashboard.no_trips')}
-                        </p>
-                        <Button
-                            onClick={() => navigate('/cliente/forfaits')}
-                            variant="accent"
-                            className="w-full"
-                        >
-                            {t('client_dashboard.buy_forfait')}
-                        </Button>
-                    </Card>
-
-                    {/* Active Trip Status */}
-                    {activeTrip && (
-                        <div className="active-trip-banner">
-                            <div style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t('client_dashboard.trip_active')}</div>
-                            <div style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>
-                                {t('client_dashboard.state')}: {activeTrip.estado}
-                            </div>
-                            {activeTrip.motorista && (
-                                <div style={{ marginTop: '0.75rem', fontSize: '0.95rem', opacity: 0.95 }}>
-                                    {t('client_dashboard.driver')}: {activeTrip.motorista.name}
-                                </div>
-                            )}
                         </div>
                     )}
                 </div>
