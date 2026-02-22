@@ -2,7 +2,7 @@
 
 # 1. Setup: Definimos lenguajes y versiones
 [phases.setup]
-nixPkgs = ["php82", "php82Extensions.pdo_mysql", "php82Extensions.bcmath", "php82Extensions.gd", "php82Extensions.zip", "nodejs_20", "npm"]
+nixPkgs = ["php82", "php82Extensions.pdo_mysql", "php82Extensions.pdo_sqlite", "php82Extensions.bcmath", "php82Extensions.gd", "php82Extensions.zip", "nodejs_20", "npm"]
 
 # 2. Install: Instalamos dependencias (Sobrescribimos el default para fixear error de React 19)
 [phases.install]
