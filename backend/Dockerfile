@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     sqlite3 \
     libsqlite3-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip pdo pdo_mysql pdo_sqlite bcmath
+    && docker-php-ext-install gd zip pdo pdo_mysql pdo_sqlite bcmath pcntl
 
 # 2. Instalar Node.js y NPM (necesarios para los assets y Reverb)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
@@ -42,8 +42,11 @@ RUN chmod -R 775 storage bootstrap/cache
 
 # 8. Script de arranque final
 RUN echo '#!/bin/bash\n\
-touch /var/www/html/database/database.sqlite\n\
-chmod 777 /var/www/html/database/database.sqlite\n\
+cd /var/www/html\n\
+mkdir -p database\n\
+touch database/database.sqlite\n\
+chmod 777 database/database.sqlite\n\
+chmod 777 database\n\
 php artisan migrate --force --seed\n\
 # Iniciar Reverb en segundo plano y Apache en primer plano\n\
 php artisan reverb:start --host=0.0.0.0 --port=8080 &\n\
