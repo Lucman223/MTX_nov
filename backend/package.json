@@ -6,7 +6,7 @@
         "build": "vite build",
         "dev": "vite",
         "start": "concurrently \"vite\" \"php artisan serve\"",
-        "prod": "touch database/database.sqlite && php artisan migrate --force --seed && concurrently \"heroku-php-apache2 public/\" \"php artisan reverb:start --host=0.0.0.0 --port=8080\""
+        "prod": "touch database/database.sqlite && php artisan migrate --force --seed && (php artisan reverb:start --host=0.0.0.0 --port=8080 & heroku-php-apache2 public/)"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
