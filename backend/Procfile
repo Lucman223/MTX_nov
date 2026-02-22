@@ -1,1 +1,1 @@
-web: bash entrypoint.sh
+web: php artisan migrate --force --seed && heroku-php-apache2 public/
