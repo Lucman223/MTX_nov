@@ -7,5 +7,6 @@ $kernel->bootstrap();
 use App\Models\User;
 
 foreach (User::all() as $user) {
-    echo "ID: {$user->id} | Email: {$user->email} | Rol: {$user->rol} | Hash: " . substr($user->password, 0, 10) . "...\n";
+    echo "ID: {$user->id} | Email: {$user->email} | Rol: {$user->rol} | Hash: " . substr($user->password, 0, 15) . "...\n";
 }
+echo "Total usuarios: " . User::count() . "\n";

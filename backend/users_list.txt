@@ -1,0 +1,13 @@
+
+
+
+
+
+
+
+
+
+ID: 1 | Email: admin@mototx.com | Rol: admin | Hash: $2y$12$KHKCs4br...
+ID: 2 | Email: cliente@mototx.com | Rol: cliente | Hash: $2y$12$tPdQfMHB...
+ID: 3 | Email: moto@mototx.com | Rol: motorista | Hash: $2y$12$EGseF47n...
+Total usuarios: 3
