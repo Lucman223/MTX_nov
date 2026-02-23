@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Admin Principal',
             'email' => 'admin@mototx.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'password' => 'password',
             'rol' => 'admin',
             'telefono' => '111222333',
         ]);
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Cliente Pruebas',
             'email' => 'cliente@mototx.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'password' => 'password',
             'rol' => 'cliente',
             'telefono' => '222333444',
         ]);
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $moto = User::create([
             'name' => 'Motorista Pruebas',
             'email' => 'moto@mototx.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+            'password' => 'password123',
             'rol' => 'motorista',
             'telefono' => '333444555',
         ]);

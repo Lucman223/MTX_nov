@@ -17,7 +17,7 @@ class UserService
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => \Illuminate\Support\Facades\Hash::make($data['password']),
+            'password' => $data['password'],
             'rol' => $data['rol'],
             'telefono' => $data['telefono'] ?? null,
             'documento_identidad_path' => $documentoPath,
@@ -33,7 +33,7 @@ class UserService
         $user->foto_perfil = $data['foto_perfil'] ?? $user->foto_perfil;
 
         if (isset($data['password'])) {
-            $user->password = \Illuminate\Support\Facades\Hash::make($data['password']);
+            $user->password = $data['password'];
         }
 
         $user->save();
@@ -65,7 +65,7 @@ class UserService
             'telefono' => null,
             'foto_perfil' => null,
             'documento_identidad_path' => null,
-            'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(32)), // Scramble
+            'password' => \Illuminate\Support\Str::random(32), // Scramble - Cast will handle hashing
         ]);
 
         // 3. Execute Soft Delete

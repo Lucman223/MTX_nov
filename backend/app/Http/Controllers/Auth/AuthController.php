@@ -77,7 +77,7 @@ class AuthController extends Controller
 
         // [ES] Verificamos si el hash necesita actualización según el driver configurado (.env)
         if (\Illuminate\Support\Facades\Hash::needsRehash($user->password)) {
-            $user->password = \Illuminate\Support\Facades\Hash::make($credentials['password']);
+            $user->password = $credentials['password'];
             $user->save();
             \Illuminate\Support\Facades\Log::info("Password rehashed for user ID: {$user->id}");
         }
