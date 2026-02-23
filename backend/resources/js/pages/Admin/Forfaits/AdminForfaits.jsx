@@ -119,8 +119,7 @@ const AdminForfaits = () => {
                         {!isMobile && (
                             <button
                                 onClick={() => navigate('/admin')}
-                                className="mtx-button"
-                                style={{ border: '1px solid #d1d5db', background: 'white' }}
+                                className="btn btn--sm btn--ghost"
                             >
                                 {t('common.back')}
                             </button>
@@ -131,7 +130,7 @@ const AdminForfaits = () => {
                                 setFormData({ nombre: '', descripcion: '', precio: '', dias_validez: '', viajes_incluidos: '', estado: 'activo' });
                                 setModalOpen(true);
                             }}
-                            className="mtx-button mtx-button-primary"
+                            className="btn btn--primary"
                         >
                             {t('admin_dashboard.forfaits.new_btn')}
                         </button>
@@ -141,7 +140,7 @@ const AdminForfaits = () => {
                 {loading ? (
                     <div style={{ textAlign: 'center', padding: '3rem', color: '#6b7280' }}>{t('common.loading')}</div>
                 ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(20rem, 1fr))', gap: '2rem' }}>
                         {(Array.isArray(forfaits) ? forfaits : Object.values(forfaits || {})).map((forfait) => (
                             <div key={forfait.id} className="mtx-card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
@@ -172,15 +171,15 @@ const AdminForfaits = () => {
                                 <div style={{ display: 'flex', gap: '0.75rem' }}>
                                     <button
                                         onClick={() => handleEdit(forfait)}
-                                        className="mtx-button"
-                                        style={{ flex: 1, padding: '0.5rem', background: '#eff6ff', color: colors.primary }}
+                                        className="btn btn--sm btn--ghost"
+                                        style={{ flex: 1 }}
                                     >
                                         {t('common.edit')}
                                     </button>
                                     <button
                                         onClick={() => handleDelete(forfait.id, forfait.nombre)}
-                                        className="mtx-button"
-                                        style={{ flex: 1, padding: '0.5rem', background: '#fef2f2', color: colors.error }}
+                                        className="btn btn--sm btn--danger"
+                                        style={{ flex: 1 }}
                                     >
                                         {t('admin_dashboard.clients.actions.delete')}
                                     </button>
@@ -193,7 +192,7 @@ const AdminForfaits = () => {
 
             {modalOpen && (
                 <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 50 }}>
-                    <div className="mtx-card" style={{ width: '100%', maxWidth: '500px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+                    <div className="mtx-card" style={{ width: '100%', maxWidth: '32rem', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)', boxSizing: 'border-box' }}>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
                             {editingForfait ? t('admin_dashboard.forfaits.modal.title_edit') : t('admin_dashboard.forfaits.modal.title_create')}
                         </h2>
@@ -230,8 +229,8 @@ const AdminForfaits = () => {
                                 </div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-                                <button type="button" onClick={() => setModalOpen(false)} className="mtx-button" style={{ background: '#e5e7eb' }}>{t('admin_dashboard.forfaits.modal.cancel')}</button>
-                                <button type="submit" className="mtx-button mtx-button-primary">{t('admin_dashboard.forfaits.modal.save')}</button>
+                                <button type="button" onClick={() => setModalOpen(false)} className="btn btn--ghost">{t('admin_dashboard.forfaits.modal.cancel')}</button>
+                                <button type="submit" className="btn btn--primary">{t('admin_dashboard.forfaits.modal.save')}</button>
                             </div>
                         </form>
                     </div>

@@ -1,0 +1,13 @@
+{
+    "app_name": "MotoTX",
+    "nav_home": "Accueil",
+    "nav_dashboard": "Tableau de Bord",
+    "home_title": "MotoTX | Accueil - Votre transport à Bamako",
+    "home_welcome": "Bienvenue chez MotoTX",
+    "home_desc": "Nous sommes la solution de mobilité la plus fiable pour vos déplacements quotidiens.",
+    "dashboard_title": "MotoTX | Tableau de Bord - Gestion des Voyages",
+    "dashboard_welcome": "Votre Tableau de Bord",
+    "dashboard_desc": "Ici, vous pouvez gérer toute votre activité sur la plateforme.",
+    "default_title": "MotoTX | Service de Mototaxi Sécurisé",
+    "default_desc": "La plateforme leader de mototaxis à Bamako. Sécurité, rapidité et confiance."
+}

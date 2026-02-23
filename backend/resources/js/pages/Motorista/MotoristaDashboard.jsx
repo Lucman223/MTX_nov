@@ -317,7 +317,8 @@ const MotoristaDashboard = () => {
                             <Button
                                 onClick={handleWithdraw}
                                 disabled={profile.billetera <= 0}
-                                className="withdraw-btn"
+                                className="btn btn--block btn--primary"
+                                style={{ background: 'white', color: 'var(--secondary-color)', border: 'none' }}
                             >
                                 💸 {t('driver_dashboard.withdraw_btn')}
                             </Button>
@@ -325,8 +326,8 @@ const MotoristaDashboard = () => {
                             <div className="stats-row" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                 <Button
                                     onClick={() => navigate('/motorista/finanzas')}
-                                    variant="outline"
-                                    style={{ fontSize: '0.75rem', padding: '0.4rem', border: '1px solid white', color: 'white' }}
+                                    className="btn--sm btn--ghost"
+                                    style={{ padding: '0.4rem', color: 'white' }}
                                 >
                                     💰 {t('driver_dashboard.view_finances')}
                                 </Button>
@@ -448,13 +449,19 @@ const MotoristaDashboard = () => {
                     <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '0.5rem', width: '90%', maxWidth: '400px' }}>
                         <h3 className="text-lg font-bold mb-4">{t('driver_dashboard.rating_modal.title')}</h3>
 
-                        <div className="flex justify-center gap-2 mb-4">
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <button key={star} onClick={() => setRating(star)} className="focus:outline-none">
+                                <button
+                                    key={star}
+                                    onClick={() => setRating(star)}
+                                    className="btn btn--ghost"
+                                    style={{ border: 'none', padding: '0.25rem' }}
+                                >
                                     <Star
-                                        size={32}
+                                        size={36}
                                         fill={star <= rating ? "#f59e0b" : "none"}
-                                        stroke={star <= rating ? "#f59e0b" : "#9ca3af"}
+                                        stroke={star <= rating ? "#f59e0b" : "#cbd5e1"}
+                                        style={{ transition: 'transform 0.2s' }}
                                     />
                                 </button>
                             ))}

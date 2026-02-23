@@ -52,6 +52,7 @@ const LandingPage = () => {
                     style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 >
+                    <h1 className="hidden-seo">{t('seo.landing_h1')}</h1>
                     <img src="/logo_clean.png" alt="MotoTX Logo" style={{ height: '2.75rem', objectFit: 'contain' }} />
                     <span style={{ fontSize: '1.5rem', fontWeight: '900', color: colors.primary, letterSpacing: '-0.5px' }}>MotoTX</span>
                 </div>
@@ -69,8 +70,7 @@ const LandingPage = () => {
 
                     <button
                         onClick={() => navigate('/login')}
-                        className="mtx-button"
-                        style={{ padding: '0.6rem 1.75rem', fontSize: '0.95rem' }}
+                        className="btn btn--primary"
                     >
                         {t('common.login')}
                     </button>

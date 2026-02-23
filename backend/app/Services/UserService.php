@@ -17,7 +17,13 @@ class UserService
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $data['password'],
+            // [ES] Forzamos el uso de Argon2id nativo para nuevos registros
+            // [FR] Nous forçons l'utilisation d'Argon2id natif pour les nouveaux enregistrements
+            'password' => password_hash($data['password'], PASSWORD_ARGON2ID, [
+                'memory_cost' => 65536,
+                'time_cost' => 4,
+                'threads' => 1
+            ]),
             'rol' => $data['rol'],
             'telefono' => $data['telefono'] ?? null,
             'documento_identidad_path' => $documentoPath,
@@ -33,7 +39,12 @@ class UserService
         $user->foto_perfil = $data['foto_perfil'] ?? $user->foto_perfil;
 
         if (isset($data['password'])) {
-            $user->password = $data['password'];
+            // [ES] Actualización manual usando Argon2id nativo
+            $user->password = password_hash($data['password'], PASSWORD_ARGON2ID, [
+                'memory_cost' => 65536,
+                'time_cost' => 4,
+                'threads' => 1
+            ]);
         }
 
         $user->save();
@@ -48,15 +59,27 @@ class UserService
      */
     public function deleteUser(User $user): void
     {
-        // Anonymize personal data
-        $user->name = 'Deleted User ' . $user->id;
-        $user->email = 'deleted_' . $user->id . '_' . time() . '@anon.com';
-        $user->telefono = null;
-        $user->foto_perfil = null;
-        $user->password = \Illuminate\Support\Str::random(32); // Scramble password
-        $user->save();
+        // 1. Clear related profile data if motorista
+        if ($user->rol === 'motorista' && $user->motorista_perfil) {
+            $user->motorista_perfil->update([
+                'matricula' => 'DELETED',
+                'documento_licencia_path' => null,
+                'latitud_actual' => null,
+                'longitud_actual' => null,
+            ]);
+        }
 
-        // Soft delete the user
+        // 2. Anonymize personal data in User model
+        $user->update([
+            'name' => null, // Name set to NULL as requested
+            'email' => 'deleted-' . $user->id . '@local', // Pattern: deleted-ID@local
+            'telefono' => null,
+            'foto_perfil' => null,
+            'documento_identidad_path' => null,
+            'password' => password_hash(\Illuminate\Support\Str::random(32), PASSWORD_ARGON2ID), // Scramble
+        ]);
+
+        // 3. Execute Soft Delete
         $user->delete();
     }
 }

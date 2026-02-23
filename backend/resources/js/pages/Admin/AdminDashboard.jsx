@@ -170,6 +170,14 @@ const AdminDashboard = () => {
             icon: '📊',
             color: colors.accent,
             action: () => navigate('/admin/reportes')
+        },
+        {
+            title: t('admin_dashboard.users.pending_title'),
+            description: t('admin_dashboard.users.pending_desc'),
+            icon: '👤',
+            color: colors.purple,
+            action: () => navigate('/admin/aprobaciones'),
+            badge: stats?.motoristasPendientes > 0 ? stats.motoristasPendientes : null
         }
     ];
 

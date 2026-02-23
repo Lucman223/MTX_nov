@@ -5,6 +5,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
         <meta name="theme-color" content="#2563eb">
 
+        <script>
+            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                (function() {
+                    const noop = () => {};
+                    const methods = ['log', 'debug', 'info', 'warn', 'error', 'assert', 'clear', 'count', 'dir', 'dirxml', 'group', 'groupCollapsed', 'groupEnd', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn'];
+                    if (window.console) {
+                        methods.forEach(method => {
+                            window.console[method] = noop;
+                        });
+                    }
+                })();
+            }
+        </script>
+
         <title>{{ config('app.name', 'MotoTX') }} - Transporte Seguro en Bamako</title>
         <meta name="description" content="MotoTX: La plataforma líder de moto-taxis en Bamako. Viajes seguros, rápidos y económicos a tu alcance.">
         <meta name="keywords" content="Moto taxi, Bamako, transporte, Mali, seguridad, viajes baratos">

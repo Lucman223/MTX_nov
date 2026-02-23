@@ -75,11 +75,12 @@ function LoginPage() {
             </div>
 
             <div className="mtx-card" style={{
-                maxWidth: '450px',
+                maxWidth: '28rem',
                 width: '100%',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
                 padding: '3rem',
-                border: 'none'
+                border: 'none',
+                boxSizing: 'border-box'
             }}>
                 {/* Logo y título */}
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -156,7 +157,7 @@ function LoginPage() {
 
                     <button
                         type="submit"
-                        className="mtx-button mtx-button-primary w-full"
+                        className="btn btn--primary btn--block"
                         disabled={loading}
                     >
                         {loading ? t('auth.logging_in') : t('common.login')}
@@ -174,14 +175,7 @@ function LoginPage() {
                     </p>
                     <Link
                         to="/register"
-                        className="mtx-button"
-                        style={{
-                            display: 'inline-flex',
-                            background: 'white',
-                            color: colors.primary,
-                            border: `2px solid ${colors.primary}`,
-                            width: 'auto'
-                        }}
+                        className="btn btn--ghost"
                     >
                         {t('common.register')}
                     </Link>

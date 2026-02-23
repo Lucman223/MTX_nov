@@ -46,6 +46,9 @@ export default defineConfig({
             }
         })
     ],
+    esbuild: {
+        drop: ['console', 'debugger'],
+    },
     server: {
         host: 'localhost',
         port: 5173,

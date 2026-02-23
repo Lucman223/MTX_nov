@@ -12,32 +12,36 @@ class ViajeService
 {
     public function solicitarViaje(User $user, float $origen_lat, float $origen_lng, ?float $destino_lat = null, ?float $destino_lng = null, ?string $origen = null, ?string $destino = null): Viaje
     {
-        // Check for Forfait
-        $clienteForfait = ClienteForfait::where('cliente_id', $user->id)
-            ->where('viajes_restantes', '>', 0)
-            ->where('fecha_expiracion', '>', Carbon::now())
-            ->first();
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($user, $origen_lat, $origen_lng, $destino_lat, $destino_lng, $origen, $destino) {
+            // [ES] Bloqueo pesimista sobre el saldo del usuario para evitar Race Conditions
+            // [FR] Verrouillage pessimiste sur le solde de l'utilisateur pour éviter les Race Conditions
+            $clienteForfait = ClienteForfait::where('cliente_id', $user->id)
+                ->where('viajes_restantes', '>', 0)
+                ->where('fecha_expiracion', '>', Carbon::now())
+                ->lockForUpdate() // SELECT ... FOR UPDATE
+                ->first();
 
-        // For now, if no forfait, we might throw error, OR allow Pay-Per-Ride pending implementation.
-        // Sticking to strict forfait for now as per logic, but adding logging.
-        if (!$clienteForfait) {
-             throw new \Exception('No active forfait. Please purchase a plan.');
-        }
+            if (!$clienteForfait) {
+                 throw new \Exception('No active forfait. Please purchase a plan.');
+            }
 
-        $viaje = Viaje::create([
-            'cliente_id' => $user->id,
-            'origen_lat' => $origen_lat,
-            'origen_lng' => $origen_lng,
-            'destino_lat' => $destino_lat,
-            'destino_lng' => $destino_lng,
-            'origen' => $origen,
-            'destino' => $destino,
-            'estado' => 'solicitado',
-        ]);
+            $viaje = Viaje::create([
+                'cliente_id' => $user->id,
+                'origen_lat' => $origen_lat,
+                'origen_lng' => $origen_lng,
+                'destino_lat' => $destino_lat,
+                'destino_lng' => $destino_lng,
+                'origen' => $origen,
+                'destino' => $destino,
+                'estado' => 'solicitado',
+            ]);
 
-        $clienteForfait->decrement('viajes_restantes');
+            // [ES] El decremento ahora es seguro dentro de la transacción bloqueada
+            // [FR] Le décrément est maintenant sûr à l'intérieur de la transaction verrouillée
+            $clienteForfait->decrement('viajes_restantes');
 
-        return $viaje;
+            return $viaje;
+        });
     }
 
     public function acceptTrip(User $motorista, Viaje $viaje): Viaje

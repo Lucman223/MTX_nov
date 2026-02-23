@@ -64,7 +64,7 @@ const AdminReportes = () => {
                     <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827' }}>
                         📊 {t('admin_dashboard.actions.reports')}
                     </h1>
-                    <Button onClick={() => navigate('/admin')} variant="outline">
+                    <Button onClick={() => navigate('/admin')} variant="ghost">
                         {t('common.back')}
                     </Button>
                 </div>
@@ -114,7 +114,7 @@ const AdminReportes = () => {
                 </Card>
 
                 <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-                    <Button onClick={handleExportPDF} variant="primary">
+                    <Button onClick={handleExportPDF} variant="primary" className="btn--lg">
                         📥 {t('admin_dashboard.actions.export_pdf')}
                     </Button>
                 </div>

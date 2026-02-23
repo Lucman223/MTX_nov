@@ -29,7 +29,7 @@ const RatingModal = ({ isOpen, onClose, onSubmit, motoristaName }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
-            <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md m-4 transform transition-all scale-100">
+            <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md m-4 transform transition-all scale-100" style={{ boxSizing: 'border-box' }}>
                 <div className="text-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-800">Califica tu viaje</h2>
                     <p className="text-gray-500 mt-2">¿Cómo estuvo tu viaje con <span className="font-semibold text-blue-600">{motoristaName}</span>?</p>

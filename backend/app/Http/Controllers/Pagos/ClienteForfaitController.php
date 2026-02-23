@@ -42,30 +42,42 @@ class ClienteForfaitController extends Controller
     public function buyForfait(BuyForfaitRequest $request)
     {
         $user = auth()->user();
+        $forfaitId = $request->forfait_id;
         $phone = $request->input('phone_number', '00000000');
         
-        // [ES] 1. Obtener precio del Forfait (En app real, obtener de BD)
-        // [FR] 1. Obtenir le prix du Forfait (Dans une vraie application, récupérer depuis la BD)
-        // For demo, we trust the ID exists because of validation, but we should fetch price.
-        $amount = 5000; // Placeholder, ideally $forfait->price
+        $forfait = \App\Models\Forfait::findOrFail($forfaitId);
+        $amount = $forfait->precio;
 
-        try {
-            // [ES] 2. Iniciar Pago (Simulado o Real)
-            // [FR] 2. Initier le Paiement (Simulé ou Réel)
-            $paymentInit = $this->orangeMoneyService->initiatePayment($phone, $amount);
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($user, $forfait, $phone, $amount) {
+            try {
+                // [ES] 1. Iniciar Pago (Simulado o Real)
+                $paymentInit = $this->orangeMoneyService->initiatePayment($phone, $amount);
+                $orderId = $paymentInit['order_id'] ?? 'TRX-' . \Illuminate\Support\Str::random(10);
 
-            // [ES] 3. Retornar estado Pendiente
-            // [FR] 3. Retourner l'état En attente
-            return response()->json([
-                'message' => 'Payment initiated. Please confirm on your mobile.',
-                'order_id' => $paymentInit['order_id'] ?? null,
-                'pay_token' => $paymentInit['pay_token'] ?? null,
-                'status' => 'pending'
-            ]);
+                // [ES] 2. Registrar transacción en estado INICIADO para idempotencia
+                \App\Models\Transaccion::create([
+                    'usuario_id' => $user->id,
+                    'forfait_id' => $forfait->id,
+                    'monto' => $amount,
+                    'moneda' => 'CFA',
+                    'tipo' => 'compra_forfait',
+                    'estado' => 'iniciado',
+                    'pasarela_pago_id' => $orderId,
+                    'metodo_pago' => 'Orange Money',
+                    'descripcion' => "Compra de Forfait: {$forfait->nombre}",
+                    'fecha_transaccion' => now(),
+                ]);
 
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
+                return response()->json([
+                    'message' => 'Payment initiated. Please confirm on your mobile.',
+                    'order_id' => $orderId,
+                    'status' => 'pending'
+                ]);
+
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 400);
+            }
+        });
     }
 
     /**
@@ -76,35 +88,55 @@ class ClienteForfaitController extends Controller
     {
         $request->validate([
             'order_id' => 'required',
-            'forfait_id' => 'required|exists:forfaits,id' // Needed to finalize purchase
+            'forfait_id' => 'required|exists:forfaits,id'
         ]);
 
-        try {
-            // [ES] 1. Verificar Estado
-            // [FR] 1. Vérifier le Statut
-            $statusData = $this->orangeMoneyService->checkStatus($request->order_id);
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
+            // [ES] Bloqueo pesimista sobre la transacción para evitar doble asignación
+            $transaccion = \App\Models\Transaccion::where('pasarela_pago_id', $request->order_id)
+                ->where('usuario_id', auth()->id())
+                ->lockForUpdate()
+                ->first();
 
-            if (isset($statusData['status']) && strtoupper($statusData['status']) === 'SUCCESS') {
-                // [ES] 2. Finalizar Compra (evitar doble asignación si ya se hizo)
-                // [FR] 2. Finaliser l'Achat (éviter la double attribution si déjà fait)
-                
-                $user = auth()->user();
-                $clienteForfait = $this->forfaitService->buyForfait($user, $request->forfait_id);
+            if (!$transaccion) {
+                return response()->json(['error' => 'Transaction not found'], 404);
+            }
 
+            // [ES] Idempotencia: Si ya está completada, devolvemos éxito directamente
+            if ($transaccion->estado === 'completado') {
                 return response()->json([
                     'status' => 'SUCCESS',
-                    'message' => 'Payment confirmed and Forfait activated',
-                    'data' => $clienteForfait
+                    'message' => 'Forfait already activated',
                 ]);
             }
 
-            return response()->json([
-                'status' => 'PENDING',
-                'message' => 'Waiting for confirmation...'
-            ]);
+            try {
+                // [ES] Verificar Estado con Pasarela
+                $statusData = $this->orangeMoneyService->checkStatus($request->order_id);
 
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
+                if (isset($statusData['status']) && strtoupper($statusData['status']) === 'SUCCESS') {
+                    $user = auth()->user();
+                    
+                    // [ES] Finalizar Compra y actualizar transacción
+                    $clienteForfait = $this->forfaitService->buyForfait($user, $request->forfait_id);
+                    
+                    $transaccion->update(['estado' => 'completado']);
+
+                    return response()->json([
+                        'status' => 'SUCCESS',
+                        'message' => 'Payment confirmed and Forfait activated',
+                        'data' => $clienteForfait
+                    ]);
+                }
+
+                return response()->json([
+                    'status' => 'PENDING',
+                    'message' => 'Waiting for confirmation...'
+                ]);
+
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 400);
+            }
+        });
     }
 }

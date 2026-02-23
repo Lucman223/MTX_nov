@@ -7,6 +7,8 @@ use App\Http\Controllers\Pagos\ForfaitController; // Forfaits are managed by adm
 Route::group(['middleware' => ['jwt.auth', 'admin'], 'prefix' => 'admin'], function () {
     Route::apiResource('forfaits', ForfaitController::class);
     Route::apiResource('users', AdminController::class)->except(['store']);
+    Route::get('/users/pending', [AdminController::class, 'getPendingUsers']);
+    Route::patch('/users/{user}/status', [AdminController::class, 'updateUserStatus']);
     Route::put('/motoristas/{user}/status', [AdminController::class, 'updateMotoristaStatus']);
     Route::get('/viajes', [AdminController::class, 'getAllTrips']);
     Route::get('/transacciones', [AdminController::class, 'getAllTransacciones']);

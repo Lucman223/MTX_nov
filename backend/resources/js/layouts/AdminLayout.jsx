@@ -52,11 +52,14 @@ const AdminLayout = () => {
                     <Link to="/admin/reportes" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 hover:text-white">
                         {t('nav.reports')}
                     </Link>
+                    <Link to="/admin/aprobaciones" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 hover:text-white">
+                        ✅ {t('admin_dashboard.users.pending_title')}
+                    </Link>
                 </nav>
                 <div className="p-4 border-t border-gray-700">
                     <button
                         onClick={handleLogout}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        className="btn btn--danger btn--block"
                     >
                         {t('common.logout')}
                     </button>

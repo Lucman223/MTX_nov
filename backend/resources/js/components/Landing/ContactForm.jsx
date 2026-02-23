@@ -6,7 +6,7 @@ const ContactForm = ({ colors }) => {
 
     return (
         <section id="contact" style={{ padding: '6rem 2rem', background: 'white' }}>
-            <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+            <div style={{ maxWidth: '38rem', width: '100%', margin: '0 auto', textAlign: 'center', boxSizing: 'border-box' }}>
                 <h3 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem', color: '#1f2937' }}>
                     {t('landing.contact_title')}
                 </h3>

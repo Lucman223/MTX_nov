@@ -1,6 +1,12 @@
 /* [ES] Sistema de diseño de componentes para MotoTX */
 /* [FR] Système de design de composants pour MotoTX */
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 :root {
     --primary-color: #2563eb;
     --secondary-color: #059669;
@@ -95,23 +101,140 @@
     box-shadow: var(--shadow-lg);
 }
 
-.mtx-button {
-    padding: 0.875rem 1.25rem;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-    display: flex;
+/* 
+   Button System (BEM)
+   [ES] Sistema de botones modular y escalable.
+*/
+.btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.625rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    text-decoration: none;
+    line-height: 1.2;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Modifiers: Color */
+.btn--primary {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.btn--primary:hover {
+    background: #1d4ed8;
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn--secondary {
+    background: var(--secondary-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+}
+
+.btn--secondary:hover {
+    background: #047857;
+    box-shadow: 0 6px 15px rgba(5, 150, 105, 0.3);
+}
+
+.btn--accent {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.btn--accent:hover {
+    background: #d97706;
+    box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3);
+}
+
+.btn--danger {
+    background: var(--error-color);
+    color: white;
+}
+
+.btn--danger:hover {
+    background: #dc2626;
+}
+
+.btn--ghost {
+    background: transparent;
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+.btn--ghost:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: var(--text-muted);
+}
+
+.btn--outline-white {
+    background: transparent;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn--outline-white:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+/* Modifiers: Size */
+.btn--sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    gap: 0.4rem;
+}
+
+.btn--lg {
+    padding: 1.1rem 2.5rem;
+    font-size: 1.15rem;
+    border-radius: var(--radius-lg);
+}
+
+/* Modifiers: Layout */
+.btn--block {
+    width: 100%;
+}
+
+/* Modifiers: Special */
+.btn--hero-client {
+    background: white;
+    color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btn--hero-client:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Alias for backward compatibility during migration */
+.mtx-button {
+    font-weight: 700;
 }
 
 .mtx-button-primary {
-    background: linear-gradient(135deg, var(--primary-color), #2563eb);
-    color: white;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    font-weight: 700;
 }
 
 .mtx-badge {
@@ -124,11 +247,13 @@
 /* Form Elements */
 .mtx-input {
     width: 100%;
+    max-width: 100%;
     padding: 0.75rem;
     border-radius: 0.5rem;
     border: 1px solid var(--border-color);
     background-color: #f9fafb;
     transition: border-color 0.2s;
+    box-sizing: border-box;
 }
 
 .mtx-input:focus {
@@ -619,4 +744,20 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* 
+   Visual Hiding / SEO Image Replacement 
+   [ES] Oculta el contenido visualmente pero lo mantiene en el DOM para lectores de pantalla y motores de búsqueda.
+*/
+.hidden-seo {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
 }

@@ -78,8 +78,7 @@ const AdminViajes = () => {
                     {!isMobile && (
                         <button
                             onClick={() => navigate('/admin')}
-                            className="mtx-button"
-                            style={{ background: '#e5e7eb' }}
+                            className="btn btn--sm btn--ghost"
                         >
                             {t('common.back')}
                         </button>

@@ -122,7 +122,7 @@ const MotoristaProfile = () => {
                 </Button>
             </nav>
 
-            <main className="main-content-centered" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginTop: '-2rem' }}>
+            <main className="main-content-centered" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(22rem, 1fr))', gap: '2rem', marginTop: '-2rem' }}>
                 <Card className="profile-info-card">
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         👤 {t('driver_dashboard.personal_data')}
@@ -193,6 +193,33 @@ const MotoristaProfile = () => {
                             {saving ? t('common.saving') : t('common.save_changes')}
                         </Button>
                     </form>
+
+                    <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
+                        <h3 style={{ fontSize: '1rem', color: 'var(--error-color)', marginBottom: '0.5rem' }}>{t('client_profile.danger_zone')}</h3>
+                        <Button
+                            onClick={async () => {
+                                const password = window.prompt(t('client_profile.enter_password_confirm'));
+                                if (!password) return;
+
+                                if (window.confirm(t('client_profile.delete_confirm'))) {
+                                    try {
+                                        await axios.delete('/api/profile', {
+                                            data: { password }
+                                        });
+                                        toast.success(t('client_profile.account_deleted'));
+                                        logout();
+                                        navigate('/');
+                                    } catch (error) {
+                                        toast.error(error.response?.data?.message || t('client_profile.delete_error'));
+                                    }
+                                }
+                            }}
+                            variant="error"
+                            className="w-full"
+                        >
+                            {t('client_profile.delete_account')}
+                        </Button>
+                    </div>
                 </Card>
 
                 {/* Vehicle Info */}

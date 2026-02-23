@@ -58,33 +58,57 @@ class AuthController extends Controller
         ], 201);
     }
 
-    /**
-     * [ES] Autentica a un usuario y emite un token JWT.
-     * [FR] Authentifie un utilisateur et émet un jeton JWT.
-     *
-     * @param Request $request Request containing 'email' and 'password'.
-     * @return \Illuminate\Http\JsonResponse JSON response with access token, type, expiration, and user data.
-     */
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
+        // [ES] Buscamos al usuario por email para realizar la verificación manual del hash
+        // [FR] Nous recherchons l'utilisateur par e-mail pour effectuer la vérification manuelle du hash
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+
+        // [ES] Verificamos la contraseña usando la función nativa de PHP
+        // [FR] Nous vérifions le mot de passe en utilisant la fonction native de PHP
+        if (!password_verify($credentials['password'], $user->password)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+
+        // [ES] Verificamos si el hash actual cumple con el estándar Argon2id configurado
+        // [FR] Nous vérifions si le hash actuel respecte la norme Argon2id configurée
+        if (password_needs_rehash($user->password, PASSWORD_ARGON2ID, [
+            'memory_cost' => 65536,
+            'time_cost' => 4,
+            'threads' => 1
+        ])) {
+            // [ES] Actualizamos el hash de forma invisible para el usuario
+            // [FR] Nous mettons à jour le hash de manière invisible pour l'utilisateur
+            $user->password = password_hash($credentials['password'], PASSWORD_ARGON2ID, [
+                'memory_cost' => 65536,
+                'time_cost' => 4,
+                'threads' => 1
+            ]);
+            $user->save();
+            \Illuminate\Support\Facades\Log::info("Password rehashed to Argon2id for user ID: {$user->id}");
+        }
+
         try {
-            // Attempt to verify credentials and create a token
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
+            // [ES] Generamos el token JWT para el usuario validado
+            if (! $token = JWTAuth::fromUser($user)) {
+                return response()->json(['error' => 'Could not create token'], 500);
             }
         } catch (JWTException $e) {
             \Illuminate\Support\Facades\Log::error('JWT Error: ' . $e->getMessage());
             return response()->json(['error' => 'Could not create token', 'message' => $e->getMessage()], 500);
         }
 
-        // Return the token and user data structure
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            'user' => auth()->user()->load(['clienteForfaits.forfait', 'motorista_perfil']), // Eager load relationships
+            'user' => $user->load(['clienteForfaits.forfait', 'motorista_perfil']),
         ]);
     }
 
@@ -133,6 +157,16 @@ class AuthController extends Controller
 
         $user = auth()->user();
         
+        // Explicitly invalidate current token before logout
+        try {
+            $token = JWTAuth::getToken();
+            if ($token) {
+                JWTAuth::invalidate($token);
+            }
+        } catch (\Exception $e) {
+            // Silently fail if token is already invalid
+        }
+
         $this->userService->deleteUser($user);
 
         auth()->logout();

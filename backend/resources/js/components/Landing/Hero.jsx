@@ -16,7 +16,7 @@ const Hero = ({ colors }) => {
             overflow: 'hidden'
         }}>
             <div style={{ position: 'relative', zIndex: 1 }}>
-                <h1 style={{
+                <h2 style={{
                     fontSize: '3.5rem',
                     fontWeight: '900',
                     marginBottom: '1.5rem',
@@ -25,7 +25,7 @@ const Hero = ({ colors }) => {
                     letterSpacing: '-1px'
                 }}>
                     {t('landing.hero_title')}
-                </h1>
+                </h2>
                 <p style={{
                     fontSize: '1.25rem',
                     marginBottom: '2.5rem',
@@ -38,37 +38,17 @@ const Hero = ({ colors }) => {
                 </p>
                 <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button
-                        onClick={() => navigate('/register')}
-                        className="mtx-button"
-                        style={{
-                            padding: '1.25rem 3.5rem',
-                            fontSize: '1.25rem',
-                            background: 'white',
-                            color: colors.primary,
-                            border: 'none',
-                            borderRadius: '0.75rem',
-                            fontWeight: 'bold',
-                            cursor: 'pointer',
-                            boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
-                            transition: 'all 0.3s'
-                        }}
+                        onClick={() => navigate('/register?role=client')}
+                        className="btn btn--lg btn--hero-client"
                     >
-                        {t('landing.get_started')}
+                        {t('landing.role_client_title')} - {t('landing.get_started')}
                     </button>
-                    <a href="#vitrina" style={{
-                        padding: '1.25rem 2.5rem',
-                        fontSize: '1.1rem',
-                        background: 'rgba(255,255,255,0.1)',
-                        color: 'white',
-                        border: '2px solid white',
-                        borderRadius: '0.75rem',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        textDecoration: 'none',
-                        transition: 'all 0.3s'
-                    }}>
-                        {t('landing.view_plans')}
-                    </a>
+                    <button
+                        onClick={() => navigate('/register?role=driver')}
+                        className="btn btn--lg btn--secondary"
+                    >
+                        {t('landing.role_driver_title')} - {t('landing.join_title')}
+                    </button>
                 </div>
             </div>
         </section>

@@ -101,15 +101,15 @@ const ForfaitManager = () => {
 
     // Basic styling
     const styles = {
-        container: { fontFamily: 'Arial, sans-serif', padding: '20px' },
-        form: { marginBottom: '20px', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' },
-        input: { display: 'block', width: '100%', padding: '8px', margin: '10px 0', boxSizing: 'border-box' },
-        button: { padding: '10px 15px', border: 'none', borderRadius: '5px', cursor: 'pointer', background: '#007bff', color: 'white' },
-        cancelButton: { marginLeft: '10px', background: '#6c757d' },
+        container: { fontFamily: 'sans-serif', padding: '1.25rem' },
+        form: { marginBottom: '1.25rem', padding: '1.25rem', border: '1px solid #ccc', borderRadius: '0.31rem' },
+        input: { display: 'block', width: '100%', padding: '0.5rem', margin: '0.625rem 0', boxSizing: 'border-box' },
+        button: { padding: '0.625rem 0.93rem', border: 'none', borderRadius: '0.31rem', cursor: 'pointer', background: '#007bff', color: 'white' },
+        cancelButton: { marginLeft: '0.625rem', background: '#6c757d' },
         table: { width: '100%', borderCollapse: 'collapse' },
-        th: { background: '#f2f2f2', padding: '12px', border: '1px solid #ddd', textAlign: 'left' },
-        td: { padding: '8px', border: '1px solid #ddd' },
-        actionButton: { marginRight: '5px', padding: '5px 10px' }
+        th: { background: '#f2f2f2', padding: '0.75rem', border: '1px solid #ddd', textAlign: 'left' },
+        td: { padding: '0.5rem', border: '1px solid #ddd' },
+        actionButton: { marginRight: '0.31rem', padding: '0.31rem 0.625rem' }
     };
 
     if (loading) return <div>Cargando forfaits...</div>;

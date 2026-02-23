@@ -143,7 +143,7 @@ const ClienteForfaits = () => {
                 ) : (
                     <div className="forfaits-grid" style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(17rem, 1fr))',
                         gap: '1.5rem',
                         marginBottom: '3rem'
                     }}>
@@ -196,8 +196,10 @@ const ClienteForfaits = () => {
                 {selectedForfait && (
                     <Card style={{
                         marginTop: '2rem',
-                        maxWidth: '600px',
-                        margin: '0 auto'
+                        maxWidth: '38rem',
+                        width: '100%',
+                        margin: '0 auto',
+                        boxSizing: 'border-box'
                     }}>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-main)' }}>
                             <img src="/om-logo.png" onError={(e) => e.target.style.display = 'none'} alt="" style={{ height: '24px' }} />

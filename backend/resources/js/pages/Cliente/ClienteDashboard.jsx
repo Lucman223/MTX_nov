@@ -432,37 +432,13 @@ const ClienteDashboard = () => {
                                 <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: '#f3f4f6', padding: '0.4rem', borderRadius: '1rem' }}>
                                     <button
                                         onClick={() => setPuntoActivo('origen')}
-                                        style={{
-                                            flex: 1,
-                                            padding: '0.6rem',
-                                            borderRadius: '0.75rem',
-                                            border: 'none',
-                                            fontSize: '0.85rem',
-                                            fontWeight: '700',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s',
-                                            background: puntoActivo === 'origen' ? 'var(--primary-color)' : 'transparent',
-                                            color: puntoActivo === 'origen' ? 'white' : 'var(--text-muted)',
-                                            boxShadow: puntoActivo === 'origen' ? '0 4px 10px rgba(37, 99, 235, 0.2)' : 'none'
-                                        }}
+                                        className={`btn btn--block ${puntoActivo === 'origen' ? 'btn--primary' : 'btn--ghost'}`}
                                     >
                                         📍 {t('client_dashboard.origin')}
                                     </button>
                                     <button
                                         onClick={() => setPuntoActivo('destino')}
-                                        style={{
-                                            flex: 1,
-                                            padding: '0.6rem',
-                                            borderRadius: '0.75rem',
-                                            border: 'none',
-                                            fontSize: '0.85rem',
-                                            fontWeight: '700',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s',
-                                            background: puntoActivo === 'destino' ? 'var(--accent-color)' : 'transparent',
-                                            color: puntoActivo === 'destino' ? 'white' : 'var(--text-muted)',
-                                            boxShadow: puntoActivo === 'destino' ? '0 4px 10px rgba(245, 158, 11, 0.2)' : 'none'
-                                        }}
+                                        className={`btn btn--block ${puntoActivo === 'destino' ? 'btn--accent' : 'btn--ghost'}`}
                                     >
                                         🚩 {t('client_dashboard.destination')}
                                     </button>
@@ -485,19 +461,8 @@ const ClienteDashboard = () => {
                                             {addressOrigen && (
                                                 <button
                                                     onClick={() => handleClearPoint('origen')}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        right: '4.5rem',
-                                                        top: '50%',
-                                                        transform: 'translateY(-50%)',
-                                                        background: 'none',
-                                                        border: 'none',
-                                                        color: '#9ca3af',
-                                                        cursor: 'pointer',
-                                                        fontSize: '1.1rem',
-                                                        display: 'flex',
-                                                        alignItems: 'center'
-                                                    }}
+                                                    className="btn btn--sm btn--ghost"
+                                                    style={{ position: 'absolute', right: '4.5rem', top: '50%', transform: 'translateY(-50%)', border: 'none' }}
                                                     title="Clear"
                                                 >
                                                     ✕
@@ -537,19 +502,8 @@ const ClienteDashboard = () => {
                                             {addressDestino && (
                                                 <button
                                                     onClick={() => handleClearPoint('destino')}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        right: '4.5rem',
-                                                        top: '50%',
-                                                        transform: 'translateY(-50%)',
-                                                        background: 'none',
-                                                        border: 'none',
-                                                        color: '#9ca3af',
-                                                        cursor: 'pointer',
-                                                        fontSize: '1.1rem',
-                                                        display: 'flex',
-                                                        alignItems: 'center'
-                                                    }}
+                                                    className="btn btn--sm btn--ghost"
+                                                    style={{ position: 'absolute', right: '4.5rem', top: '50%', transform: 'translateY(-50%)', border: 'none' }}
                                                     title="Clear"
                                                 >
                                                     ✕
@@ -661,7 +615,8 @@ const ClienteDashboard = () => {
                                                     <button
                                                         key={star}
                                                         onClick={() => setRating(star)}
-                                                        style={{ background: 'none', border: 'none', cursor: 'pointer', outline: 'none' }}
+                                                        className="btn btn--ghost"
+                                                        style={{ border: 'none', padding: '0.25rem' }}
                                                     >
                                                         <Star
                                                             size={36}
@@ -772,10 +727,10 @@ const ClienteDashboard = () => {
                                                     </div>
 
                                                     <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
-                                                        <Button variant="outline" className="flex-1" style={{ borderColor: '#ef4444', color: '#ef4444' }}>
+                                                        <Button variant="danger" className="btn--block">
                                                             🆘 SOS
                                                         </Button>
-                                                        <Button variant="primary" className="flex-1">
+                                                        <Button variant="primary" className="btn--block">
                                                             📞 {t('common.call') || 'Llamar'}
                                                         </Button>
                                                     </div>

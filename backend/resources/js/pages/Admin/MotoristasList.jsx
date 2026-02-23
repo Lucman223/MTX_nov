@@ -112,7 +112,7 @@ const MotoristasList = () => {
                                         {motorista.motorista_perfil?.estado_validacion !== 'aprobado' && (
                                             <button
                                                 onClick={() => handleStatusChange(motorista.id, 'aprobado')}
-                                                className="text-green-600 hover:text-green-900 mr-4"
+                                                className="btn btn--sm btn--primary mr-2"
                                             >
                                                 {t('admin_dashboard.motoristas.actions.approve')}
                                             </button>
@@ -120,7 +120,7 @@ const MotoristasList = () => {
                                         {motorista.motorista_perfil?.estado_validacion !== 'rechazado' && (
                                             <button
                                                 onClick={() => handleStatusChange(motorista.id, 'rechazado')}
-                                                className="text-red-600 hover:text-red-900"
+                                                className="btn btn--sm btn--danger"
                                             >
                                                 {t('admin_dashboard.motoristas.actions.reject')}
                                             </button>
@@ -170,8 +170,8 @@ const MotoristasList = () => {
                                 {motorista.motorista_perfil?.estado_validacion !== 'aprobado' && (
                                     <button
                                         onClick={() => handleStatusChange(motorista.id, 'aprobado')}
-                                        className="mtx-button mtx-button-primary"
-                                        style={{ flex: 1, padding: '0.5rem', background: '#dcfce7', color: '#166534', borderRadius: '0.5rem' }}
+                                        className="btn btn--block btn--primary"
+                                        style={{ flex: 1 }}
                                     >
                                         ✓ {t('admin_dashboard.motoristas.actions.approve')}
                                     </button>
@@ -179,8 +179,8 @@ const MotoristasList = () => {
                                 {motorista.motorista_perfil?.estado_validacion !== 'rechazado' && (
                                     <button
                                         onClick={() => handleStatusChange(motorista.id, 'rechazado')}
-                                        className="mtx-button"
-                                        style={{ flex: 1, padding: '0.5rem', backgroundColor: '#fee2e2', color: '#991b1b', borderRadius: '0.5rem' }}
+                                        className="btn btn--block btn--danger"
+                                        style={{ flex: 1, color: 'white' }}
                                     >
                                         ✕ {t('admin_dashboard.motoristas.actions.reject')}
                                     </button>

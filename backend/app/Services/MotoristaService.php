@@ -17,6 +17,12 @@ class MotoristaService
     public function updateStatus(User $user, string $estadoActual): MotoristaPerfil
     {
         $motoristaPerfil = MotoristaPerfil::where('usuario_id', $user->id)->firstOrFail();
+        
+        // [ES] Si intenta ponerse online, verificamos acceso (viajes de prueba o suscripción)
+        if ($estadoActual === 'activo' && !$motoristaPerfil->hasAccess()) {
+            throw new \Exception('Subscription required to go online');
+        }
+
         $motoristaPerfil->update(['estado_actual' => $estadoActual]);
         return $motoristaPerfil;
     }

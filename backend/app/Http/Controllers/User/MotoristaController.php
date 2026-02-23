@@ -43,8 +43,13 @@ class MotoristaController extends Controller
                 'message' => 'Motorista status updated successfully',
                 'data' => $motoristaPerfil,
             ]);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Motorista profile not found'], 404);
+        } catch (\Exception $e) {
+            if (str_contains($e->getMessage(), 'Subscription required')) {
+                return response()->json(['error' => $e->getMessage()], 403);
+            }
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 

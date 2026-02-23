@@ -27,11 +27,11 @@ export const Button = ({
     ...props
 }) => (
     <button
-        className={`mtx-button mtx-button-${variant} ${className}`}
+        className={`btn btn--${variant} ${className}`}
         aria-label={label}
         {...props}
     >
-        {icon && <span className="mtx-button-icon">{icon}</span>}
+        {icon && <span className="btn__icon">{icon}</span>}
         {children}
     </button>
 );

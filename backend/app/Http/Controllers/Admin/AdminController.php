@@ -319,4 +319,38 @@ class AdminController extends Controller
             'recentActivity' => $recentActivity
         ]);
     }
+
+    /**
+     * [ES] Recupera el listado de usuarios con estado 'pendiente'.
+     * [FR] Récupère la liste des utilisateurs avec le statut 'en attente'.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPendingUsers()
+    {
+        $users = User::where('status', 'pendiente')->orderBy('created_at', 'desc')->get();
+        return response()->json($users);
+    }
+
+    /**
+     * [ES] Actualiza el estado de cuenta de un usuario (aprobar/rechazar/pendiente).
+     * [FR] Met à jour le statut du compte d'un utilisateur (approuver/rejeter/en attente).
+     *
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateUserStatus(Request $request, User $user)
+    {
+        $request->validate([
+            'status' => ['required', Rule::in(['pendiente', 'aprobado', 'rechazado'])],
+        ]);
+
+        $user->update(['status' => $request->status]);
+
+        return response()->json([
+            'message' => 'User status updated successfully',
+            'user' => $user,
+        ]);
+    }
 }

@@ -120,7 +120,7 @@ const ClienteProfile = () => {
                 </Button>
             </nav>
 
-            <main className="main-content-centered" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginTop: '-2rem' }}>
+            <main className="main-content-centered" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(22rem, 1fr))', gap: '2rem', marginTop: '-2rem' }}>
                 <Card className="profile-info-card">
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)' }}>
                         {t('client_profile.personal_info')}

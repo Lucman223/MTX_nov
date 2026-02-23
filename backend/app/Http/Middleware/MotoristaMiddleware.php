@@ -56,7 +56,9 @@ class MotoristaMiddleware
              
              // If we block here, we must exempt subscription routes.
              // If we block here, we must exempt subscription routes and basic profile info.
-             if (!$request->is('api/motorista/planes*') && !$request->is('api/motorista/perfil')) {
+             if (!$request->is('api/motorista/planes*') && 
+                 !$request->is('api/motorista/perfil') && 
+                 !$request->is('api/motorista/status')) {
                  return response()->json(['error' => 'Subscription required', 'code' => 'SUBSCRIPTION_REQUIRED'], 403);
              }
         }

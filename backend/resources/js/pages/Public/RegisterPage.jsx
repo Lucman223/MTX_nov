@@ -134,11 +134,12 @@ function RegisterPage() {
             />
 
             <div className="mtx-card" style={{
-                maxWidth: '500px',
+                maxWidth: '32rem',
                 width: '100%',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
                 padding: '3rem',
-                border: 'none'
+                border: 'none',
+                boxSizing: 'border-box'
             }}>
                 {/* Logo y título */}
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -301,17 +302,7 @@ function RegisterPage() {
                                 type="button"
                                 disabled={loading}
                                 onClick={() => setRol('cliente')}
-                                style={{
-                                    padding: '1rem',
-                                    background: rol === 'cliente' ? colors.primary : 'white',
-                                    color: rol === 'cliente' ? 'white' : colors.primary,
-                                    border: `2px solid ${colors.primary}`,
-                                    borderRadius: '0.75rem',
-                                    fontWeight: 'bold',
-                                    cursor: loading ? 'not-allowed' : 'pointer',
-                                    transition: 'all 0.2s',
-                                    opacity: loading && rol !== 'cliente' ? 0.5 : 1
-                                }}
+                                className={`btn btn--block ${rol === 'cliente' ? 'btn--primary' : 'btn--ghost'}`}
                             >
                                 {t('auth.role_client')}
                             </button>
@@ -319,17 +310,7 @@ function RegisterPage() {
                                 type="button"
                                 disabled={loading}
                                 onClick={() => setRol('motorista')}
-                                style={{
-                                    padding: '1rem',
-                                    background: rol === 'motorista' ? colors.secondary : 'white',
-                                    color: rol === 'motorista' ? 'white' : colors.secondary,
-                                    border: `2px solid ${colors.secondary}`,
-                                    borderRadius: '0.75rem',
-                                    fontWeight: 'bold',
-                                    cursor: loading ? 'not-allowed' : 'pointer',
-                                    transition: 'all 0.2s',
-                                    opacity: loading && rol !== 'motorista' ? 0.5 : 1
-                                }}
+                                className={`btn btn--block ${rol === 'motorista' ? 'btn--secondary' : 'btn--ghost'}`}
                             >
                                 {t('auth.role_driver')}
                             </button>
@@ -385,9 +366,8 @@ function RegisterPage() {
 
                     <button
                         type="submit"
-                        className="mtx-button mtx-button-primary w-full"
+                        className={`btn btn--block ${rol === 'motorista' ? 'btn--secondary' : 'btn--primary'}`}
                         disabled={loading}
-                        style={{ background: getRoleColor(), boxShadow: `0 4px 12px ${getRoleColor()}40` }}
                     >
                         {loading ? t('common.loading') : t('common.register')}
                     </button>
@@ -404,14 +384,7 @@ function RegisterPage() {
                     </p>
                     <Link
                         to="/login"
-                        className="mtx-button"
-                        style={{
-                            display: 'inline-flex',
-                            background: 'white',
-                            color: getRoleColor(),
-                            border: `2px solid ${getRoleColor()}`,
-                            width: 'auto'
-                        }}
+                        className="btn btn--ghost"
                     >
                         {t('common.login')}
                     </Link>

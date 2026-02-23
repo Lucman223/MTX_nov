@@ -82,7 +82,17 @@
         "error": "Error",
         "edit": "Editar",
         "refresh": "Actualizar",
-        "date_locale": "es-ES"
+        "date_locale": "es-ES",
+        "name": "Nombre",
+        "email": "Email",
+        "role": "Rol",
+        "date": "Fecha",
+        "actions": "Acciones",
+        "approve": "Aprobar",
+        "reject": "Rechazar",
+        "search": "Buscar...",
+        "error_loading_data": "Error al cargar los datos",
+        "error_updating_status": "Error al actualizar el estado"
     },
     "auth": {
         "welcome_title": "Bienvenido a MotoTX",
@@ -93,7 +103,6 @@
         "have_account": "¿Ya tienes una cuenta?",
         "logging_in": "Iniciando sesión...",
         "login_error": "Error en el inicio de sesión.",
-        "name": "Nombre Completo",
         "phone": "Teléfono",
         "password_confirm": "Confirmar Contraseña",
         "i_want_to_be": "Quiero ser:",
@@ -111,6 +120,11 @@
         "file_too_large": "El archivo es demasiado grande (máx 2MB)",
         "invalid_file_type": "Formato no válido (solo PDF, JPG, PNG)",
         "identity_document_required": "El documento de identidad es obligatorio"
+    },
+    "roles": {
+        "admin": "Administrador",
+        "motorista": "Motorista",
+        "cliente": "Cliente"
     },
     "nav": {
         "admin_title": "MotoTX Admin",
@@ -290,6 +304,13 @@
                 "label_description": "Descripción",
                 "save": "Guardar Forfait",
                 "cancel": "Cancelar"
+            },
+            "users": {
+                "pending_title": "Usuarios Pendientes",
+                "pending_desc": "Revisar y aprobar nuevos registros",
+                "status_updated_aprobado": "Usuario aprobado con éxito",
+                "status_updated_rechazado": "Usuario rechazado",
+                "no_pending": "No hay usuarios pendientes de aprobación"
             }
         }
     },
@@ -427,6 +448,7 @@
     },
     "seo": {
         "landing_title": "MotoTX: Mototaxi Seguro en Bamako | Transporte Líder en Mali",
+        "landing_h1": "Reserva tu Transporte en Bamako: Taxis y Moto Taxis Seguros",
         "landing_desc": "Reserva tu mototaxi en Bamako con MotoTX. Seguridad garantizada, tracking en tiempo real y los mejores precios con nuestros Forfaits exclusivos.",
         "login_title": "Iniciar Sesión - MotoTX",
         "login_desc": "Inicia sesión en tu cuenta de MotoTX para gestionar tus viajes o tu actividad como conductor.",
