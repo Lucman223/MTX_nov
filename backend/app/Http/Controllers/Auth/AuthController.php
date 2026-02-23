@@ -70,28 +70,16 @@ class AuthController extends Controller
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        // [ES] Verificamos la contraseña usando la función nativa de PHP
-        // [FR] Nous vérifions le mot de passe en utilisant la fonction native de PHP
-        if (!password_verify($credentials['password'], $user->password)) {
+        // [ES] Verificamos la contraseña usando la fachada Hash de Laravel (más compatible)
+        if (!\Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        // [ES] Verificamos si el hash actual cumple con el estándar Argon2id configurado
-        // [FR] Nous vérifions si le hash actuel respecte la norme Argon2id configurée
-        if (password_needs_rehash($user->password, PASSWORD_ARGON2ID, [
-            'memory_cost' => 65536,
-            'time_cost' => 4,
-            'threads' => 1
-        ])) {
-            // [ES] Actualizamos el hash de forma invisible para el usuario
-            // [FR] Nous mettons à jour le hash de manière invisible pour l'utilisateur
-            $user->password = password_hash($credentials['password'], PASSWORD_ARGON2ID, [
-                'memory_cost' => 65536,
-                'time_cost' => 4,
-                'threads' => 1
-            ]);
+        // [ES] Verificamos si el hash necesita actualización según el driver configurado (.env)
+        if (\Illuminate\Support\Facades\Hash::needsRehash($user->password)) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($credentials['password']);
             $user->save();
-            \Illuminate\Support\Facades\Log::info("Password rehashed to Argon2id for user ID: {$user->id}");
+            \Illuminate\Support\Facades\Log::info("Password rehashed for user ID: {$user->id}");
         }
 
         try {
