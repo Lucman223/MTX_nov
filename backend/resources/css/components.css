@@ -292,6 +292,11 @@
     align-items: center;
 }
 
+/* Hidden on desktop, shown as compact badge on mobile */
+.mobile-balance-badge {
+    display: none;
+}
+
 .mtx-header-brand {
     display: flex;
     align-items: center;
@@ -338,6 +343,12 @@
 @media (max-width: 768px) {
     .desktop-nav {
         display: none;
+    }
+
+    .mobile-balance-badge {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
     }
 
     .mtx-header {

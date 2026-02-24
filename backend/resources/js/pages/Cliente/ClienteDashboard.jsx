@@ -393,7 +393,7 @@ const ClienteDashboard = () => {
                 </div>
             </header>
 
-            {/* Mobile Bottom Nav */}
+            {/* Mobile Bottom Nav — 3 items only for clean mobile layout */}
             <nav className="mobile-bottom-nav">
                 <Button variant="ghost" className="active" label={t('nav.dashboard')}>
                     <span style={{ fontSize: '1.25rem' }}>🏠</span>
@@ -406,10 +406,6 @@ const ClienteDashboard = () => {
                 <Button variant="ghost" onClick={() => navigate('/cliente/perfil')} label={t('client_dashboard.profile')}>
                     <span style={{ fontSize: '1.25rem' }}>👤</span>
                     {t('client_dashboard.profile')}
-                </Button>
-                <Button variant="ghost" onClick={handleLogout} label={t('common.logout')} className="text-error">
-                    <span style={{ fontSize: '1.25rem' }}>🚪</span>
-                    {t('common.logout')}
                 </Button>
             </nav>
 
@@ -429,16 +425,18 @@ const ClienteDashboard = () => {
                                 </p>
 
                                 {/* Mode Selector Toggles */}
-                                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: '#f3f4f6', padding: '0.4rem', borderRadius: '1rem' }}>
+                                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: '#f3f4f6', padding: '0.4rem', borderRadius: '1rem', overflow: 'hidden' }}>
                                     <button
                                         onClick={() => setPuntoActivo('origen')}
                                         className={`btn btn--block ${puntoActivo === 'origen' ? 'btn--primary' : 'btn--ghost'}`}
+                                        style={{ flex: 1, minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: '0.85rem' }}
                                     >
                                         📍 {t('client_dashboard.origin')}
                                     </button>
                                     <button
                                         onClick={() => setPuntoActivo('destino')}
                                         className={`btn btn--block ${puntoActivo === 'destino' ? 'btn--accent' : 'btn--ghost'}`}
+                                        style={{ flex: 1, minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: '0.85rem' }}
                                     >
                                         🚩 {t('client_dashboard.destination')}
                                     </button>
