@@ -18,6 +18,7 @@ import AdminViajes from './pages/Admin/Viajes/AdminViajes';
 import AdminReportes from './pages/Admin/Reports/AdminReportes';
 import AdminClientes from './pages/Admin/Clientes/AdminClientes';
 import AdminUserApproval from './pages/Admin/Users/AdminUserApproval';
+import AdminProfile from './pages/Admin/AdminProfile';
 
 import ClienteDashboard from './pages/Cliente/ClienteDashboard.jsx';
 import ClienteForfaits from './pages/Cliente/ClienteForfaits.jsx';
@@ -94,6 +95,7 @@ function AppContent() {
                         <Route path="clientes" element={<AdminClientes />} />
                         <Route path="reportes" element={<AdminReportes />} />
                         <Route path="aprobaciones" element={<AdminUserApproval />} />
+                        <Route path="perfil" element={<AdminProfile />} />
                     </Route>
                 </Route>
 

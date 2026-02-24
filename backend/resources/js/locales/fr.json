@@ -313,14 +313,15 @@
                 "label_description": "Description",
                 "save": "Enregistrer le Forfait",
                 "cancel": "Annuler"
-            },
-            "users": {
-                "pending_title": "Utilisateurs en Attente",
-                "pending_desc": "Réviser et approuver les nouveaux enregistrements",
-                "status_updated_aprobado": "Utilisateur approuvé avec succès",
-                "status_updated_rechazado": "Utilisateur rejeté",
-                "no_pending": "Aucun utilisateur en attente d'approbation"
             }
+        },
+        "users": {
+            "pending_title": "Utilisateurs en Attente",
+            "pending_desc": "Réviser et approuver les nouveaux enregistrements",
+            "status_updated_aprobado": "Utilisateur approuvé avec succès",
+            "status_updated_rechazado": "Utilisateur rejeté",
+            "no_pending": "Aucun utilisateur en attente d'approbation",
+            "no_per": "Aucun utilisateur en attente"
         }
     },
     "rating_modal": {

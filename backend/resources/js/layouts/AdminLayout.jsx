@@ -55,6 +55,9 @@ const AdminLayout = () => {
                     <Link to="/admin/aprobaciones" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 hover:text-white">
                         ✅ {t('admin_dashboard.users.pending_title')}
                     </Link>
+                    <Link to="/admin/perfil" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 hover:text-white">
+                        👤 {t('client_dashboard.profile')}
+                    </Link>
                 </nav>
                 <div className="p-4 border-t border-gray-700">
                     <button
@@ -90,19 +93,19 @@ const AdminLayout = () => {
                 <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around p-3 shadow-lg z-50">
                     <Link to="/admin" className="flex flex-col items-center text-indigo-600">
                         <span className="text-xl">📊</span>
-                        <span className="text-xs mt-1">Stats</span>
+                        <span className="text-xs mt-1">{t('nav.dashboard')}</span>
                     </Link>
-                    <Link to="/admin/motoristas" className="flex flex-col items-center text-gray-500">
-                        <span className="text-xl">🏍️</span>
-                        <span className="text-xs mt-1">Motos</span>
+                    <Link to="/admin/viajes" className="flex flex-col items-center text-gray-500">
+                        <span className="text-xl">📋</span>
+                        <span className="text-xs mt-1">{t('client_dashboard.history')}</span>
                     </Link>
-                    <Link to="/admin/clientes" className="flex flex-col items-center text-gray-500">
-                        <span className="text-xl">👥</span>
-                        <span className="text-xs mt-1">Users</span>
+                    <Link to="/admin/perfil" className="flex flex-col items-center text-gray-500">
+                        <span className="text-xl">👤</span>
+                        <span className="text-xs mt-1">{t('client_dashboard.profile')}</span>
                     </Link>
                     <button onClick={handleLogout} className="flex flex-col items-center text-red-500">
                         <span className="text-xl">🚪</span>
-                        <span className="text-xs mt-1">Salir</span>
+                        <span className="text-xs mt-1">{t('common.logout')}</span>
                     </button>
                 </div>
             </div>

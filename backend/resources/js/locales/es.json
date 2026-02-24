@@ -333,14 +333,15 @@
                 "label_description": "Descripción",
                 "save": "Guardar Forfait",
                 "cancel": "Cancelar"
-            },
-            "users": {
-                "pending_title": "Usuarios Pendientes",
-                "pending_desc": "Revisar y aprobar nuevos registros",
-                "status_updated_aprobado": "Usuario aprobado con éxito",
-                "status_updated_rechazado": "Usuario rechazado",
-                "no_pending": "No hay usuarios pendientes de aprobación"
             }
+        },
+        "users": {
+            "pending_title": "Usuarios Pendientes",
+            "pending_desc": "Revisar y aprobar nuevos registros",
+            "status_updated_aprobado": "Usuario aprobado con éxito",
+            "status_updated_rechazado": "Usuario rechazado",
+            "no_pending": "No hay usuarios pendientes de aprobación",
+            "no_per": "Sin usuarios pendientes"
         }
     },
     "rating_modal": {
