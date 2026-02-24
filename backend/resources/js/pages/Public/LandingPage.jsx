@@ -11,6 +11,14 @@ import HowItWorksSteps from '../../components/Landing/HowItWorksSteps';
 import RoadmapSection from '../../components/Landing/RoadmapSection';
 import DriverBanner from '../../components/Landing/DriverBanner';
 
+// Expanded Content Components
+import StatsBar from '../../components/Landing/StatsBar';
+import SafetyProtocol from '../../components/Landing/SafetyProtocol';
+import ForfaitsModern from '../../components/Landing/ForfaitsModern';
+import Testimonials from '../../components/Landing/Testimonials';
+import FAQSection from '../../components/Landing/FAQSection';
+import ModernContact from '../../components/Landing/ModernContact';
+
 /**
  * LandingPage Component
  * Rebuilt to focus on passenger transport with a modern, high-conversion structure.
@@ -67,10 +75,16 @@ const LandingPage = () => {
 
             <main>
                 <MotoHero colors={colors} />
+                <StatsBar />
                 <BenefitsGrid />
                 <HowItWorksSteps />
+                <SafetyProtocol />
+                <ForfaitsModern />
+                <Testimonials />
                 <RoadmapSection />
                 <DriverBanner />
+                <FAQSection />
+                <ModernContact />
             </main>
 
             {/* Basic Footer */}
