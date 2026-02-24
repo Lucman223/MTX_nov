@@ -106,6 +106,10 @@ const ClienteForfaits = () => {
         const successMsg = msg || t('client_forfaits.purchase_success');
         toast.success(successMsg);
         setStatusMessage({ type: 'success', text: successMsg });
+
+        // Refresh local user state (viajes_restantes)
+        refreshUser();
+
         setTimeout(() => {
             setSelectedForfait(null);
             setPhoneNumber('');

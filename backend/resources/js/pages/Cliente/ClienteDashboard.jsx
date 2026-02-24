@@ -363,13 +363,9 @@ const ClienteDashboard = () => {
                             {user?.email === 'cliente@test.com' ? t('auth.role_client') + ' (Demo)' : user?.name || t('auth.role_client')}
                         </span>
                     </div>
-                    {/* Badge inside brand row — shown on mobile only via CSS */}
-                    <div className="mobile-balance-badge" style={{ marginLeft: 'auto', flexShrink: 0 }}>
-                        <Badge variant="premium">{viajesDisponibles} 🎫</Badge>
-                    </div>
                 </div>
 
-                {/* Desktop Nav */}
+                {/* Desktop/Tablet Nav */}
                 <div className="desktop-nav" style={{ gap: '1rem', alignItems: 'center' }}>
                     <Badge variant="premium">
                         {t('client_dashboard.trips_badge', { count: viajesDisponibles })}

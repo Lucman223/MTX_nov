@@ -18,14 +18,35 @@ class OrangeMoneyService
     }
 
     /**
+     * [ES] Inicia un pago (Método llamado por ClienteForfaitController).
+     */
+    public function initiatePayment($phone, $amount)
+    {
+        return [
+            'status' => 'pending',
+            'order_id' => 'TRX-' . Str::random(10),
+            'message' => 'Simulated: Please confirm on your mobile'
+        ];
+    }
+
+    /**
+     * [ES] Verifica el estado (Método llamado por ClienteForfaitController).
+     */
+    public function checkStatus($orderId)
+    {
+        // En simulación, siempre retornamos SUCCESS para que el flujo avance
+        return [
+            'status' => 'SUCCESS',
+            'message' => 'Payment simulated successfully'
+        ];
+    }
+
+    /**
      * Simula la inicialización de un pago web con Orange Money.
      */
     public function webPayment($amount, $orderId, $returnUrl, $cancelUrl)
     {
-        // Simulación: En un entorno real haríamos un POST a la API de OM
-        // $response = Http::withHeaders([...])->post(...);
-
-        // Generamos un token de pago simulado
+        // ... (existing code for other controllers)
         $payToken = 'MP-' . Str::random(20);
         
         return [

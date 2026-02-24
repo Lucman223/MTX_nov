@@ -11,11 +11,18 @@ window.Pusher = Pusher;
 
 if (import.meta.env.VITE_PUSHER_APP_KEY) {
     const scheme = import.meta.env.VITE_PUSHER_SCHEME ?? 'https';
+    const host = import.meta.env.VITE_PUSHER_HOST;
+
+    // [ES] Evitar ERR_NAME_NOT_RESOLVED: Si el host es localhost o vacío y estamos en producción, usar el hostname actual
+    const finalHost = (host && host !== 'localhost' && host !== '127.0.0.1')
+        ? host
+        : window.location.hostname;
+
     window.Echo = new Echo({
         broadcaster: 'reverb',
         key: import.meta.env.VITE_PUSHER_APP_KEY,
-        wsHost: import.meta.env.VITE_PUSHER_HOST ?? window.location.hostname,
-        wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
+        wsHost: finalHost,
+        wsPort: import.meta.env.VITE_PUSHER_PORT ?? (scheme === 'https' ? 443 : 80),
         wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
         forceTLS: scheme === 'https',
         enabledTransports: ['ws', 'wss'],
