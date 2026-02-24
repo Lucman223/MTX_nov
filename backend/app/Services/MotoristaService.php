@@ -57,6 +57,10 @@ class MotoristaService
     public function updateValidationStatus(User $user, string $estadoValidacion): MotoristaPerfil
     {
         $motoristaPerfil = MotoristaPerfil::where('usuario_id', $user->id)->firstOrFail();
+        
+        // [ES] Sincronizamos con el estado de la cuenta principal para que los banners desaparezcan
+        $user->update(['status' => $estadoValidacion]);
+        
         $motoristaPerfil->update(['estado_validacion' => $estadoValidacion]);
         return $motoristaPerfil;
     }

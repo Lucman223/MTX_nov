@@ -25,7 +25,7 @@ import { Star, LayoutDashboard, History, User, LogOut, Crown } from 'lucide-reac
  * @component
  */
 const MotoristaDashboard = () => {
-    const { logout, user } = useAuth();
+    const { logout, user, refreshUser } = useAuth();
     const { t } = useTranslation();
     const navigate = useNavigate();
 
@@ -99,6 +99,7 @@ const MotoristaDashboard = () => {
     // ... (rest of useEffects) ...
 
     useEffect(() => {
+        refreshUser();
         fetchData();
         const interval = setInterval(fetchData, 10000);
 
@@ -397,6 +398,28 @@ const MotoristaDashboard = () => {
                             <strong>{t('common.account_pending_title')}</strong>
                             <p style={{ margin: 0, fontSize: '0.875rem' }}>{t('common.account_pending_desc')}</p>
                         </div>
+                    </div>
+                )}
+                {user?.status === 'aprobado' && profile && profile.viajes_prueba_restantes === 0 && !profile.suscripcion_activa && (
+                    <div className="alert alert--warning mb-4" style={{
+                        background: '#fff7ed',
+                        color: '#9a3412',
+                        padding: '1rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid #fb923c',
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '1.5rem' }}>👑</span>
+                            <strong>{t('driver_dashboard.access_blocked')}</strong>
+                        </div>
+                        <p style={{ margin: '0 0 1rem 0', fontSize: '0.875rem' }}>{t('driver_dashboard.blocked_desc')}</p>
+                        <Button
+                            onClick={() => navigate('/motorista/suscripciones')}
+                            className="btn btn--block"
+                            style={{ backgroundColor: '#f97316', color: 'white', border: 'none' }}
+                        >
+                            {t('driver_dashboard.activate_plan')}
+                        </Button>
                     </div>
                 )}
                 {loading && <div className="loading-state">{t('common.loading')}</div>}

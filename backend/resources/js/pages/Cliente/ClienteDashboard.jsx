@@ -37,7 +37,7 @@ const safeParseCoord = (val, label = 'unknown') => {
 };
 
 const ClienteDashboard = () => {
-    const { logout, user } = useAuth();
+    const { logout, user, refreshUser } = useAuth();
     const { t } = useTranslation();
     const navigate = useNavigate();
 

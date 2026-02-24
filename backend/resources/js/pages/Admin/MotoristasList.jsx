@@ -48,7 +48,11 @@ const MotoristasList = () => {
         try {
             await axios.put(`/api/admin/motoristas/${id}/status`, { estado_validacion: newStatus });
             setMotoristas(prev => Array.isArray(prev) ? prev.map(m =>
-                m.id === id ? { ...m, motorista_perfil: { ...m.motorista_perfil, estado_validacion: newStatus } } : m
+                m.id === id ? {
+                    ...m,
+                    status: newStatus,
+                    motorista_perfil: { ...m.motorista_perfil, estado_validacion: newStatus }
+                } : m
             ) : []);
         } catch (error) {
             toast.error(t('common.error'));
