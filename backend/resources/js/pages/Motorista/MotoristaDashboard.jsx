@@ -54,25 +54,29 @@ const MotoristaDashboard = () => {
 
     const fetchData = async (isManual = false) => {
         if (!isManual) setLoading(true);
+        // Cache-buster to prevent browser from returning old state
+        const ts = Date.now();
         try {
             // Fetch Stats
             try {
-                const statsRes = await axios.get('/api/motorista/stats');
+                const statsRes = await axios.get(`/api/motorista/stats?t=${ts}`);
                 setStats(statsRes.data);
             } catch (e) { }
 
             // Fetch Profile (Wallet Balance & Status)
             try {
-                const profileRes = await axios.get('/api/motorista/perfil');
+                const profileRes = await axios.get(`/api/motorista/perfil?t=${ts}`);
                 setProfile(profileRes.data);
 
-                // Only sync online status IF we aren't currently in the middle of a manual toggle
+                // CRITICAL: Only sync online status IF we aren't currently in a manual toggle
+                // AND we wait a bit longer to ensure the server DB write is fully committed and visible to follow-up GETs
                 if (!statusLockRef.current) {
-                    setIsOnline(profileRes.data.estado_actual === 'activo');
+                    const serverIsOnline = profileRes.data.estado_actual === 'activo';
+                    setIsOnline(serverIsOnline);
                 }
             } catch (e) { }
 
-            const activeRes = await axios.get('/api/viajes/actual');
+            const activeRes = await axios.get(`/api/viajes/actual?t=${ts}`);
             if (activeRes.data && activeRes.data.id) {
                 const trip = activeRes.data;
                 trip.origen_lat = parseFloat(trip.origen_lat);
@@ -83,7 +87,7 @@ const MotoristaDashboard = () => {
                 setViajes([]);
             } else {
                 setCurrentTrip(null);
-                const pendingRes = await axios.get('/api/motorista/viajes/solicitados');
+                const pendingRes = await axios.get(`/api/motorista/viajes/solicitados?t=${ts}`);
                 setViajes(Array.isArray(pendingRes.data) ? pendingRes.data : []);
             }
         } finally {
@@ -176,14 +180,15 @@ const MotoristaDashboard = () => {
                 return t('driver_dashboard.update_error');
             },
             finally: () => {
-                // Release toggle block after a small delay to ensure React state settled
+                // Unlock the spinner quickly so the button feels responsive
                 setTimeout(() => {
                     setIsTogglingStatus(false);
-                    // Polling lock stays a bit longer to allow backend cache to clear
-                    setTimeout(() => {
-                        statusLockRef.current = false;
-                    }, 3000);
                 }, 500);
+                // Keep the polling lock for 12s — longer than the 10s poll interval.
+                // This guarantees the background GET cannot overwrite a fresh manual toggle.
+                setTimeout(() => {
+                    statusLockRef.current = false;
+                }, 12000);
             }
         });
     };
