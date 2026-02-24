@@ -11,7 +11,7 @@ import { Card, Button, Badge, Modal } from '../../components/Common/UIComponents
 import LanguageSwitcher from '../../components/Common/LanguageSwitcher';
 import TripPhaseTracker from '../../components/Viaje/TripPhaseTracker';
 import '../../../css/components.css';
-import { Star, LayoutDashboard, History, User, LogOut } from 'lucide-react';
+import { Star, LayoutDashboard, History, User, LogOut, Crown } from 'lucide-react';
 
 /**
  * MotoristaDashboard Component
@@ -354,6 +354,10 @@ const MotoristaDashboard = () => {
                     <History size={20} />
                     {t('client_dashboard.history')}
                 </Button>
+                <Button variant="ghost" onClick={() => navigate('/motorista/suscripciones')} label={t('nav.forfaits')}>
+                    <Crown size={20} />
+                    {t('nav.forfaits')}
+                </Button>
                 <Button variant="ghost" onClick={() => navigate('/motorista/perfil')} label={t('client_dashboard.profile')}>
                     <User size={20} />
                     {t('client_dashboard.profile')}
@@ -368,214 +372,230 @@ const MotoristaDashboard = () => {
                 {geoError && (
                     <div className="alert alert--error mb-4" style={{
                         background: '#fee2e2',
-                        border: '1px solid #ef4444',
+                        color: '#991b1b',
                         padding: '1rem',
-                        borderRadius: '12px',
-                        marginBottom: '1.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.75rem',
-                        color: '#b91c1c'
+                        borderRadius: '0.5rem',
+                        border: '1px solid #f87171'
                     }}>
-                        <div style={{ fontSize: '1.5rem' }}>📍</div>
-                        <div>
-                            <div style={{ fontWeight: 'bold' }}>{t('driver_dashboard.geo_error_title') || 'Error de Ubicación'}</div>
-                            <p style={{ margin: 0, fontSize: '0.9rem' }}>
-                                {geoError === 'denied'
-                                    ? (t('driver_dashboard.geo_error_denied') || 'Permiso de GPS denegado. Debes activarlo para ser visible.')
-                                    : (t('driver_dashboard.geo_error_generic') || 'No se puede obtener tu ubicación actual.')}
-                            </p>
-                        </div>
+                        <strong>⚠️ {t('common.error')}:</strong> {geoError}
                     </div>
                 )}
 
+                {user?.status === 'pendiente' && (
+                    <div className="alert alert--warning mb-4" style={{
+                        background: '#fff7ed',
+                        color: '#9a3412',
+                        padding: '1rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid #fb923c',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem'
+                    }}>
+                        <span style={{ fontSize: '1.5rem' }}>⏳</span>
+                        <div>
+                            <strong>{t('common.account_pending_title')}</strong>
+                            <p style={{ margin: 0, fontSize: '0.875rem' }}>{t('common.account_pending_desc')}</p>
+                        </div>
+                    </div>
+                )}
                 {loading && <div className="loading-state">{t('common.loading')}</div>}
 
                 {/* Wallet Card */}
-                {profile && (
-                    <Card className="wallet-card">
-                        <div className="wallet-info">
-                            <div className="wallet-label">{t('driver_dashboard.wallet_title')}</div>
-                            <div className="wallet-amount">
-                                {profile.billetera} <span className="currency">CFA</span>
+
+                {/* Wallet Card */}
+                {
+                    profile && (
+                        <Card className="wallet-card">
+                            <div className="wallet-info">
+                                <div className="wallet-label">{t('driver_dashboard.wallet_title')}</div>
+                                <div className="wallet-amount">
+                                    {profile.billetera} <span className="currency">CFA</span>
+                                </div>
+                                <div className="wallet-desc">{t('driver_dashboard.payout_daily_desc')}</div>
                             </div>
-                            <div className="wallet-desc">{t('driver_dashboard.payout_daily_desc')}</div>
-                        </div>
 
-                        <div className="wallet-actions">
-                            <Button
-                                onClick={handleWithdraw}
-                                disabled={profile.billetera <= 0}
-                                className="btn btn--block btn--primary"
-                                style={{ background: 'white', color: 'var(--secondary-color)', border: 'none' }}
-                            >
-                                💸 {t('driver_dashboard.withdraw_btn')}
-                            </Button>
-
-                            <div className="stats-row" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <div className="wallet-actions">
                                 <Button
-                                    onClick={() => navigate('/motorista/finanzas')}
-                                    className="btn--sm btn--ghost"
-                                    style={{ padding: '0.4rem', color: 'white' }}
+                                    onClick={handleWithdraw}
+                                    disabled={profile.billetera <= 0}
+                                    className="btn btn--block btn--primary"
+                                    style={{ background: 'white', color: 'var(--secondary-color)', border: 'none' }}
                                 >
-                                    💰 {t('driver_dashboard.view_finances')}
+                                    💸 {t('driver_dashboard.withdraw_btn')}
                                 </Button>
-                                <div className="stat-item">
-                                    <div className="stat-label">{t('driver_dashboard.trips_today')}</div>
-                                    <div className="stat-value">{stats?.today_trips || 0}</div>
-                                </div>
-                                <div className="stat-item highlight">
-                                    <div className="stat-label">⚡ {t('driver_dashboard.savings')}</div>
-                                    <div className="stat-value">{stats?.commission_saved || 0} CFA</div>
+
+                                <div className="stats-row" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                    <Button
+                                        onClick={() => navigate('/motorista/finanzas')}
+                                        className="btn--sm btn--ghost"
+                                        style={{ padding: '0.4rem', color: 'white' }}
+                                    >
+                                        💰 {t('driver_dashboard.view_finances')}
+                                    </Button>
+                                    <div className="stat-item">
+                                        <div className="stat-label">{t('driver_dashboard.trips_today')}</div>
+                                        <div className="stat-value">{stats?.today_trips || 0}</div>
+                                    </div>
+                                    <div className="stat-item highlight">
+                                        <div className="stat-label">⚡ {t('driver_dashboard.savings')}</div>
+                                        <div className="stat-value">{stats?.commission_saved || 0} CFA</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </Card>
-                )}
+                        </Card>
+                    )
+                }
 
                 {/* Active Trip */}
-                {currentTrip && (
-                    <Card accent className="active-trip-card">
-                        <h2 className="card-title-active">🚀 {t('client_dashboard.trip_active')}</h2>
+                {
+                    currentTrip && (
+                        <Card accent className="active-trip-card">
+                            <h2 className="card-title-active">🚀 {t('client_dashboard.trip_active')}</h2>
 
-                        <TripPhaseTracker estado={currentTrip.estado} />
+                            <TripPhaseTracker estado={currentTrip.estado} />
 
-                        <div className="trip-details-grid">
-                            <div className="detail-item">
-                                <div className="detail-label">{t('client_dashboard.client')}</div>
-                                <div className="detail-value">{currentTrip.cliente?.name || 'N/A'}</div>
-                            </div>
-                            <div className="detail-item">
-                                <div className="detail-label">{t('client_dashboard.state')}</div>
-                                <div className="detail-value status-active" style={{ textTransform: 'capitalize' }}>
-                                    {t(`status.${currentTrip.estado}`)}
+                            <div className="trip-details-grid">
+                                <div className="detail-item">
+                                    <div className="detail-label">{t('client_dashboard.client')}</div>
+                                    <div className="detail-value">{currentTrip.cliente?.name || 'N/A'}</div>
+                                </div>
+                                <div className="detail-item">
+                                    <div className="detail-label">{t('client_dashboard.state')}</div>
+                                    <div className="detail-value status-active" style={{ textTransform: 'capitalize' }}>
+                                        {t(`status.${currentTrip.estado}`)}
+                                    </div>
+                                </div>
+                                <div className="detail-item col-span-2">
+                                    <div className="detail-label">📍 {t('client_dashboard.origin')}</div>
+                                    <div className="detail-value">{currentTrip.origen || `${currentTrip.origen_lat}, ${currentTrip.origen_lng}`}</div>
+                                </div>
+                                <div className="detail-item col-span-2">
+                                    <div className="detail-label">🏁 {t('client_dashboard.destination')}</div>
+                                    <div className="detail-value">{currentTrip.destino || `${currentTrip.destino_lat}, ${currentTrip.destino_lng}`}</div>
                                 </div>
                             </div>
-                            <div className="detail-item col-span-2">
-                                <div className="detail-label">📍 {t('client_dashboard.origin')}</div>
-                                <div className="detail-value">{currentTrip.origen || `${currentTrip.origen_lat}, ${currentTrip.origen_lng}`}</div>
-                            </div>
-                            <div className="detail-item col-span-2">
-                                <div className="detail-label">🏁 {t('client_dashboard.destination')}</div>
-                                <div className="detail-value">{currentTrip.destino || `${currentTrip.destino_lat}, ${currentTrip.destino_lng}`}</div>
-                            </div>
-                        </div>
 
-                        <div className="trip-actions">
-                            <Button onClick={openGoogleMaps} variant="outline" className="w-full mb-2">
-                                🗺️ Navegar con Maps
-                            </Button>
-
-                            {currentTrip.estado === 'aceptado' && (
-                                <Button onClick={() => handleUpdateStatus('en_curso')} className="w-full">
-                                    {t('driver_dashboard.start_trip')}
+                            <div className="trip-actions">
+                                <Button onClick={openGoogleMaps} variant="outline" className="w-full mb-2">
+                                    🗺️ Navegar con Maps
                                 </Button>
-                            )}
-                            {currentTrip.estado === 'en_curso' && (
-                                <Button onClick={() => handleUpdateStatus('completado')} variant="secondary" className="w-full">
-                                    {t('driver_dashboard.complete_trip')}
-                                </Button>
-                            )}
-                        </div>
-                    </Card>
-                )}
 
-                {!currentTrip && (
-                    <div className="requests-section">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h2 className="section-title" style={{ margin: 0 }}>📋 {t('driver_dashboard.pending_requests')}</h2>
-                            <Button
-                                onClick={fetchData}
-                                variant="ghost"
-                                style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                            >
-                                🔄 {t('common.refresh')}
-                            </Button>
-                        </div>
-                        {(Array.isArray(viajes) && viajes.length === 0) ? (
-                            <Card className="empty-state">
-                                <div className="empty-icon">🔍</div>
-                                <p className="empty-text">{t('driver_dashboard.no_requests')}</p>
-                            </Card>
-                        ) : (
-                            <div className="requests-grid">
-                                {Array.isArray(viajes) && viajes.map((viaje) => (
-                                    <Card key={viaje.id} className="request-item-card">
-                                        <div className="request-header">
-                                            <div>
-                                                <div className="detail-label">{t('client_dashboard.client')}</div>
-                                                <div className="detail-value" style={{ fontWeight: 'bold' }}>{viaje.cliente?.name || 'N/A'}</div>
-                                            </div>
-                                            <Badge variant="accent">{t('driver_dashboard.new_tag')}</Badge>
-                                        </div>
-
-                                        <div className="request-body" style={{ margin: '0.75rem 0', fontSize: '0.85rem' }}>
-                                            <div style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
-                                                📍 <span style={{ color: 'var(--text-main)' }}>{viaje.origen || t('common.loading')}</span>
-                                            </div>
-                                            <div style={{ color: 'var(--text-muted)' }}>
-                                                🏁 <span style={{ color: 'var(--text-main)' }}>{viaje.destino || t('common.loading')}</span>
-                                            </div>
-                                        </div>
-
-                                        <Button onClick={() => handleAcceptTrip(viaje.id)} className="w-full">
-                                            {t('driver_dashboard.accept_trip')}
-                                        </Button>
-                                    </Card>
-                                ))}
+                                {currentTrip.estado === 'aceptado' && (
+                                    <Button onClick={() => handleUpdateStatus('en_curso')} className="w-full">
+                                        {t('driver_dashboard.start_trip')}
+                                    </Button>
+                                )}
+                                {currentTrip.estado === 'en_curso' && (
+                                    <Button onClick={() => handleUpdateStatus('completado')} variant="secondary" className="w-full">
+                                        {t('driver_dashboard.complete_trip')}
+                                    </Button>
+                                )}
                             </div>
-                        )}
-                    </div>
-                )}
-            </main>
+                        </Card>
+                    )
+                }
+
+                {
+                    !currentTrip && (
+                        <div className="requests-section">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                <h2 className="section-title" style={{ margin: 0 }}>📋 {t('driver_dashboard.pending_requests')}</h2>
+                                <Button
+                                    onClick={fetchData}
+                                    variant="ghost"
+                                    style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                                >
+                                    🔄 {t('common.refresh')}
+                                </Button>
+                            </div>
+                            {(Array.isArray(viajes) && viajes.length === 0) ? (
+                                <Card className="empty-state">
+                                    <div className="empty-icon">🔍</div>
+                                    <p className="empty-text">{t('driver_dashboard.no_requests')}</p>
+                                </Card>
+                            ) : (
+                                <div className="requests-grid">
+                                    {Array.isArray(viajes) && viajes.map((viaje) => (
+                                        <Card key={viaje.id} className="request-item-card">
+                                            <div className="request-header">
+                                                <div>
+                                                    <div className="detail-label">{t('client_dashboard.client')}</div>
+                                                    <div className="detail-value" style={{ fontWeight: 'bold' }}>{viaje.cliente?.name || 'N/A'}</div>
+                                                </div>
+                                                <Badge variant="accent">{t('driver_dashboard.new_tag')}</Badge>
+                                            </div>
+
+                                            <div className="request-body" style={{ margin: '0.75rem 0', fontSize: '0.85rem' }}>
+                                                <div style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                                                    📍 <span style={{ color: 'var(--text-main)' }}>{viaje.origen || t('common.loading')}</span>
+                                                </div>
+                                                <div style={{ color: 'var(--text-muted)' }}>
+                                                    🏁 <span style={{ color: 'var(--text-main)' }}>{viaje.destino || t('common.loading')}</span>
+                                                </div>
+                                            </div>
+
+                                            <Button onClick={() => handleAcceptTrip(viaje.id)} className="w-full">
+                                                {t('driver_dashboard.accept_trip')}
+                                            </Button>
+                                        </Card>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )
+                }
+            </main >
 
             {/* Rating Modal */}
-            {ratingModalOpen && (
-                <div style={{
-                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-                }}>
-                    <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '0.5rem', width: '90%', maxWidth: '400px' }}>
-                        <h3 className="text-lg font-bold mb-4">{t('driver_dashboard.rating_modal.title')}</h3>
+            {
+                ratingModalOpen && (
+                    <div style={{
+                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                        backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+                    }}>
+                        <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '0.5rem', width: '90%', maxWidth: '400px' }}>
+                            <h3 className="text-lg font-bold mb-4">{t('driver_dashboard.rating_modal.title')}</h3>
 
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <button
-                                    key={star}
-                                    onClick={() => setRating(star)}
-                                    className="btn btn--ghost"
-                                    style={{ border: 'none', padding: '0.25rem' }}
-                                >
-                                    <Star
-                                        size={36}
-                                        fill={star <= rating ? "#f59e0b" : "none"}
-                                        stroke={star <= rating ? "#f59e0b" : "#cbd5e1"}
-                                        style={{ transition: 'transform 0.2s' }}
-                                    />
-                                </button>
-                            ))}
-                        </div>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <button
+                                        key={star}
+                                        onClick={() => setRating(star)}
+                                        className="btn btn--ghost"
+                                        style={{ border: 'none', padding: '0.25rem' }}
+                                    >
+                                        <Star
+                                            size={36}
+                                            fill={star <= rating ? "#f59e0b" : "none"}
+                                            stroke={star <= rating ? "#f59e0b" : "#cbd5e1"}
+                                            style={{ transition: 'transform 0.2s' }}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
 
-                        <textarea
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            placeholder={t('driver_dashboard.rating_modal.placeholder')}
-                            className="w-full p-2 border rounded mb-4"
-                            rows="3"
-                        />
+                            <textarea
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                placeholder={t('driver_dashboard.rating_modal.placeholder')}
+                                className="w-full p-2 border rounded mb-4"
+                                rows="3"
+                            />
 
-                        <div className="flex justify-end gap-2 mt-4">
-                            <Button variant="ghost" onClick={() => setRatingModalOpen(false)}>
-                                {t('common.cancel')}
-                            </Button>
-                            <Button variant="primary" onClick={submitRatingOnly}>
-                                {t('driver_dashboard.rating_modal.submit')}
-                            </Button>
+                            <div className="flex justify-end gap-2 mt-4">
+                                <Button variant="ghost" onClick={() => setRatingModalOpen(false)}>
+                                    {t('common.cancel')}
+                                </Button>
+                                <Button variant="primary" onClick={submitRatingOnly}>
+                                    {t('driver_dashboard.rating_modal.submit')}
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 };
 

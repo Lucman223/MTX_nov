@@ -107,7 +107,9 @@
         "reject": "Rechazar",
         "search": "Buscar...",
         "error_loading_data": "Error al cargar los datos",
-        "error_updating_status": "Error al actualizar el estado"
+        "error_updating_status": "Error al actualizar el estado",
+        "account_pending_title": "Cuenta en Revisión",
+        "account_pending_desc": "Tu cuenta está siendo verificada por nuestro equipo. Tendrás acceso total una vez aprobada."
     },
     "auth": {
         "welcome_title": "Bienvenido a MotoTX",

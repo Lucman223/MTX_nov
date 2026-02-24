@@ -19,6 +19,7 @@ const AdminForfaits = () => {
     const [forfaits, setForfaits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState('clientes'); // 'clientes' or 'motoristas'
     const [editingForfait, setEditingForfait] = useState(null);
     const [formData, setFormData] = useState({
         nombre: '',
@@ -26,6 +27,7 @@ const AdminForfaits = () => {
         precio: '',
         dias_validez: '',
         viajes_incluidos: '',
+        es_vip: false,
         estado: 'activo'
     });
 
@@ -36,12 +38,14 @@ const AdminForfaits = () => {
     };
 
     useEffect(() => {
-        fetchForfaits();
-    }, []);
+        fetchData();
+    }, [activeTab]);
 
-    const fetchForfaits = async () => {
+    const fetchData = async () => {
+        setLoading(true);
         try {
-            const response = await axios.get('/api/admin/forfaits');
+            const endpoint = activeTab === 'clientes' ? '/api/admin/forfaits' : '/api/admin/motorista-plans';
+            const response = await axios.get(endpoint);
             setForfaits(response.data);
         } catch (error) {
             toast.error(t('common.error'));
@@ -53,41 +57,66 @@ const AdminForfaits = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const endpoint = activeTab === 'clientes' ? '/api/admin/forfaits' : '/api/admin/motorista-plans';
             if (editingForfait) {
-                await axios.put(`/api/admin/forfaits/${editingForfait.id}`, formData);
+                await axios.put(`${endpoint}/${editingForfait.id}`, formData);
                 toast.success(t('admin_dashboard.forfaits.save_success'));
             } else {
-                await axios.post('/api/admin/forfaits', formData);
+                await axios.post(endpoint, formData);
                 toast.success(t('admin_dashboard.forfaits.save_success'));
             }
             setModalOpen(false);
             setEditingForfait(null);
-            setFormData({ nombre: '', descripcion: '', precio: '', dias_validez: '', viajes_incluidos: '', estado: 'activo' });
-            fetchForfaits();
+            resetForm();
+            fetchData();
         } catch (error) {
             toast.error(t('common.error'));
         }
     };
 
+    const resetForm = () => {
+        setFormData({
+            nombre: '',
+            descripcion: '',
+            precio: '',
+            dias_validez: '',
+            viajes_incluidos: '',
+            es_vip: false,
+            estado: 'activo'
+        });
+    };
+
     const handleEdit = (forfait) => {
         setEditingForfait(forfait);
-        setFormData({
-            nombre: forfait.nombre,
-            descripcion: forfait.descripcion || '',
-            precio: forfait.precio,
-            dias_validez: forfait.dias_validez,
-            viajes_incluidos: forfait.viajes_incluidos,
-            estado: forfait.estado
-        });
+        if (activeTab === 'clientes') {
+            setFormData({
+                nombre: forfait.nombre,
+                descripcion: forfait.descripcion || '',
+                precio: forfait.precio,
+                dias_validez: forfait.dias_validez,
+                viajes_incluidos: forfait.viajes_incluidos,
+                estado: forfait.estado
+            });
+        } else {
+            setFormData({
+                nombre: forfait.nombre,
+                descripcion: forfait.descripcion || '',
+                precio: forfait.precio,
+                dias_validez: forfait.dias_validez,
+                es_vip: !!forfait.es_vip,
+                estado: 'activo'
+            });
+        }
         setModalOpen(true);
     };
 
     const handleDelete = async (id, name) => {
         if (!window.confirm(t('admin_dashboard.forfaits.delete_confirm', { name }))) return;
         try {
-            await axios.delete(`/api/admin/forfaits/${id}`);
+            const endpoint = activeTab === 'clientes' ? '/api/admin/forfaits' : '/api/admin/motorista-plans';
+            await axios.delete(`${endpoint}/${id}`);
             toast.success(t('common.success'));
-            fetchForfaits();
+            fetchData();
         } catch (error) {
             toast.error(t('common.error'));
         }
@@ -113,7 +142,7 @@ const AdminForfaits = () => {
                     marginBottom: '2rem'
                 }}>
                     <h1 style={{ fontSize: isMobile ? '1.5rem' : '1.875rem', fontWeight: 'bold', color: '#111827' }}>
-                        {isMobile ? t('nav.forfaits') : t('admin_dashboard.forfaits.title')}
+                        {t('nav.forfaits')}
                     </h1>
                     <div style={{ display: 'flex', gap: '1rem', width: isMobile ? '100%' : 'auto' }}>
                         {!isMobile && (
@@ -127,7 +156,7 @@ const AdminForfaits = () => {
                         <button
                             onClick={() => {
                                 setEditingForfait(null);
-                                setFormData({ nombre: '', descripcion: '', precio: '', dias_validez: '', viajes_incluidos: '', estado: 'activo' });
+                                resetForm();
                                 setModalOpen(true);
                             }}
                             className="btn btn--primary"
@@ -135,6 +164,38 @@ const AdminForfaits = () => {
                             {t('admin_dashboard.forfaits.new_btn')}
                         </button>
                     </div>
+                </div>
+
+                {/* Tabs */}
+                <div style={{ display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border-color)', marginBottom: '2rem' }}>
+                    <button
+                        onClick={() => setActiveTab('clientes')}
+                        style={{
+                            padding: '1rem 1.5rem',
+                            border: 'none',
+                            background: 'none',
+                            borderBottom: activeTab === 'clientes' ? '2px solid var(--primary-color)' : 'none',
+                            color: activeTab === 'clientes' ? 'var(--primary-color)' : 'var(--text-muted)',
+                            fontWeight: activeTab === 'clientes' ? 'bold' : 'normal',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {t('roles.cliente')}
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('motoristas')}
+                        style={{
+                            padding: '1rem 1.5rem',
+                            border: 'none',
+                            background: 'none',
+                            borderBottom: activeTab === 'motoristas' ? '2px solid var(--secondary-color)' : 'none',
+                            color: activeTab === 'motoristas' ? 'var(--secondary-color)' : 'var(--text-muted)',
+                            fontWeight: activeTab === 'motoristas' ? 'bold' : 'normal',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {t('roles.motorista')}
+                    </button>
                 </div>
 
                 {loading ? (
@@ -152,10 +213,19 @@ const AdminForfaits = () => {
                                         borderRadius: '9999px',
                                         fontSize: '0.75rem',
                                         fontWeight: '600',
-                                        backgroundColor: forfait.estado === 'activo' || forfait.estado === 'aprobado' ? '#dcfce7' : '#f3f4f6',
-                                        color: forfait.estado === 'activo' || forfait.estado === 'aprobado' ? '#15803d' : '#6b7280'
+                                        backgroundColor: (activeTab === 'clientes'
+                                            ? (forfait.estado === 'activo' || forfait.estado === 'aprobado')
+                                            : true) // Plans are always active if they exist for now
+                                            ? '#dcfce7' : '#f3f4f6',
+                                        color: (activeTab === 'clientes'
+                                            ? (forfait.estado === 'activo' || forfait.estado === 'aprobado')
+                                            : true)
+                                            ? '#15803d' : '#6b7280'
                                     }}>
-                                        {t(`status.${forfait.estado}`, forfait.estado)}
+                                        {activeTab === 'clientes'
+                                            ? t(`status.${forfait.estado}`, forfait.estado)
+                                            : (forfait.es_vip ? 'VIP' : 'Standard')
+                                        }
                                     </span>
                                 </div>
                                 <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: colors.primary, marginBottom: '1rem' }}>
@@ -163,7 +233,8 @@ const AdminForfaits = () => {
                                 </div>
                                 <div style={{ spaceY: '0.5rem', color: '#4b5563', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
                                     <p>📅 {forfait.dias_validez} {t('admin_dashboard.forfaits.modal.label_days')}</p>
-                                    <p>🚀 {forfait.viajes_incluidos} {t('admin_dashboard.forfaits.modal.label_trips')}</p>
+                                    {activeTab === 'clientes' && <p>🚀 {forfait.viajes_incluidos} {t('admin_dashboard.forfaits.modal.label_trips')}</p>}
+                                    {activeTab === 'motoristas' && <p>👑 {forfait.es_vip ? 'Prioridad VIP' : 'Normal'}</p>}
                                     <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
                                         {t(`plans.${forfait.nombre}_desc`, forfait.descripcion)}
                                     </p>
@@ -210,23 +281,35 @@ const AdminForfaits = () => {
                                     <label className="form-label">{t('admin_dashboard.forfaits.modal.label_price')}</label>
                                     <input required type="number" className="mtx-input" value={formData.precio} onChange={e => setFormData({ ...formData, precio: e.target.value })} min="0" />
                                 </div>
-                                <div>
-                                    <label className="form-label">{t('admin_dashboard.forfaits.modal.label_trips')}</label>
-                                    <input required type="number" className="mtx-input" value={formData.viajes_incluidos} onChange={e => setFormData({ ...formData, viajes_incluidos: e.target.value })} min="0" />
-                                </div>
+                                {activeTab === 'clientes' ? (
+                                    <div>
+                                        <label className="form-label">{t('admin_dashboard.forfaits.modal.label_trips')}</label>
+                                        <input required type="number" className="mtx-input" value={formData.viajes_incluidos} onChange={e => setFormData({ ...formData, viajes_incluidos: e.target.value })} min="0" />
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <label className="form-label">Tipo Plan</label>
+                                        <select className="mtx-input" value={formData.es_vip} onChange={e => setFormData({ ...formData, es_vip: e.target.value === 'true' })}>
+                                            <option value="false">Standard</option>
+                                            <option value="true">VIP (Prioridad)</option>
+                                        </select>
+                                    </div>
+                                )}
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
                                     <label className="form-label">{t('admin_dashboard.forfaits.modal.label_days')}</label>
                                     <input required type="number" className="mtx-input" value={formData.dias_validez} onChange={e => setFormData({ ...formData, dias_validez: e.target.value })} min="0" />
                                 </div>
-                                <div>
-                                    <label className="form-label">{t('admin_dashboard.forfaits.modal.label_status')}</label>
-                                    <select className="mtx-input" value={formData.estado} onChange={e => setFormData({ ...formData, estado: e.target.value })}>
-                                        <option value="activo">{t('status.aprobado')}</option>
-                                        <option value="inactivo">{t('status.rechazado')}</option>
-                                    </select>
-                                </div>
+                                {activeTab === 'clientes' && (
+                                    <div>
+                                        <label className="form-label">{t('admin_dashboard.forfaits.modal.label_status')}</label>
+                                        <select className="mtx-input" value={formData.estado} onChange={e => setFormData({ ...formData, estado: e.target.value })}>
+                                            <option value="activo">{t('status.aprobado')}</option>
+                                            <option value="inactivo">{t('status.rechazado')}</option>
+                                        </select>
+                                    </div>
+                                )}
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
                                 <button type="button" onClick={() => setModalOpen(false)} className="btn btn--ghost">{t('admin_dashboard.forfaits.modal.cancel')}</button>

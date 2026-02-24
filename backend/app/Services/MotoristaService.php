@@ -16,7 +16,23 @@ class MotoristaService
 {
     public function updateStatus(User $user, string $estadoActual): MotoristaPerfil
     {
-        $motoristaPerfil = MotoristaPerfil::where('usuario_id', $user->id)->firstOrFail();
+        // [ES] Verificamos si la cuenta principal está aprobada por el admin
+        if ($user->status !== 'aprobado') {
+            throw new \Exception('Account pending approval. Please contact support.');
+        }
+
+        $motoristaPerfil = MotoristaPerfil::where('usuario_id', $user->id)->first();
+        
+        // [ES] Auto-fix: Si el perfil no existe, lo creamos con 5 viajes de prueba
+        if (!$motoristaPerfil) {
+            $motoristaPerfil = MotoristaPerfil::create([
+                'usuario_id' => $user->id,
+                'estado_actual' => 'inactivo',
+                'viajes_prueba_restantes' => 5,
+                'billetera' => 0,
+            ]);
+            \Illuminate\Support\Facades\Log::info("Auto-created missing profile for driver ID: {$user->id}");
+        }
         
         // [ES] Si intenta ponerse online, verificamos acceso (viajes de prueba o suscripción)
         if ($estadoActual === 'activo' && !$motoristaPerfil->hasAccess()) {

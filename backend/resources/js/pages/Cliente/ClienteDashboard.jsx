@@ -409,6 +409,26 @@ const ClienteDashboard = () => {
 
             {/* Main Content */}
             <main className="main-content">
+                {user?.status === 'pendiente' && (
+                    <div className="alert alert--warning mb-6" style={{
+                        gridColumn: '1 / -1',
+                        background: '#fff7ed',
+                        color: '#9a3412',
+                        padding: '1rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid #fb923c',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        marginBottom: '1rem'
+                    }}>
+                        <span style={{ fontSize: '1.5rem' }}>⏳</span>
+                        <div>
+                            <strong style={{ display: 'block' }}>{t('common.account_pending_title')}</strong>
+                            <p style={{ margin: 0, fontSize: '0.875rem' }}>{t('common.account_pending_desc')}</p>
+                        </div>
+                    </div>
+                )}
                 {/* Left Panel: Controls & Info */}
                 <div className="side-panel">
                     {!activeTrip ? (
