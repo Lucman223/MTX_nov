@@ -48,7 +48,8 @@ const MotoristaDashboard = () => {
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
     const [lastFinishedTripId, setLastFinishedTripId] = useState(null);
-    const [isTogglingStatus, setIsTogglingStatus] = useState(false); // Declare missing isTogglingStatus state
+    const [isTogglingStatus, setIsTogglingStatus] = useState(false);
+    const [geoError, setGeoError] = useState(null); // [NEW] Geolocation error state
     // Use a ref for status locking to avoid race conditions with polling
     const statusLockRef = React.useRef(false);
 
@@ -104,13 +105,19 @@ const MotoristaDashboard = () => {
         const locationInterval = setInterval(() => {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(async (position) => {
+                    setGeoError(null); // Clear error on success
                     const { latitude, longitude } = position.coords;
                     try {
                         await axios.put('/api/motorista/ubicacion', { latitude, longitude });
-                    } catch (err) { }
+                    } catch (err) {
+                        console.error("[GEO] Failed to update backend with coordinates:", err);
+                    }
                 }, (error) => {
-                    // console.error("Error getting geolocation:", error); // Optionally log error
+                    console.error("[GEO] Permission or hardware error:", error);
+                    setGeoError(error.code === error.PERMISSION_DENIED ? 'denied' : 'error');
                 });
+            } else {
+                setGeoError('not_supported');
             }
         }, 10000);
 
@@ -160,24 +167,30 @@ const MotoristaDashboard = () => {
         setIsTogglingStatus(true);
         setIsOnline(newIsOnline);
 
+        console.log(`[STATUS] Attempting to toggle status to: ${newStatus}`);
         const promise = axios.put('/api/motorista/status', { estado_actual: newStatus });
 
         toast.promise(promise, {
             loading: t('common.saving') || 'Actualizando...',
             success: (response) => {
+                console.log("[STATUS] Toggle success:", response.data);
                 if (response.data && response.data.data) {
                     setProfile(prev => ({ ...prev, ...response.data.data }));
+                    // Force sync state from server response if possible
+                    setIsOnline(response.data.data.estado_actual === 'activo');
                 }
                 const msg = newIsOnline ? t('driver_dashboard.online_msg') : t('driver_dashboard.offline_msg');
                 return msg;
             },
             error: (err) => {
+                console.error("[STATUS] Toggle failed:", err.response?.data || err.message);
                 // Revert on error
                 setIsOnline(!newIsOnline);
 
                 const errorMsg = err.response?.data?.error || '';
 
                 if (errorMsg.includes('Subscription required') || err.response?.status === 403) {
+                    console.warn("[STATUS] Subscription required, redirecting...");
                     // Open a small delay before navigating so user can read toast
                     setTimeout(() => navigate('/motorista/suscripciones'), 2000);
                     return t('driver_dashboard.subscription_required') || 'Requiere suscripción activa';
@@ -188,7 +201,7 @@ const MotoristaDashboard = () => {
                 setTimeout(() => {
                     setIsTogglingStatus(false);
                 }, 500);
-                // Keep the polling lock for 12s
+                // Keep the polling lock for 12s to allow propagation
                 setTimeout(() => {
                     statusLockRef.current = false;
                 }, 12000);
@@ -352,6 +365,30 @@ const MotoristaDashboard = () => {
             </nav>
 
             <main className="main-content-centered">
+                {geoError && (
+                    <div className="alert alert--error mb-4" style={{
+                        background: '#fee2e2',
+                        border: '1px solid #ef4444',
+                        padding: '1rem',
+                        borderRadius: '12px',
+                        marginBottom: '1.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        color: '#b91c1c'
+                    }}>
+                        <div style={{ fontSize: '1.5rem' }}>📍</div>
+                        <div>
+                            <div style={{ fontWeight: 'bold' }}>{t('driver_dashboard.geo_error_title') || 'Error de Ubicación'}</div>
+                            <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                                {geoError === 'denied'
+                                    ? (t('driver_dashboard.geo_error_denied') || 'Permiso de GPS denegado. Debes activarlo para ser visible.')
+                                    : (t('driver_dashboard.geo_error_generic') || 'No se puede obtener tu ubicación actual.')}
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 {loading && <div className="loading-state">{t('common.loading')}</div>}
 
                 {/* Wallet Card */}
