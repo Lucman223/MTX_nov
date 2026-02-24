@@ -459,8 +459,9 @@
             <p>MotoTX está construido bajo una filosofía de separación de responsabilidades, garantizando que el núcleo
                 de negocio sea independiente de la interfaz de usuario.</p>
             <p class="description-text">Esta arquitectura permite una escalabilidad horizontal masiva. El Frontend actúa
-                como un cliente agnóstico que consume una REST API protegida, lo que facilita futuras integraciones con
-                aplicaciones móviles nativas o servicios de terceros sin alterar la lógica central.</p>
+                como un cliente agnóstico que consume una REST API protegida. Además, implementamos un flujo de
+                **Despliegue Continuo (CD)** automatizado hacia Koyeb, garantizando que cada mejora técnica se valide y
+                despliegue en minutos.</p>
 
             <div class="archetype-grid">
                 <div class="tree-box">
@@ -494,8 +495,8 @@
             <h2>🎨 Bloque 1: Desarrollo Front End Avanzado</h2>
             <p>Demostración de interactividad React 19, persistencia de estado y herramientas de inclusión.</p>
             <p class="description-text">Implementamos una Single Page Application (SPA) para eliminar las recargas de
-                página, mejorando drásticamente la tasa de retención. La gestión de estado global asegura que la
-                experiencia del usuario sea fluida incluso en redes inestables.</p>
+                página, mejorando drásticamente la tasa de retención. La gestión de estado global y el pulido de UI
+                (Header unificado y prevención de solapamientos) aseguran que la experiencia sea premium y fluida.</p>
 
             <h3>1.1 Enrutamiento y Protección (React Router)</h3>
             <div class="code-container">
@@ -579,9 +580,9 @@ public function run() {
         <section id="bloque3">
             <h2>🚀 Bloque 3: Frameworks y Tiempo Real</h2>
             <p>Uso de WebSockets para una experiencia de usuario instantánea y reactiva.</p>
-            <p class="description-text">Mediante Laravel Reverb, el sistema gestiona eventos en tiempo real. Esto
-                permite que los clientes vean la posición de los motoristas y el estado de sus pedidos sin necesidad de
-                refrescar, logrando una experiencia de "App Nativa" en el navegador.</p>
+            <p class="description-text">Mediante Laravel Reverb, el sistema gestiona eventos en tiempo real. Hemos
+                endurecido la infraestructura con logs de diagnóstico avanzados y resiliencia en la conexión,
+                permitiendo que los clientes vean la posición de los motoristas sin refrescar la página.</p>
 
             <h3>3.1 Interacción en Tiempo Real (Laravel Reverb)</h3>
             <div class="highlight highlight-green"
@@ -781,9 +782,9 @@ setInterval(() => {
                 <!-- 7. Admin Dashboard -->
                 <div class="gallery-item">
                     <h3>7. Centro de Administración (KPIs & Control)</h3>
-                    <p class="description-text">Panel de Inteligencia de Negocio. Los KPIs se cargan de forma paralela
-                        mediante optimización de consultas, ofreciendo una visión en tiempo real de los ingresos y
-                        operaciones de la plataforma.</p>
+                    <p class="description-text">Panel de Inteligencia de Negocio con interfaz normalizada. Hemos
+                        estandarizado la navegación (Dashboard, Historial, Perfil) y corregido la jerarquía de
+                        traducciones i18next para una experiencia de usuario consistente y profesional.</p>
                     <div class="archetype-grid">
                         <div class="ui-mockup">
                             <img src="file:///C:/Users/lucman/Desktop/mtx_nov/capturas/Admin/foto/dashboard .png"
@@ -895,7 +896,7 @@ const handleStatusChange = async (id, newStatus) => {
             </div>
             <p
                 style="text-align: center; margin-top: 3rem; font-size: 1.5rem; font-weight: 800; color: var(--secondary);">
-                ✨ PROYECTO AUDITADO 100% LISTO ✨</p>
+                ✨ PROYECTO AUDITADO Y PULIDO 100% LISTO ✨</p>
         </section>
 
         <footer>
