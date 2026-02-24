@@ -89,18 +89,18 @@ const MotoristaHistory = () => {
             <SEO title={t('client_dashboard.history')} />
 
             <header className="mtx-header driver-header">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontSize: '2rem' }}>🏍️</span>
-                    <div>
-                        <h1 className="header-title" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--secondary-color)', margin: 0 }}>
+                <div className="mtx-header-brand">
+                    <div className="mtx-header-icon">🏍️</div>
+                    <div className="mtx-header-text">
+                        <h1 className="header-title">
                             {t('client_dashboard.history')}
                         </h1>
-                        <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                        <span className="header-subtitle">
                             {user?.name || t('driver_dashboard.driver_role')}
                         </span>
                     </div>
                 </div>
-                <div className="desktop-nav" style={{ display: 'flex', gap: '1rem' }}>
+                <div className="desktop-nav">
                     <Button onClick={() => navigate('/motorista')} label="Dashboard">
                         ← Dashboard
                     </Button>

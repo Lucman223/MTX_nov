@@ -83,20 +83,13 @@ const MotoristaProfile = () => {
             <SEO title={t('driver_dashboard.profile')} />
 
             <header className="mtx-header driver-header">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{
-                        background: 'rgba(255,255,255,0.2)',
-                        padding: '0.75rem',
-                        borderRadius: '1rem',
-                        fontSize: '2rem'
-                    }}>
-                        🛵
-                    </div>
-                    <div>
-                        <h1 className="header-title" style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0 }}>
+                <div className="mtx-header-brand">
+                    <div className="mtx-header-icon">🛵</div>
+                    <div className="mtx-header-text">
+                        <h1 className="header-title">
                             {t('driver_dashboard.profile')}
                         </h1>
-                        <p style={{ margin: 0, opacity: 0.9, fontSize: '0.95rem' }}>{t('driver_dashboard.manage_profile')}</p>
+                        <p className="header-subtitle">{t('driver_dashboard.manage_profile')}</p>
                     </div>
                 </div>
                 <div className="desktop-nav">
@@ -122,9 +115,9 @@ const MotoristaProfile = () => {
                 </Button>
             </nav>
 
-            <main className="main-content-centered" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(22rem, 1fr))', gap: '2rem', marginTop: '-2rem' }}>
+            <main className="main-content-centered mtx-profile-grid">
                 <Card className="profile-info-card">
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <h2 className="card-title-section">
                         👤 {t('driver_dashboard.personal_data')}
                     </h2>
 
@@ -223,8 +216,8 @@ const MotoristaProfile = () => {
                 </Card>
 
                 {/* Vehicle Info */}
-                <Card className="profile-vehicle-card" style={{ height: 'fit-content' }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Card className="profile-vehicle-card">
+                    <h2 className="card-title-section">
                         🏍️ {t('driver_dashboard.your_vehicle')}
                     </h2>
 

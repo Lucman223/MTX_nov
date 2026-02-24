@@ -66,7 +66,16 @@
         "completed_trips": "Viajes Realizados",
         "average_rating": "Calificación Media",
         "rating_received": "Calificación Recibida",
-        "no_rating": "Aún no calificado"
+        "no_rating": "Aún no calificado",
+        "profile": "Perfil del Conductor",
+        "manage_profile": "Gestiona tus datos y vehículo",
+        "personal_data": "Datos Personales",
+        "your_vehicle": "Tu Vehículo",
+        "license_plate": "Matrícula",
+        "model": "Modelo",
+        "year": "Año",
+        "color": "Color",
+        "vehicle_support_note": "La información del vehículo es validada por soporte."
     },
     "common": {
         "login": "Iniciar Sesión",

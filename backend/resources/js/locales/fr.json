@@ -61,7 +61,16 @@
         "completed_trips": "Trajets Effectués",
         "average_rating": "Note Moyenne",
         "rating_received": "Note Reçue",
-        "no_rating": "Pas encore noté"
+        "no_rating": "Pas encore noté",
+        "profile": "Profil du Chauffeur",
+        "manage_profile": "Gérez vos données et votre véhicule",
+        "personal_data": "Données Personnelles",
+        "your_vehicle": "Votre Véhicule",
+        "license_plate": "Immatriculation",
+        "model": "Modèle",
+        "year": "Année",
+        "color": "Couleur",
+        "vehicle_support_note": "Les informations del véhicule sont validées par le support."
     },
     "common": {
         "login": "Connexion",

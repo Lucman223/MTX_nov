@@ -213,7 +213,16 @@
         "completed_trips": "Trips Completed",
         "average_rating": "Average Rating",
         "rating_received": "Rating Received",
-        "no_rating": "Not yet rated"
+        "no_rating": "Not yet rated",
+        "profile": "Driver Profile",
+        "manage_profile": "Manage your data and vehicle",
+        "personal_data": "Personal Data",
+        "your_vehicle": "Your Vehicle",
+        "license_plate": "License Plate",
+        "model": "Model",
+        "year": "Year",
+        "color": "Color",
+        "vehicle_support_note": "Vehicle information is validated by support."
     },
     "common": {
         "login": "Login",

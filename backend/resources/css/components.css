@@ -291,6 +291,41 @@
     align-items: center;
 }
 
+.mtx-header-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mtx-header-logo {
+    height: 3.5rem;
+    object-fit: contain;
+}
+
+.mtx-header-icon {
+    font-size: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+}
+
+.mtx-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.header-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
 .mobile-status-toggle {
     display: none;
 }
@@ -311,11 +346,16 @@
     }
 
     .header-title {
-        font-size: 1.1rem !important;
+        font-size: 1.1rem;
     }
 
     .mtx-header-logo {
-        height: 2.5rem !important;
+        height: 2.5rem;
+    }
+
+    .mtx-header-icon {
+        font-size: 1.5rem;
+        padding: 0.3rem;
     }
 
     .mobile-bottom-nav {
@@ -408,6 +448,23 @@
 .driver-theme {
     --primary-color: #059669;
     --secondary-color: #059669;
+}
+
+.mtx-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.card-title-section {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .driver-header {
