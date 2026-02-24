@@ -271,7 +271,7 @@ const MotoristaDashboard = () => {
 
                 <div className="desktop-nav">
                     <div
-                        onClick={currentTrip ? null : handleToggleStatus}
+                        onClick={currentTrip ? null : toggleStatus}
                         className={`status-badge ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}
                     >
                         {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? t('driver_dashboard.status_online') : t('driver_dashboard.status_offline'))}
@@ -301,7 +301,7 @@ const MotoristaDashboard = () => {
                 {/* Mobile Status Badge */}
                 <div
                     className={`mobile-status-toggle ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}
-                    onClick={currentTrip ? null : handleToggleStatus}
+                    onClick={currentTrip ? null : toggleStatus}
                 >
                     {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? 'ON' : 'OFF')}
                 </div>
