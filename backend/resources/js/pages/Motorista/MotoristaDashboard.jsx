@@ -146,41 +146,46 @@ const MotoristaDashboard = () => {
     };
 
     const toggleStatus = async () => {
-        if (isTogglingStatus) return; // Prevent double clicks
+        if (isTogglingStatus || currentTrip) return;
 
         const newIsOnline = !isOnline;
         const newStatus = newIsOnline ? 'activo' : 'inactivo';
 
-        // 1. Optimistic Update & Lock
+        // 1. Synchronous Lock & Optimistic UI
         statusLockRef.current = true;
-        setIsOnline(newIsOnline);
         setIsTogglingStatus(true);
+        setIsOnline(newIsOnline);
 
-        try {
-            const response = await axios.put('/api/motorista/status', { estado_actual: newStatus });
+        const promise = axios.put('/api/motorista/status', { estado_actual: newStatus });
 
-            // 2. Success: Update profile in local state immediately with server data
-            if (response.data && response.data.data) {
-                setProfile(prev => ({ ...prev, ...response.data.data }));
+        toast.promise(promise, {
+            loading: t('common.saving') || 'Updating...',
+            success: (response) => {
+                if (response.data && response.data.data) {
+                    setProfile(prev => ({ ...prev, ...response.data.data }));
+                }
+                return newIsOnline ? t('driver_dashboard.online_msg') : t('driver_dashboard.offline_msg');
+            },
+            error: (err) => {
+                // Revert on error
+                setIsOnline(!newIsOnline);
+                if (err.response && err.response.status === 403) {
+                    setTimeout(() => navigate('/motorista/suscripciones'), 1500);
+                    return t('driver_dashboard.subscription_required');
+                }
+                return t('driver_dashboard.update_error');
+            },
+            finally: () => {
+                // Release toggle block after a small delay to ensure React state settled
+                setTimeout(() => {
+                    setIsTogglingStatus(false);
+                    // Polling lock stays a bit longer to allow backend cache to clear
+                    setTimeout(() => {
+                        statusLockRef.current = false;
+                    }, 3000);
+                }, 500);
             }
-
-            toast.success(newIsOnline ? t('driver_dashboard.online_msg') : t('driver_dashboard.offline_msg'));
-        } catch (error) {
-            // 3. Revert on failure
-            setIsOnline(!newIsOnline);
-            if (error.response && error.response.status === 403) {
-                toast.error(t('driver_dashboard.subscription_required'));
-                setTimeout(() => navigate('/motorista/suscripciones'), 1500);
-            } else {
-                toast.error(t('driver_dashboard.update_error'));
-            }
-        } finally {
-            // 4. Release lock after a short delay to allow server state to propagate to future polls
-            setTimeout(() => {
-                statusLockRef.current = false;
-                setIsTogglingStatus(false);
-            }, 5000);
-        }
+        });
     };
 
     const handleUpdateStatus = async (newStatus) => {
@@ -271,13 +276,18 @@ const MotoristaDashboard = () => {
                 </div>
 
                 <div className="desktop-nav">
-                    <div
-                        onClick={currentTrip ? null : toggleStatus}
-                        className={`status-badge ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}
+                    <button
+                        onClick={toggleStatus}
+                        disabled={!!currentTrip || isTogglingStatus}
+                        className={`status-badge ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')} ${isTogglingStatus ? 'is-loading' : ''}`}
                     >
-                        {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? t('driver_dashboard.status_online') : t('driver_dashboard.status_offline'))}
-                        {!currentTrip && <span className="refresh-icon">↻</span>}
-                    </div>
+                        {isTogglingStatus ? (
+                            <span className="animate-spin">↻</span>
+                        ) : (
+                            currentTrip ? t('driver_dashboard.in_service') : (isOnline ? t('driver_dashboard.status_online') : t('driver_dashboard.status_offline'))
+                        )}
+                        {!currentTrip && !isTogglingStatus && <span className="refresh-icon">↻</span>}
+                    </button>
 
                     <Button variant="outline" onClick={() => navigate('/motorista/historial')} className="nav-btn-secondary">
                         {t('client_dashboard.history')}
@@ -300,12 +310,17 @@ const MotoristaDashboard = () => {
                 </div>
 
                 {/* Mobile Status Badge */}
-                <div
-                    className={`mobile-status-toggle ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}
-                    onClick={currentTrip ? null : toggleStatus}
+                <button
+                    className={`mobile-status-toggle ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')} ${isTogglingStatus ? 'is-loading' : ''}`}
+                    onClick={toggleStatus}
+                    disabled={!!currentTrip || isTogglingStatus}
                 >
-                    {currentTrip ? t('driver_dashboard.in_service') : (isOnline ? 'ON' : 'OFF')}
-                </div>
+                    {isTogglingStatus ? (
+                        <div className="animate-spin" style={{ width: '20px', height: '20px', border: '2px solid', borderTopColor: 'transparent', borderRadius: '50%' }}></div>
+                    ) : (
+                        currentTrip ? t('driver_dashboard.in_service') : (isOnline ? 'ON' : 'OFF')
+                    )}
+                </button>
             </header>
 
             {/* Mobile Bottom Nav */}
