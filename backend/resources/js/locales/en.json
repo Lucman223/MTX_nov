@@ -233,6 +233,8 @@
         "phone": "Phone",
         "password": "Password",
         "submit": "Submit",
+        "save_changes": "Save Changes",
+        "saving": "Saving...",
         "back_home": "← Back to Home",
         "loading": "Loading...",
         "back": "Back",

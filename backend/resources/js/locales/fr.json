@@ -82,6 +82,8 @@
         "phone": "Téléphone",
         "password": "Mot de passe",
         "submit": "Envoyer",
+        "save_changes": "Enregistrer les modifications",
+        "saving": "Enregistrement...",
         "back_home": "← Retour à l'accueil",
         "loading": "Chargement...",
         "back": "Retour",

@@ -236,10 +236,10 @@ const MotoristaProfile = () => {
                     <Card className="profile-preferences-card animate-in fade-in slide-in-from-bottom-6">
                         <div className="card-header-with-icon">
                             <Settings size={20} className="text-secondary" />
-                            <h3 className="card-title-section-modern">{t('profile.preferences')}</h3>
+                            <h3 className="card-title-section-modern">{t('driver_dashboard.preferences')}</h3>
                         </div>
                         <p className="section-description-text">
-                            {t('driver_dashboard.manage_profile')} - {t('profile.notifications')}
+                            {t('driver_dashboard.manage_profile')} - {t('driver_dashboard.notifications')}
                         </p>
 
                         <div className="preferences-action-box">

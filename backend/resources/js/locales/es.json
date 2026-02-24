@@ -87,6 +87,8 @@
         "phone": "Teléfono",
         "password": "Contraseña",
         "submit": "Enviar",
+        "save_changes": "Guardar Cambios",
+        "saving": "Guardando...",
         "back_home": "← Volver al inicio",
         "loading": "Cargando...",
         "back": "Volver",
