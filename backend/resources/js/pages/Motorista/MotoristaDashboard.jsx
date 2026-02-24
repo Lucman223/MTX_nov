@@ -48,6 +48,7 @@ const MotoristaDashboard = () => {
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
     const [lastFinishedTripId, setLastFinishedTripId] = useState(null);
+    const [isTogglingStatus, setIsTogglingStatus] = useState(false); // Declare missing isTogglingStatus state
     // Use a ref for status locking to avoid race conditions with polling
     const statusLockRef = React.useRef(false);
 
@@ -159,8 +160,8 @@ const MotoristaDashboard = () => {
             const response = await axios.put('/api/motorista/status', { estado_actual: newStatus });
 
             // 2. Success: Update profile in local state immediately with server data
-            if (response.data && response.data.motorista) {
-                setProfile(prev => ({ ...prev, ...response.data.motorista }));
+            if (response.data && response.data.data) {
+                setProfile(prev => ({ ...prev, ...response.data.data }));
             }
 
             toast.success(newIsOnline ? t('driver_dashboard.online_msg') : t('driver_dashboard.offline_msg'));
