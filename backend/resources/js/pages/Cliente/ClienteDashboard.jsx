@@ -445,9 +445,10 @@ const ClienteDashboard = () => {
                                 </div>
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                                    {/* ORIGIN INPUT */}
                                     <div className={`point-input-group ${puntoActivo === 'origen' ? 'active-origen' : ''}`}>
                                         <label className="point-label-origen">{t('client_dashboard.origin')}</label>
-                                        <div style={{ display: 'flex', gap: '0.5rem', position: 'relative' }}>
+                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                             <input
                                                 type="text"
                                                 placeholder={t('client_dashboard.tap_map')}
@@ -456,14 +457,14 @@ const ClienteDashboard = () => {
                                                 onFocus={() => setPuntoActivo('origen')}
                                                 onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('origen')}
                                                 className="mtx-input"
-                                                style={{ flex: 1, paddingRight: addressOrigen ? '2.5rem' : '0.75rem' }}
+                                                style={{ flex: 1, minWidth: 0 }}
                                             />
                                             {addressOrigen && (
                                                 <button
                                                     onClick={() => handleClearPoint('origen')}
                                                     className="btn btn--sm btn--ghost"
-                                                    style={{ position: 'absolute', right: '4.5rem', top: '50%', transform: 'translateY(-50%)', border: 'none' }}
                                                     title="Clear"
+                                                    style={{ flexShrink: 0 }}
                                                 >
                                                     ✕
                                                 </button>
@@ -473,22 +474,23 @@ const ClienteDashboard = () => {
                                                 variant="ghost"
                                                 className="search-mini-btn"
                                                 disabled={searching}
+                                                style={{ flexShrink: 0 }}
                                             >
                                                 🔍
                                             </Button>
-                                            {origen && <span className="coord-badge" style={{ backgroundColor: 'var(--primary-color)' }}>{t('common.done') || 'FIX'}</span>}
                                         </div>
                                         {origen && (
                                             <div className="point-value-mini">
-                                                {console.log('[LOG_COORD_4] Rendering origen mini:', origen)}
                                                 {safeParseCoord(origen[0], 'origen_0').toFixed(5)}, {safeParseCoord(origen[1], 'origen_1').toFixed(5)}
+                                                <span className="coord-badge" style={{ backgroundColor: 'var(--primary-color)', marginLeft: '0.5rem' }}>✓</span>
                                             </div>
                                         )}
                                     </div>
 
+                                    {/* DESTINATION INPUT */}
                                     <div className={`point-input-group ${puntoActivo === 'destino' ? 'active-destino' : ''}`}>
                                         <label className="point-label-destino">{t('client_dashboard.destination')}</label>
-                                        <div style={{ display: 'flex', gap: '0.5rem', position: 'relative' }}>
+                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                             <input
                                                 type="text"
                                                 placeholder={t('client_dashboard.tap_map')}
@@ -497,14 +499,14 @@ const ClienteDashboard = () => {
                                                 onFocus={() => setPuntoActivo('destino')}
                                                 onKeyDown={(e) => e.key === 'Enter' && handleAddressSearch('destino')}
                                                 className="mtx-input"
-                                                style={{ flex: 1, paddingRight: addressDestino ? '2.5rem' : '0.75rem' }}
+                                                style={{ flex: 1, minWidth: 0 }}
                                             />
                                             {addressDestino && (
                                                 <button
                                                     onClick={() => handleClearPoint('destino')}
                                                     className="btn btn--sm btn--ghost"
-                                                    style={{ position: 'absolute', right: '4.5rem', top: '50%', transform: 'translateY(-50%)', border: 'none' }}
                                                     title="Clear"
+                                                    style={{ flexShrink: 0 }}
                                                 >
                                                     ✕
                                                 </button>
@@ -514,15 +516,15 @@ const ClienteDashboard = () => {
                                                 variant="ghost"
                                                 className="search-mini-btn"
                                                 disabled={searching}
+                                                style={{ flexShrink: 0 }}
                                             >
                                                 🔍
                                             </Button>
-                                            {destino && <span className="coord-badge" style={{ backgroundColor: 'var(--accent-color)' }}>{t('common.done') || 'FIX'}</span>}
                                         </div>
                                         {destino && (
                                             <div className="point-value-mini">
-                                                {console.log('[LOG_COORD_5] Rendering destino mini:', destino)}
                                                 {safeParseCoord(destino[0], 'destino_0').toFixed(5)}, {safeParseCoord(destino[1], 'destino_1').toFixed(5)}
+                                                <span className="coord-badge" style={{ backgroundColor: 'var(--accent-color)', marginLeft: '0.5rem' }}>✓</span>
                                             </div>
                                         )}
                                     </div>
