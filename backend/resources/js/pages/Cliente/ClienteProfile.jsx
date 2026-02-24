@@ -179,33 +179,50 @@ const ClienteProfile = () => {
                             {saving ? t('client_profile.saving') : t('client_profile.save_changes')}
                         </Button>
                     </form>
+                </Card>
 
-                    {/* Danger Zone */}
-                    <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
-                        <h3 style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--error-color)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            ⚠️ {t('client_profile.danger_zone')}
-                        </h3>
-                        <Button
-                            variant="error"
-                            className="w-full"
-                            onClick={async () => {
-                                const password = window.prompt(t('client_profile.enter_password_confirm'));
-                                if (!password) return;
-                                if (window.confirm(t('client_profile.delete_confirm'))) {
-                                    try {
-                                        await axios.delete('/api/profile', { data: { password } });
-                                        toast.success(t('client_profile.account_deleted'));
-                                        logout();
-                                        navigate('/');
-                                    } catch (error) {
-                                        toast.error(error.response?.data?.message || t('client_profile.delete_error'));
-                                    }
-                                }
-                            }}
-                        >
-                            🗑️ {t('client_profile.delete_account')}
-                        </Button>
+                {/* ─── Danger Zone Card ─── */}
+                <Card style={{ height: 'fit-content', border: '2px solid #fca5a5', background: 'linear-gradient(135deg, #fff5f5, #fff1f1)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                        <div style={{
+                            background: '#ef4444',
+                            width: '2.5rem', height: '2.5rem',
+                            borderRadius: '50%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '1.1rem', flexShrink: 0
+                        }}>⚠️</div>
+                        <div>
+                            <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#991b1b', margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                {t('client_profile.danger_zone')}
+                            </h3>
+                            <p style={{ fontSize: '0.8rem', color: '#b91c1c', margin: 0 }}>
+                                {t('client_profile.danger_zone_desc') || 'Esta acción es permanente e irreversible'}
+                            </p>
+                        </div>
                     </div>
+                    <div style={{ background: '#fee2e2', borderRadius: '0.75rem', padding: '1rem', marginBottom: '1rem', fontSize: '0.85rem', color: '#7f1d1d', lineHeight: 1.5 }}>
+                        🔴 {t('client_profile.delete_warning') || 'Se eliminarán tu cuenta, datos personales, forfaits activos e historial de viajes.'}
+                    </div>
+                    <Button
+                        variant="error"
+                        className="w-full"
+                        onClick={async () => {
+                            const password = window.prompt(t('client_profile.enter_password_confirm'));
+                            if (!password) return;
+                            if (window.confirm(t('client_profile.delete_confirm'))) {
+                                try {
+                                    await axios.delete('/api/profile', { data: { password } });
+                                    toast.success(t('client_profile.account_deleted'));
+                                    logout();
+                                    navigate('/');
+                                } catch (error) {
+                                    toast.error(error.response?.data?.message || t('client_profile.delete_error'));
+                                }
+                            }
+                        }}
+                    >
+                        🗑️ {t('client_profile.delete_account')}
+                    </Button>
                 </Card>
 
                 {/* Active Forfaits Card */}
@@ -296,40 +313,35 @@ const ClienteProfile = () => {
                         📜 {t('client_profile.purchase_history')}
                     </h2>
 
-                    <div style={{ overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-                            <thead>
-                                <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left' }}>
-                                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.8rem', textTransform: 'uppercase' }}>
-                                        {t('client_profile.date')}
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.8rem', textTransform: 'uppercase' }}>
-                                        {t('client_profile.plan')}
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.8rem', textTransform: 'uppercase' }}>
-                                        {t('client_profile.price')}
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.8rem', textTransform: 'uppercase' }}>
-                                        {t('client_dashboard.state')}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {forfaits.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="4" style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-                                            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📭</div>
-                                            {t('client_profile.no_history')}
-                                        </td>
+                    {forfaits.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '2.5rem', border: '2px dashed #e5e7eb', borderRadius: '1rem', color: 'var(--text-muted)' }}>
+                            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📭</div>
+                            <p style={{ margin: 0, fontWeight: '600' }}>{t('client_profile.no_history')}</p>
+                        </div>
+                    ) : (
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                                <thead>
+                                    <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left' }}>
+                                        <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                                            {t('client_profile.date')}
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                                            {t('client_profile.plan')}
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                                            {t('client_profile.price')}
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                                            {t('client_dashboard.state')}
+                                        </th>
                                     </tr>
-                                ) : (
-                                    Array.isArray(forfaits) && [...forfaits]
+                                </thead>
+                                <tbody>
+                                    {[...forfaits]
                                         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                                         .map((item, index) => (
-                                            <tr key={index} style={{
-                                                borderBottom: '1px solid var(--border-color)',
-                                                transition: 'background 0.15s ease'
-                                            }}
+                                            <tr key={index} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.15s ease' }}
                                                 onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
                                                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                                             >
@@ -344,24 +356,22 @@ const ClienteProfile = () => {
                                                 </td>
                                                 <td style={{ padding: '1rem' }}>
                                                     <span style={{
-                                                        display: 'inline-block',
-                                                        padding: '0.2rem 0.7rem',
-                                                        borderRadius: '9999px',
-                                                        fontSize: '0.72rem',
-                                                        fontWeight: '700',
+                                                        display: 'inline-block', padding: '0.2rem 0.7rem',
+                                                        borderRadius: '9999px', fontSize: '0.72rem', fontWeight: '700',
                                                         textTransform: 'uppercase',
                                                         backgroundColor: item.estado === 'activo' ? '#dcfce7' : '#f3f4f6',
                                                         color: item.estado === 'activo' ? '#166534' : '#6b7280'
                                                     }}>
-                                                        {item.estado ? item.estado : 'N/A'}
+                                                        {item.estado || 'N/A'}
                                                     </span>
                                                 </td>
                                             </tr>
                                         ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </Card>
 
             </main>
