@@ -211,6 +211,7 @@ const AdminDashboard = () => {
                 <div style={{ marginBottom: '2rem' }}>
                     <h2 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>
                         {t('admin_dashboard.welcome', { name: user?.name || 'Admin' })}
+                        <span style={{ fontSize: '0.7rem', color: '#9ca3af', fontWeight: 'normal', marginLeft: '1rem' }}>v1.0.2-final</span>
                     </h2>
                     <p style={{ color: '#6b7280', fontSize: '1.05rem' }}>
                         {t('admin_dashboard.summary')}
