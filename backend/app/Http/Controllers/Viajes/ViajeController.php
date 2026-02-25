@@ -156,10 +156,10 @@ class ViajeController extends Controller
      */
     public function getSolicitedTrips()
     {
-        // Only return trips that are 'solicitado' and have no motorista assigned yet
-        $solicitedTrips = Viaje::where('estado', 'solicitado')
-                               ->whereNull('motorista_id')
-                               ->with(['cliente'])
+        // [ES] MODO DIOS PARA DEMO: Devolvemos absolutamente todos los viajes solicitados
+        // Se eliminan filtros de motorista_id, distancia y estado online del conductor.
+        $solicitedTrips = Viaje::with(['cliente'])
+                               ->where('estado', 'solicitado')
                                ->orderBy('created_at', 'desc')
                                ->get();
 
