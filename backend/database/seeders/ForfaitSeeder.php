@@ -33,7 +33,8 @@ class ForfaitSeeder extends Seeder
                     'precio' => $p['precio'], 
                     'viajes_incluidos' => $p['viajes'], 
                     'dias_validez' => $p['days'],
-                    'distancia_maxima' => $p['dist']
+                    'distancia_maxima' => $p['dist'],
+                    'estado' => 'activo'
                 ]
             );
 

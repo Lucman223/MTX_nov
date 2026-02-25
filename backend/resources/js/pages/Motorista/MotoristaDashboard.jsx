@@ -396,8 +396,37 @@ const MotoristaDashboard = () => {
                         <span style={{ fontSize: '1.5rem' }}>⏳</span>
                         <div>
                             <strong>{t('common.account_pending_title')}</strong>
-                            <p style={{ margin: 0, fontSize: '0.875rem' }}>{t('common.account_pending_desc')}</p>
+                            <p style={{ margin: 0, fontSize: '0.875rem' }}>{t('driver_dashboard.online_error_pending')}</p>
                         </div>
+                    </div>
+                )}
+
+                {profile?.viajes_prueba_restantes > 0 && (
+                    <div className="alert alert--info mb-4" style={{
+                        background: '#eff6ff',
+                        color: '#1e40af',
+                        padding: '1rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid #93c5fd',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <span style={{ fontSize: '1.5rem' }}>🎁</span>
+                            <div>
+                                <strong style={{ display: 'block' }}>{t('driver_dashboard.trial_badge')}</strong>
+                                <span style={{ fontSize: '0.875rem' }}>{t('driver_dashboard.trial_desc', { count: profile.viajes_prueba_restantes })}</span>
+                            </div>
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => navigate('/motorista/suscripciones')}
+                            style={{ color: '#2563eb', fontWeight: 'bold' }}
+                        >
+                            {t('driver_dashboard.buy_credits')}
+                        </Button>
                     </div>
                 )}
                 {user?.status === 'aprobado' && profile && profile.viajes_prueba_restantes === 0 && !profile.suscripcion_activa && (
