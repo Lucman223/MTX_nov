@@ -15,10 +15,8 @@ use App\Events\MotoristaLocationUpdated;
 class MotoristaService
 {
     public function updateStatus(\App\Models\User $user, string $estadoActual): \App\Models\MotoristaPerfil {
-        $motoristaPerfil = \App\Models\MotoristaPerfil::where('usuario_id', $user->id)->first();
-        if ($motoristaPerfil) {
-            $motoristaPerfil->update(['estado_actual' => $estadoActual]);
-        }
+        $motoristaPerfil = \App\Models\MotoristaPerfil::where('usuario_id', $user->id)->firstOrFail();
+        $motoristaPerfil->update(['estado_actual' => $estadoActual]);
         return $motoristaPerfil;
     }
 

@@ -61,7 +61,9 @@ const MotoristaDashboard = () => {
             toast.success(newStatus === 'activo' ? 'Estás en línea' : 'Estás desconectado');
         } catch (error) {
             fetchData(); // Revert on error
-            toast.error("Error al cambiar estado");
+            const errorMsg = error.response?.data?.error || error.message || "Error de red desconocido";
+            toast.error("Error: " + errorMsg);
+            console.error("Toggle error:", error.response || error);
         }
     };
 
