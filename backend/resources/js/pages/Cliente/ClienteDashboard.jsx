@@ -249,20 +249,6 @@ const ClienteDashboard = () => {
                 </div>
             </header>
 
-            <nav className="mobile-bottom-nav">
-                <Button variant="ghost" className="active" onClick={() => navigate('/cliente/dashboard')}>
-                    <LayoutDashboard size={20} />
-                    <span>{t('nav.dashboard')}</span>
-                </Button>
-                <Button variant="ghost" onClick={() => navigate('/cliente/historial')}>
-                    <History size={20} />
-                    <span>{t('client_dashboard.history')}</span>
-                </Button>
-                <Button variant="ghost" onClick={() => navigate('/cliente/perfil')}>
-                    <User size={20} />
-                    <span>{t('client_dashboard.profile')}</span>
-                </Button>
-            </nav>
 
             <main className="main-content" style={{ paddingBottom: '80px' }}>
                 <div className="side-panel">
@@ -274,7 +260,7 @@ const ClienteDashboard = () => {
                                     <button onClick={() => setPuntoActivo('origen')} className={`btn btn--block ${puntoActivo === 'origen' ? 'btn--primary' : 'btn--ghost'}`} style={{ flex: 1, fontSize: '0.85rem' }}>📍 {t('client_dashboard.origin')}</button>
                                     <button onClick={() => setPuntoActivo('destino')} className={`btn btn--block ${puntoActivo === 'destino' ? 'btn--accent' : 'btn--ghost'}`} style={{ flex: 1, fontSize: '0.85rem' }}>🚩 {t('client_dashboard.destination')}</button>
                                 </div>
-                                
+
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                     <div className="point-input-group">
                                         <label className="point-label-origen">{t('client_dashboard.origin')}</label>
@@ -318,7 +304,7 @@ const ClienteDashboard = () => {
                             <div style={{ background: 'var(--primary-color)', color: 'white', padding: '1.5rem', textAlign: 'center' }}>
                                 <h2>{activeTrip.estado === 'solicitado' ? t('client_dashboard.searching_driver') : t('client_dashboard.trip_active')}</h2>
                             </div>
-                            
+
                             <div style={{ padding: '1.25rem' }}>
                                 {activeTrip.estado === 'completado' ? (
                                     <div style={{ textAlign: 'center' }}>

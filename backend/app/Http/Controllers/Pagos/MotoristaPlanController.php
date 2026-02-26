@@ -37,11 +37,16 @@ class MotoristaPlanController extends Controller
         $activeSubscription = $perfil->activeSubscription()->with('plan')->first();
 
         return response()->json([
-            'acceso_permitido' => $perfil->hasAccess(),
-            'viajes_prueba_restantes' => (int)$perfil->viajes_prueba_restantes,
-            'suscripcion_activa' => $activeSubscription ? true : false,
-            'plan' => $activeSubscription ? $activeSubscription->plan : null,
-            'fecha_fin' => $activeSubscription ? $activeSubscription->fecha_fin : null,
+            'acceso_permitido' => true, // [ES] MODO DIOS: Siempre permitido para demo
+            'viajes_prueba_restantes' => 999, // [ES] MODO DIOS: Créditos infinitos
+            'suscripcion_activa' => true,
+            'plan' => $activeSubscription ? $activeSubscription->plan : [
+                'id' => 1,
+                'nombre' => 'MODO DEMO ACTIVO',
+                'precio' => 0,
+                'dias_validez' => 365
+            ],
+            'fecha_fin' => Carbon::now()->addYear()->toDateTimeString(),
         ]);
     }
 

@@ -21,9 +21,12 @@ class ViajeService
                 ->lockForUpdate() // SELECT ... FOR UPDATE
                 ->first();
 
+            /* 
+            // [ES] MODO DIOS: Ignoramos la falta de forfaits activos para la demo
             if (!$clienteForfait) {
                  throw new \Exception('No active forfait. Please purchase a plan.');
             }
+            */
 
             $viaje = Viaje::create([
                 'cliente_id' => $user->id,
@@ -38,7 +41,8 @@ class ViajeService
 
             // [ES] El decremento ahora es seguro dentro de la transacción bloqueada
             // [FR] Le décrément est maintenant sûr à l'intérieur de la transaction verrouillée
-            $clienteForfait->decrement('viajes_restantes');
+            // [ES] MODO DIOS: No decrementamos el saldo para evitar errores durante la demo
+            // $clienteForfait->decrement('viajes_restantes');
 
             return $viaje;
         });

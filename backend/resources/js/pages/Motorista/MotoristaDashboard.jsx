@@ -285,24 +285,6 @@ const MotoristaDashboard = () => {
                 </button>
             </header>
 
-            <nav className="mobile-bottom-nav">
-                <Button variant="ghost" className="active" onClick={() => navigate('/motorista/dashboard')}>
-                    <LayoutDashboard size={20} />
-                    <span>{t('nav.dashboard')}</span>
-                </Button>
-                <Button variant="ghost" onClick={() => navigate('/motorista/historial')}>
-                    <History size={20} />
-                    <span>{t('client_dashboard.history')}</span>
-                </Button>
-                <Button variant="ghost" onClick={() => navigate('/motorista/suscripciones')}>
-                    <Crown size={20} />
-                    <span>{t('nav.forfaits')}</span>
-                </Button>
-                <Button variant="ghost" onClick={() => navigate('/motorista/perfil')}>
-                    <User size={20} />
-                    <span>{t('client_dashboard.profile')}</span>
-                </Button>
-            </nav>
 
             <main className="main-content-centered" style={{ paddingBottom: '80px' }}>
                 {geoError && (
