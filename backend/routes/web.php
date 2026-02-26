@@ -135,7 +135,7 @@ Route::get('/ver-errores', function () {
         return "No hay errores registrados.";
     }
     // Read the last 5000 bytes of the log file
-    $content = file_get_contents($logFile, false, null, max(0, filesize($logFile) - 5000));
+    $content = file_get_contents($logFile, false, null, max(0, filesize($logFile) - 50000));
     return response("<pre>" . htmlspecialchars($content) . "</pre>")->header('Content-Type', 'text/html');
 });
 
