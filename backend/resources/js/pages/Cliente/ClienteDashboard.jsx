@@ -302,7 +302,7 @@ const ClienteDashboard = () => {
                     ) : (
                         <Card style={{ padding: 0, overflow: 'hidden' }}>
                             <div style={{ background: 'var(--primary-color)', color: 'white', padding: '1.5rem', textAlign: 'center' }}>
-                                <h2>{activeTrip.estado === 'solicitado' ? t('client_dashboard.searching_driver') : t('client_dashboard.trip_active')}</h2>
+                                <h2>{activeTrip.estado === 'solicitado' ? t('client_dashboard.searching_driver') : (activeTrip.estado === 'aceptado' ? t('client_dashboard.trip_active') : t('client_dashboard.trip_active'))}</h2>
                             </div>
 
                             <div style={{ padding: '1.25rem' }}>

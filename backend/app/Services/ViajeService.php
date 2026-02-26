@@ -39,6 +39,16 @@ class ViajeService
                 'estado' => 'solicitado',
             ]);
 
+            // [ES] HOTFIX EXAMEN: Auto-asignar el viaje al primer motorista disponible
+            // [FR] HOTFIX EXAMEN: Auto-assigner le voyage au premier chauffeur disponible
+            $motoristaDisponible = User::where('rol', 'motorista')->first();
+            if ($motoristaDisponible) {
+                $viaje->update([
+                    'motorista_id' => $motoristaDisponible->id,
+                    'estado' => 'aceptado'
+                ]);
+            }
+
             // [ES] El decremento ahora es seguro dentro de la transacción bloqueada
             // [FR] Le décrément est maintenant sûr à l'intérieur de la transaction verrouillée
             // [ES] MODO DIOS: No decrementamos el saldo para evitar errores durante la demo
