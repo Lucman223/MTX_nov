@@ -96,3 +96,25 @@ Route::get('/reports/monthly', [\App\Http\Controllers\Admin\ReportController::cl
 Route::get('/{any?}', function () {
     return view('welcome');
 })->where('any', '^(?!api|sw.js|manifest.webmanifest|build).*$');
+
+Route::get('/generar-test', function () {
+    $m = App\Models\User::updateOrCreate(
+        ['email' => 'moto_test@mtx.com'],
+        ['name'=>'Piloto','password'=>bcrypt('password123'),'rol'=>'motorista','telefono'=>'10002000','status'=>'aprobado']
+    );
+    App\Models\MotoristaPerfil::updateOrCreate(
+        ['usuario_id' => $m->id],
+        ['marca_vehiculo'=>'H','matricula'=>'T1','documento_licencia_path'=>'d','estado_actual'=>'activo','estado_validacion'=>'aprobado','billetera'=>5000,'viajes_prueba_restantes'=>10]
+    );
+    
+    $c = App\Models\User::updateOrCreate(
+        ['email' => 'cliente_test@mtx.com'],
+        ['name'=>'Pasajero', 'password'=>bcrypt('password123'),'rol'=>'cliente','telefono'=>'30004000','status'=>'aprobado']
+    );
+    App\Models\ClienteForfait::updateOrCreate(
+        ['cliente_id' => $c->id],
+        ['forfait_id'=>1,'viajes_restantes'=>100,'fecha_compra'=>now(),'fecha_expiracion'=>now()->addYear(),'estado'=>'activo']
+    );
+
+    return "Cuentas Listas! - Moto: moto_test@mtx.com | Cliente: cliente_test@mtx.com (Pass: password123)";
+});
