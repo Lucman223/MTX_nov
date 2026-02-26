@@ -129,6 +129,16 @@ Route::get('/instalar-base-de-datos', function () {
     }
 });
 
+Route::get('/ver-errores', function () {
+    $logFile = storage_path('logs/laravel.log');
+    if (!file_exists($logFile)) {
+        return "No hay errores registrados.";
+    }
+    // Read the last 5000 bytes of the log file
+    $content = file_get_contents($logFile, false, null, max(0, filesize($logFile) - 5000));
+    return response("<pre>" . htmlspecialchars($content) . "</pre>")->header('Content-Type', 'text/html');
+});
+
 // React App Catch-all (exclude API and PWA files)
 Route::get('/{any?}', function () {
     return view('welcome');
