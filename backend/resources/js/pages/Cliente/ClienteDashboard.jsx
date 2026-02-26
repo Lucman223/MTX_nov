@@ -61,6 +61,9 @@ const ClienteDashboard = () => {
 
                     if (!origen && polledTrip.origen_lat) setOrigen([polledTrip.origen_lat, polledTrip.origen_lng]);
                     if (!destino && polledTrip.destino_lat) setDestino([polledTrip.destino_lat, polledTrip.destino_lng]);
+                } else {
+                    // EXAM HOTFIX: Si el backend devuelve null (viaje completado o inexistente), reseteamos el estado para no quedarnos bloqueados en "En Camino"
+                    setActiveTrip(prev => prev ? null : prev);
                 }
             } catch (error) { }
         };
