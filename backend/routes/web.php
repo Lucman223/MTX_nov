@@ -114,6 +114,21 @@ Route::get('/generar-test', function () {
     return "Cuentas Listas! - Moto: moto_test@mtx.com | Cliente: cliente_test@mtx.com (Pass: password123)";
 });
 
+Route::get('/instalar-base-de-datos', function () {
+    try {
+        // Aumentar el tiempo límite e ignorar restricciones para migraciones pesadas
+        set_time_limit(300);
+        
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--force' => true,
+            '--seed' => true
+        ]);
+        return "¡Base de datos Aiven instalada y lista con éxito!";
+    } catch (\Exception $e) {
+        return "ERROR AL INSTALAR: " . $e->getMessage() . " -- Verifica que los credenciales DB_ en Koyeb estén bien copiados.";
+    }
+});
+
 // React App Catch-all (exclude API and PWA files)
 Route::get('/{any?}', function () {
     return view('welcome');
