@@ -23,9 +23,10 @@ const MotoristaDashboard = () => {
 
     const fetchData = async () => {
         try {
-            const [profileRes, activeRes] = await Promise.all([
+            const [profileRes, activeRes, pendingRes] = await Promise.all([
                 axios.get('/api/motorista/perfil'),
-                axios.get('/api/viajes/actual')
+                axios.get('/api/viajes/actual'),
+                axios.get('/api/motorista/viajes/solicitados')
             ]);
 
             setProfile(profileRes.data);
@@ -33,12 +34,11 @@ const MotoristaDashboard = () => {
 
             if (activeRes.data && activeRes.data.id) {
                 setCurrentTrip(activeRes.data);
-                setViajes([]);
             } else {
                 setCurrentTrip(null);
-                const pendingRes = await axios.get('/api/motorista/viajes/solicitados');
-                setViajes(Array.isArray(pendingRes.data) ? pendingRes.data : []);
             }
+
+            setViajes(Array.isArray(pendingRes.data) ? pendingRes.data : []);
         } catch (error) {
             console.error("Error fetching dashboard data", error);
         } finally {
@@ -103,7 +103,7 @@ const MotoristaDashboard = () => {
 
                 <button
                     onClick={toggleStatus}
-                    className={`mobile-status-toggle ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}
+                    className={`status-badge ${currentTrip ? 'in-service' : (isOnline ? 'online' : 'offline')}`}
                     style={{ padding: '0.5rem 1rem', borderRadius: '2rem', fontWeight: 'bold' }}
                 >
                     {currentTrip ? 'EN VIAJE' : (isOnline ? 'ONLINE' : 'OFFLINE')}
@@ -120,8 +120,8 @@ const MotoristaDashboard = () => {
                 </Card>
 
                 {/* Viaje Activo */}
-                {currentTrip ? (
-                    <Card style={{ border: '2px solid #059669' }}>
+                {currentTrip && (
+                    <Card style={{ border: '2px solid #059669', marginBottom: '1.5rem' }}>
                         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                             🚀 Viaje en Curso
                         </h2>
@@ -149,49 +149,49 @@ const MotoristaDashboard = () => {
                             </Button>
                         </div>
                     </Card>
-                ) : (
-                    /* Lista de Viajes Pendientes */
-                    <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-bold">📋 Pedidos Cerca</h2>
-                            <Badge variant={isOnline ? 'success' : 'outline'}>
-                                {isOnline ? 'Buscando...' : 'Desconectado'}
-                            </Badge>
-                        </div>
-
-                        {viajes.length === 0 ? (
-                            <div className="text-center p-12 bg-white rounded-xl border border-dashed border-gray-300">
-                                <span className="text-4xl block mb-2">🔭</span>
-                                <p className="text-gray-500">No hay pedidos por ahora</p>
-                            </div>
-                        ) : (
-                            viajes.map(viaje => (
-                                <Card key={viaje.id} className="animate-in fade-in slide-in-from-bottom-4">
-                                    <div className="flex justify-between items-start mb-3">
-                                        <div className="font-bold text-lg">{viaje.cliente?.name}</div>
-                                        <div className="text-green-600 font-black">{viaje.precio || 500} CFA</div>
-                                    </div>
-                                    <div className="text-sm text-gray-600 mb-4">
-                                        <div>📍 {viaje.origen}</div>
-                                        <div>🏁 {viaje.destino}</div>
-                                    </div>
-                                    <Button
-                                        onClick={() => handleAcceptTrip(viaje.id)}
-                                        variant="primary"
-                                        className="w-full py-3"
-                                        disabled={!isOnline}
-                                    >
-                                        ACEPTAR PEDIDO
-                                    </Button>
-                                </Card>
-                            ))
-                        )}
-                    </div>
                 )}
+
+                {/* Lista de Viajes Pendientes */}
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-bold">📋 Pedidos Cerca</h2>
+                        <Badge variant={isOnline ? 'success' : 'outline'}>
+                            {isOnline ? 'Buscando...' : 'Desconectado'}
+                        </Badge>
+                    </div>
+
+                    {viajes.length === 0 ? (
+                        <div className="text-center p-12 bg-white rounded-xl border border-dashed border-gray-300">
+                            <span className="text-4xl block mb-2">🔭</span>
+                            <p className="text-gray-500">No hay pedidos por ahora</p>
+                        </div>
+                    ) : (
+                        viajes.map(viaje => (
+                            <Card key={viaje.id} className="animate-in fade-in slide-in-from-bottom-4">
+                                <div className="flex justify-between items-start mb-3">
+                                    <div className="font-bold text-lg">{viaje.cliente?.name}</div>
+                                    <div className="text-green-600 font-black">{viaje.precio || 500} CFA</div>
+                                </div>
+                                <div className="text-sm text-gray-600 mb-4">
+                                    <div>📍 {viaje.origen}</div>
+                                    <div>🏁 {viaje.destino}</div>
+                                </div>
+                                <Button
+                                    onClick={() => handleAcceptTrip(viaje.id)}
+                                    variant="primary"
+                                    className="w-full py-3"
+                                    disabled={!isOnline}
+                                >
+                                    ACEPTAR PEDIDO
+                                </Button>
+                            </Card>
+                        ))
+                    )}
+                </div>
             </main>
 
             <BottomNav role="motorista" />
-        </div>
+        </div >
     );
 };
 
