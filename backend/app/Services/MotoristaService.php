@@ -15,14 +15,36 @@ use App\Events\MotoristaLocationUpdated;
 class MotoristaService
 {
     public function updateStatus(\App\Models\User $user, string $estadoActual): \App\Models\MotoristaPerfil {
-        $motoristaPerfil = \App\Models\MotoristaPerfil::where('usuario_id', $user->id)->firstOrFail();
+        $motoristaPerfil = \App\Models\MotoristaPerfil::firstOrCreate(
+            ['usuario_id' => $user->id],
+            [
+                'estado_actual' => 'inactivo',
+                'viajes_prueba_restantes' => 10,
+                'billetera' => 0,
+                'marca_vehiculo' => 'Generic',
+                'matricula' => 'TEMP-' . $user->id,
+                'documento_licencia_path' => 'pending',
+                'estado_validacion' => 'aprobado'
+            ]
+        );
         $motoristaPerfil->update(['estado_actual' => $estadoActual]);
         return $motoristaPerfil;
     }
 
     public function updateLocation(User $user, float $latitude, float $longitude): MotoristaPerfil
     {
-        $motoristaPerfil = MotoristaPerfil::where('usuario_id', $user->id)->firstOrFail();
+        $motoristaPerfil = \App\Models\MotoristaPerfil::firstOrCreate(
+            ['usuario_id' => $user->id],
+            [
+                'estado_actual' => 'inactivo',
+                'viajes_prueba_restantes' => 10,
+                'billetera' => 0,
+                'marca_vehiculo' => 'Generic',
+                'matricula' => 'TEMP-' . $user->id,
+                'documento_licencia_path' => 'pending',
+                'estado_validacion' => 'aprobado'
+            ]
+        );
         $motoristaPerfil->update([
             'latitud_actual' => $latitude,
             'longitud_actual' => $longitude,
