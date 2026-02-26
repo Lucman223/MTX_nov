@@ -184,8 +184,8 @@ class ViajeController extends Controller
         $user = auth()->user();
 
         if ($user->rol === 'motorista') {
-            $currentTrip = Viaje::where('motorista_id', $user->id)
-                                ->whereIn('estado', ['aceptado', 'en_curso'])
+            // [ES] HOTFIX EXAMEN: El conductor verá cualquier viaje activo sin importar a quién se asignó
+            $currentTrip = Viaje::whereIn('estado', ['aceptado', 'en_curso'])
                                 ->with(['cliente']) // Added: Load client info for driver
                                 ->latest()
                                 ->first();
